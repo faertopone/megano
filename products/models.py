@@ -23,6 +23,6 @@ class ProductProperty(models.Model):
     Модель измеримых свойств товара.
     Поле measure можно определить через предопределенный список единиц измерения
     """
-    product = models.ForeignKey(Product)
-    property = models.ForeignKey(Property)
+    product = models.ForeignKey(Product, on_delete=models.RESTRICT)
+    property = models.ForeignKey(Property, on_delete=models.RESTRICT)
     value = models.IntegerField(verbose_name='Значение свойства')
