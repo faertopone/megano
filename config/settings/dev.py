@@ -36,11 +36,11 @@ INSTALLED_APPS.append('django_extensions')
 
 MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
 
-try:
-    INTERNAL_IPS.append('127.0.0.1')
-except:
-    INTERNAL_IPS = [
-        '127.0.0.1',
-    ]
+# try:
+#     INTERNAL_IPS.append('127.0.0.1')
+# except:
+#     INTERNAL_IPS = [
+#         '127.0.0.1',
+#     ]
 
 STATIC_ROOT = 'static'
