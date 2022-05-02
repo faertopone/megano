@@ -59,8 +59,8 @@ TEMPLATES = [
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
-        'environment': 'app_webshop.jinja2.environment'
-   },
+            'environment': 'app_webshop.jinja2.environment'
+            },
     },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
