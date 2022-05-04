@@ -137,7 +137,7 @@ class Products(models.Model):
             ]
     article = models.CharField(max_length=25, default='NOTARTICLE', blank=True, verbose_name=_('article'))
     name = models.CharField(max_length=39, blank=True, verbose_name=_('name'))
-    price = models.DecimalField(verbose_name=_('price'), decimal_places=2, default=0)
+    price = models.DecimalField(verbose_name=_('price'), decimal_places=2, max_digits=10, default=0)
     rating = models.IntegerField(verbose_name=_('rating'), default=0)
     flag_limit = models.CharField(max_length=1, choices=STATUS_CHOICES, default='n', verbose_name=_('limit status'))
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name=_('category'))
@@ -203,9 +203,9 @@ class ShopProduct(models.Model):
     shop = models.ForeignKey(Shops, on_delete=models.CASCADE, verbose_name=_('shops'))
     product = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name=_('product'))
     amount = models.IntegerField(verbose_name=_('amount'), default=0)
-    price_in_shop = price = models.DecimalField(verbose_name=_('price'), decimal_places=2, default=0)
+    price_in_shop = models.DecimalField(verbose_name=_('price'), decimal_places=2, max_digits=10, default=0)
     promotion = models.ForeignKey(Promotions, on_delete=models.CASCADE, verbose_name=_('promotion'))
-    special_price = models.FloatField(verbose_name=_('special price'), default=0)
+    special_price = models.DecimalField(verbose_name=_('special price'), decimal_places=2, max_digits=10, default=0)
 
     class Meta:
         verbose_name = _('product in shop')
@@ -235,8 +235,8 @@ class Basket(models.Model):
     selection_time = models.DateTimeField(verbose_name='selection_time', auto_now_add=True)
     status_paid = models.CharField(max_length=1, choices=STATUS_PAID_CHOICES,
                                    default='n', verbose_name=_('status paid'))
-    status_ready = models.CharField(max_length=1, choices=STATUS_READY_CHOICES, default='n',
-                                    verbose_name=_('status ready'))
+    status_ready = models.CharField(max_length=1, choices=STATUS_READY_CHOICES,
+                                    default='n', verbose_name=_('status ready'))
 
     class Meta:
         verbose_name = _('product in user basket')
