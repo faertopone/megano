@@ -44,5 +44,3 @@ except:
     ]
 
 STATIC_ROOT = 'static'
-
-FIXTURE_DIRS = [BASE_DIR / 'fixtures']
