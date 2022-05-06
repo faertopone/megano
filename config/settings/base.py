@@ -24,6 +24,9 @@ SECRET_KEY = 'django-insecure-*@d!oahvx+!t+bdx(j31=rpy^ocx%^p@uy%t^o2*c^@z-&dwd*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# в setting обезателньо еще написать
+SITE_ID = 1
+
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -35,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'products'
+    'app_webshop',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +58,9 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.jinja2.Jinja2',
         'DIRS': [],
         'APP_DIRS': True,
+        'OPTIONS': {
+            'environment': 'app_webshop.jinja2.environment'
+        },
     },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -104,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-RU'
 
 TIME_ZONE = 'UTC'
 

@@ -1,5 +1,3 @@
-from django.conf import settings  # пример импорта сеттингсов
-from django.shortcuts import render
-
+from django.shortcuts import render  # noqa: F401
 
 # Create your views here.
