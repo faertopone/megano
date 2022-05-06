@@ -43,4 +43,4 @@ except Exception:
         '127.0.0.1',
     ]
 
-STATIC_ROOT = 'static'
+STATIC_ROOT = 'app_webshop/static'
