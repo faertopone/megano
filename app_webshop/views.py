@@ -3,6 +3,7 @@ from django.views import View
 
 
 class Index(View):
+
     def get(self, request):
-        context = {'text': ''}
+        context = {'text': 'Hello world'}
         return render(request, 'index.html', context=context)

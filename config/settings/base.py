@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,9 +24,6 @@ SECRET_KEY = 'django-insecure-*@d!oahvx+!t+bdx(j31=rpy^ocx%^p@uy%t^o2*c^@z-&dwd*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# в setting обезателньо еще написать
-SITE_ID = 1
-
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -39,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app_webshop',
+
 ]
 
 MIDDLEWARE = [
@@ -56,11 +54,11 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.jinja2.Jinja2',
-        'DIRS': [],
+        'DIRS': ['app_webshop/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'environment': 'app_webshop.jinja2.environment'
-        },
+            },
     },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -123,6 +121,16 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+
+STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static')
+]
+
+
+# Тут хранить загруженные файлы
+MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA_FILES')
+# ссылка на файлы
+MEDIA_URL = '/MEDIA_FILES/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
