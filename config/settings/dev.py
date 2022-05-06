@@ -1,4 +1,4 @@
-from .base import *
+from .base import *  # noqa: F403
 
 DEBUG = True
 
@@ -31,14 +31,14 @@ LOGGING = {
     },
 }
 
-INSTALLED_APPS.append('debug_toolbar')
-INSTALLED_APPS.append('django_extensions')
+INSTALLED_APPS.append('debug_toolbar')  # noqa: F405
+INSTALLED_APPS.append('django_extensions')  # noqa: F405
 
-MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: F405
 
 try:
-    INTERNAL_IPS.append('127.0.0.1')
-except:
+    INTERNAL_IPS.append('127.0.0.1')  # noqa: F405
+except Exception:
     INTERNAL_IPS = [
         '127.0.0.1',
     ]
