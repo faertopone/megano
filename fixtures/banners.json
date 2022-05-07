@@ -1,0 +1,58 @@
+[
+{
+  "model": "app_webshop.banners",
+  "pk": 1,
+  "fields": {
+    "name": "banner1",
+    "photo": "banners_photo/no_avatar.jpg",
+    "product_there": null,
+    "number_series": 123,
+    "mini_description": "изи",
+    "description": "описание баннера 1",
+    "is_active": true,
+    "creation_date": "2022-05-07T19:28:25.427Z"
+  }
+},
+{
+  "model": "app_webshop.banners",
+  "pk": 2,
+  "fields": {
+    "name": "Banner2",
+    "photo": "banners_photo/Audi_A4_2.0_TFSI_quattro_5Vsly8N.gif",
+    "product_there": null,
+    "number_series": 2000,
+    "mini_description": "супер",
+    "description": "Баннер 2",
+    "is_active": true,
+    "creation_date": "2022-05-07T19:29:07.219Z"
+  }
+},
+{
+  "model": "app_webshop.banners",
+  "pk": 7,
+  "fields": {
+    "name": "414",
+    "photo": "",
+    "product_there": null,
+    "number_series": 3,
+    "mini_description": "41",
+    "description": "124414141",
+    "is_active": true,
+    "creation_date": "2022-05-07T21:16:55.385Z"
+  }
+},
+{
+  "model": "app_webshop.banners",
+  "pk": 8,
+  "fields": {
+    "name": "Новый банер",
+    "photo": "banners_photo/Safequeue.jpg",
+    "product_there": null,
+    "number_series": 34,
+    "mini_description": "421",
+    "description": "кпвапвппв",
+    "is_active": true,
+    "creation_date": "2022-05-07T21:32:38.813Z"
+  }
+}
+]
