@@ -1,13 +1,7 @@
-import os
-
-from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm, forms, ImageField
+from django.forms import ModelForm
 from django.template.defaultfilters import filesizeformat
-
 from .models import Banners
-
-
 
 
 class BannersForm(ModelForm):

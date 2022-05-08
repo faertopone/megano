@@ -11,7 +11,7 @@ class BannersServices:
         if not Banners.objects.all().exists():
             return None
         list_banners = []
-        banners = Banners.objects.select_related('product_there').filter(is_active=True)
+        banners = Banners.objects.filter(is_active=True)
         # Если баннеров мало, то просто выведем их
         if banners.count() >= max_banners:
             for item in banners:

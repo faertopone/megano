@@ -9,31 +9,35 @@ from django.utils.translation import gettext_lazy as _
 @admin.register(Banners)
 class BannersAdmin(admin.ModelAdmin):
     form = BannersForm
-    list_display = ('name', 'banner_photo', 'min_description_admin', 'is_active', 'creation_date')
+    list_display = ('name', 'id', 'url_link', 'banner_photo', 'min_description_admin', 'is_active', 'creation_date')
     readonly_fields = ['banner_photo']
     list_filter = ['name', 'is_active', 'creation_date']
     actions = ['active', 'not_active']
     search_fields = ['name']
     fieldsets = (
-        (_('Наименования банера'), {
-            'fields': (('name'),)
+        (_('Наименования банера и товара'), {
+            'fields': (('name', 'name_product', 'version'), )
+        }),
+        (None, {
+            'fields': (('url_link'),)
         }),
         (_('Фотографии для баннера'), {
             'fields': (('photo', 'banner_photo'),)
         }),
-        (_('Описание баннера'), {
+        (None, {
             'fields': (('description'),)
         }),
-        (_('Статус актуальности банера'), {
+        (None, {
             'fields': (('is_active'),)
         }),
 
+
     )
 
-    def active(self, queryset):
+    def active(self, requests, queryset ):
         queryset.update(is_active=True)
 
-    def not_active(self, queryset):
+    def not_active(self, requests, queryset):
         queryset.update(is_active=False)
 
     active.short_description = _('Включить баннер')

@@ -248,18 +248,22 @@ class Basket(models.Model):
 
 
 
+def banners_directory_path(instance, filename):
+    # путь, куда будет осуществлена загрузка MEDIA_FILES/banners_photo/id_баннера + <filename>
+    return 'banners_photo/{id}_photo_+{filename}'.format(id=instance.name, filename=filename)
+
 class Banners(models.Model):
     """
     Модель баннеров, которые используются для рекламы на сайте
     """
     name = models.CharField(max_length=15, verbose_name=_('название баннера'))
-    photo = models.ImageField(upload_to='banners_photo', null=True, blank=True, verbose_name=_('Фотография для баннера'))
-    product_there = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name=_('На какой продукт этот баннер'), blank=True, null=True)
-    number_series = models.IntegerField(verbose_name=_('Серия модели'), null=True, blank=True, validators=[MaxValueValidator(99999)])
-    mini_description = models.CharField(max_length=50, verbose_name=_('мини описание'), blank=True, null=True)
+    name_product = models.CharField(max_length=40, verbose_name=_('название товара'), null=True)
+    photo = models.ImageField(upload_to=banners_directory_path, null=True, verbose_name=_('Фотография для баннера'))
+    url_link = models.CharField(max_length=300, verbose_name=_('url на товар'), default='')
     description = models.TextField(blank=True, verbose_name=_('описание'))
     is_active = models.BooleanField(default=True, verbose_name=_('статус активности'))
     creation_date = models.DateTimeField(verbose_name='дата создания', auto_now_add=True)
+    version = models.CharField(max_length=10, verbose_name=_('Серия/версия продукта'), null=True, blank=True)
 
     def __str__(self):
         return self.name

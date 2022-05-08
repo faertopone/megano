@@ -1,58 +1,58 @@
 [
 {
   "model": "app_webshop.banners",
-  "pk": 1,
+  "pk": 24,
   "fields": {
-    "name": "banner1",
-    "photo": "banners_photo/no_avatar.jpg",
-    "product_there": null,
-    "number_series": 123,
-    "mini_description": "изи",
-    "description": "описание баннера 1",
+    "name": "Баннер 1",
+    "name_product": "Видеокарта",
+    "photo": "banners_photo/Баннер_1_photo_videoca.png",
+    "url_link": "skillbox.ru",
+    "description": "Лучшая видеокарта в мире!",
     "is_active": true,
-    "creation_date": "2022-05-07T19:28:25.427Z"
+    "creation_date": "2022-05-08T18:43:21.563Z",
+    "version": "2000"
   }
 },
 {
   "model": "app_webshop.banners",
-  "pk": 2,
+  "pk": 25,
   "fields": {
-    "name": "Banner2",
-    "photo": "banners_photo/Audi_A4_2.0_TFSI_quattro_5Vsly8N.gif",
-    "product_there": null,
-    "number_series": 2000,
-    "mini_description": "супер",
-    "description": "Баннер 2",
+    "name": "Баннер 2",
+    "name_product": "Квадракоптер",
+    "photo": "banners_photo/Баннер_2_photo_slider.png",
+    "url_link": "skillbox.ru",
+    "description": "С ним ваша жизнь станет лучше",
     "is_active": true,
-    "creation_date": "2022-05-07T19:29:07.219Z"
+    "creation_date": "2022-05-08T18:43:45.477Z",
+    "version": "12"
   }
 },
 {
   "model": "app_webshop.banners",
-  "pk": 7,
+  "pk": 26,
   "fields": {
-    "name": "414",
-    "photo": "",
-    "product_there": null,
-    "number_series": 3,
-    "mini_description": "41",
-    "description": "124414141",
+    "name": "Баннер 3",
+    "name_product": "Ноутбук",
+    "photo": "banners_photo/Баннер_3_photo_card.jpg",
+    "url_link": "skillbox.ru",
+    "description": "Самый современный ноутбук в мире",
     "is_active": true,
-    "creation_date": "2022-05-07T21:16:55.385Z"
+    "creation_date": "2022-05-08T18:44:14.845Z",
+    "version": "678"
   }
 },
 {
   "model": "app_webshop.banners",
-  "pk": 8,
+  "pk": 27,
   "fields": {
-    "name": "Новый банер",
-    "photo": "banners_photo/Safequeue.jpg",
-    "product_there": null,
-    "number_series": 34,
-    "mini_description": "421",
-    "description": "кпвапвппв",
+    "name": "баннер 4",
+    "name_product": "ноутбук",
+    "photo": "banners_photo/баннер_4_photo_card.jpg",
+    "url_link": "skillbox.ru",
+    "description": "Тоже норм ноутбук",
     "is_active": true,
-    "creation_date": "2022-05-07T21:32:38.813Z"
+    "creation_date": "2022-05-08T18:44:53.378Z",
+    "version": "984"
   }
 }
 ]
