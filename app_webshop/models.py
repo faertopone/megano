@@ -249,8 +249,8 @@ class Basket(models.Model):
 
 
 def banners_directory_path(instance, filename):
-    # путь, куда будет осуществлена загрузка MEDIA_FILES/banners_photo/id_баннера + <filename>
-    return 'banners_photo/{id}_photo_+{filename}'.format(id=instance.name, filename=filename)
+    # путь, куда будет осуществлена загрузка MEDIA_FILES/banners_photo/name_баннера + <filename>
+    return 'banners_photo/{name}_photo_+{filename}'.format(name=instance.name, filename=filename)
 
 class Banners(models.Model):
     """
