@@ -15,7 +15,6 @@ class HistoryView(View):
             }
         ]
         return render(request, 'product_services/historyview.html', context=context)
-        # return render(request, 'product_services/proba.html', context=context)
 
 
 class ProductComment(View):
