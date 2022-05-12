@@ -7,7 +7,6 @@ from app_webshop.services.banners import BannersServices
 class Index(View):
 
     def get(self, request):
-
         # Список случайных баннеров
         banner = BannersServices()
         banners = banner.get_banners(max_banners=3)

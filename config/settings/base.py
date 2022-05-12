@@ -62,6 +62,12 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'environment': 'app_webshop.jinja2.environment',
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
 
         },
     },
@@ -149,4 +155,4 @@ MEDIA_URL = '/MEDIA_FILES/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-FIXTURE_DIRS = [BASE_DIR / 'fixtures']
+FIXTURE_DIRS = (os.path.join(BASE_DIR, 'fixtures'))
