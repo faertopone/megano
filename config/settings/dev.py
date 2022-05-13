@@ -1,4 +1,4 @@
-from .base import *
+from .base import *  # noqa: F403
 
 DEBUG = True
 
@@ -43,4 +43,4 @@ except Exception:
         '127.0.0.1',
     ]
 
-STATIC_ROOT = 'app_webshop/../../static'
+# STATIC_ROOT = 'static'

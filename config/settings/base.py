@@ -9,12 +9,11 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-import os
+
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-from config import settings
-
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Quick-start development settings - unsuitable for production
@@ -25,6 +24,9 @@ SECRET_KEY = 'django-insecure-*@d!oahvx+!t+bdx(j31=rpy^ocx%^p@uy%t^o2*c^@z-&dwd*
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+# в setting обезателньо еще написать
+SITE_ID = 1
 
 ALLOWED_HOSTS = []
 
@@ -38,20 +40,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app_webshop',
+    'products',
     'banners',
 
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -140,12 +141,9 @@ LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
-
 STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'static')
+    (BASE_DIR / "static"),
 ]
-
 
 # Тут хранить загруженные файлы
 MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA_FILES')
