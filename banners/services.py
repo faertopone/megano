@@ -1,4 +1,4 @@
-from app_webshop.models import Banners
+from .models import Banners
 from random import sample
 
 class BannersServices:

@@ -1,6 +1,6 @@
 [
 {
-  "model": "app_webshop.banners",
+  "model": "banners.banners",
   "pk": 24,
   "fields": {
     "name": "Баннер 1",
@@ -14,7 +14,7 @@
   }
 },
 {
-  "model": "app_webshop.banners",
+  "model": "banners.banners",
   "pk": 25,
   "fields": {
     "name": "Баннер 2",
@@ -28,7 +28,7 @@
   }
 },
 {
-  "model": "app_webshop.banners",
+  "model": "banners.banners",
   "pk": 26,
   "fields": {
     "name": "Баннер 3",
@@ -42,7 +42,7 @@
   }
 },
 {
-  "model": "app_webshop.banners",
+  "model": "banners.banners",
   "pk": 27,
   "fields": {
     "name": "баннер 4",
