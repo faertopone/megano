@@ -33,6 +33,7 @@ LOGGING = {
 
 INSTALLED_APPS.append('debug_toolbar')  # noqa: F405
 INSTALLED_APPS.append('django_extensions')  # noqa: F405
+INSTALLED_APPS.append('fixturemedia')  # noqa: F405
 
 MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: F405
 
@@ -42,5 +43,3 @@ except Exception:
     INTERNAL_IPS = [
         '127.0.0.1',
     ]
-
-# STATIC_ROOT = 'static'

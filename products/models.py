@@ -1,28 +1,27 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
-class Product(models.Model):
+class Category(models.Model):
     """
-    Модель товара
+    Категория каталога товаров.
     """
-    name = models.CharField(max_length=256)
-    property = models.ManyToManyField('Property', through='ProductProperty', null=True, blank=True)
+    activity = models.BooleanField(
+        default=True,
+        verbose_name=_("Активность"),
+        help_text=_("Если категория активна, то она должна отображаться в главном меню сайта")
+    )
+    icon_photo = models.FileField(upload_to="categories/", max_length=500,
+                                  validators=(FileExtensionValidator(["jpeg", "jpg", "png", "svg"]),),
+                                  verbose_name=_("Иконка категории"))
+    category_name = models.CharField(max_length=1000, verbose_name=_("Название категории"))
+    description = models.TextField(blank=True, verbose_name=_("Описание"),
+                                   help_text=_("Опишите, например, какие товары соответствуют данной категории"))
 
+    class Meta:
+        verbose_name = _("категория каталога товаров")
+        verbose_name_plural = _("категории каталога товаров")
 
-class Property(models.Model):
-    """
-    Модель измеримых свойств товара.
-    Поле measure можно определить через предопределенный список единиц измерения
-    """
-    name = models.CharField(max_length=256)
-    measure = models.CharField(max_length=256, verbose_name='Единица измерения')
-
-
-class ProductProperty(models.Model):
-    """
-    Модель измеримых свойств товара.
-    Поле measure можно определить через предопределенный список единиц измерения
-    """
-    product = models.ForeignKey(Product, on_delete=models.RESTRICT)
-    property = models.ForeignKey(Property, on_delete=models.RESTRICT)
-    value = models.IntegerField(verbose_name='Значение свойства')
+    def __str__(self):
+        return self.category_name
