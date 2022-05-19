@@ -9,7 +9,7 @@ def shop_info(request, *args, **kwargs):
 	с товарами данного магазина, отфильтрованными по рейтингу
 	"""
 	context = dict()
-	shop_photo_list = ShopPhoto.objects.select_related('shop').filter(shop=kwargs['pk'])
+	shop_photo_list = ShopPhoto.objects.filter(shop=kwargs['pk']).select_related('shop')
 	context['photos'] = [i.photo.url for i in shop_photo_list]
 	context['shop'] = shop_photo_list[1].shop
 	context['products'] = [{
