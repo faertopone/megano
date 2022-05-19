@@ -1,0 +1,130 @@
+[
+{
+  "model": "products.property",
+  "pk": 3,
+  "fields": {
+    "name": "Тип",
+    "tooltip": ""
+  }
+},
+{
+  "model": "products.property",
+  "pk": 4,
+  "fields": {
+    "name": "Пол",
+    "tooltip": ""
+  }
+},
+{
+  "model": "products.property",
+  "pk": 5,
+  "fields": {
+    "name": "Коллекция",
+    "tooltip": ""
+  }
+},
+{
+  "model": "products.property",
+  "pk": 6,
+  "fields": {
+    "name": "Цвет",
+    "tooltip": ""
+  }
+},
+{
+  "model": "products.property",
+  "pk": 7,
+  "fields": {
+    "name": "Сезон",
+    "tooltip": ""
+  }
+},
+{
+  "model": "products.property",
+  "pk": 8,
+  "fields": {
+    "name": "Ширина, см",
+    "tooltip": ""
+  }
+},
+{
+  "model": "products.property",
+  "pk": 9,
+  "fields": {
+    "name": "Российский размер",
+    "tooltip": ""
+  }
+},
+{
+  "model": "products.property",
+  "pk": 10,
+  "fields": {
+    "name": "Размер производителя",
+    "tooltip": ""
+  }
+},
+{
+  "model": "products.property",
+  "pk": 11,
+  "fields": {
+    "name": "Страна-изготовитель",
+    "tooltip": ""
+  }
+},
+{
+  "model": "products.property",
+  "pk": 12,
+  "fields": {
+    "name": "Длина изделия, см",
+    "tooltip": ""
+  }
+},
+{
+  "model": "products.property",
+  "pk": 13,
+  "fields": {
+    "name": "Материал",
+    "tooltip": ""
+  }
+},
+{
+  "model": "products.property",
+  "pk": 14,
+  "fields": {
+    "name": "Размеры, мм",
+    "tooltip": ""
+  }
+},
+{
+  "model": "products.property",
+  "pk": 15,
+  "fields": {
+    "name": "Вес товара, г",
+    "tooltip": ""
+  }
+},
+{
+  "model": "products.property",
+  "pk": 16,
+  "fields": {
+    "name": "Гарантийный срок",
+    "tooltip": "Гарантийный срок – это период, в течение которого изготовитель гарантирует качество товара и обязуется принять данный товар у потребителя для проведения проверки качества (экспертизы) и выполнения предусмотренных законом требований."
+  }
+},
+{
+  "model": "products.property",
+  "pk": 19,
+  "fields": {
+    "name": "Рост",
+    "tooltip": ""
+  }
+},
+{
+  "model": "products.property",
+  "pk": 29,
+  "fields": {
+    "name": "Вспышка",
+    "tooltip": ""
+  }
+}
+]
