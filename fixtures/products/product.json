@@ -1,0 +1,110 @@
+[
+{
+  "model": "products.product",
+  "pk": 2,
+  "fields": {
+    "name": "Наручные часы",
+    "article": "587706108",
+    "price": "3200.00",
+    "rating": "0.00",
+    "flag_limit": false,
+    "category": 4
+  }
+},
+{
+  "model": "products.product",
+  "pk": 3,
+  "fields": {
+    "name": "Ремень БГ",
+    "article": "238693895",
+    "price": "1500.00",
+    "rating": "0.00",
+    "flag_limit": false,
+    "category": 4
+  }
+},
+{
+  "model": "products.product",
+  "pk": 4,
+  "fields": {
+    "name": "Ремень БГ",
+    "article": "241038423",
+    "price": "1500.00",
+    "rating": "0.00",
+    "flag_limit": false,
+    "category": 4
+  }
+},
+{
+  "model": "products.product",
+  "pk": 5,
+  "fields": {
+    "name": "Заколка-краб YourDiadem",
+    "article": "243548731",
+    "price": "610.00",
+    "rating": "0.00",
+    "flag_limit": false,
+    "category": 4
+  }
+},
+{
+  "model": "products.product",
+  "pk": 6,
+  "fields": {
+    "name": "Пижама Hola",
+    "article": "431513092",
+    "price": "1399.00",
+    "rating": "0.00",
+    "flag_limit": false,
+    "category": 3
+  }
+},
+{
+  "model": "products.product",
+  "pk": 7,
+  "fields": {
+    "name": "Домашний комплект",
+    "article": "357657060",
+    "price": "1299.00",
+    "rating": "0.00",
+    "flag_limit": false,
+    "category": 3
+  }
+},
+{
+  "model": "products.product",
+  "pk": 8,
+  "fields": {
+    "name": "Смартфон Apple iPhone 12 128GB, черный",
+    "article": "299368232",
+    "price": "67880.00",
+    "rating": "0.00",
+    "flag_limit": false,
+    "category": 1
+  }
+},
+{
+  "model": "products.product",
+  "pk": 9,
+  "fields": {
+    "name": "Смартфон Tecno Pova 2 4/64GB, черный",
+    "article": "297737670",
+    "price": "16980.00",
+    "rating": "0.00",
+    "flag_limit": false,
+    "category": 1
+  }
+},
+{
+  "model": "products.product",
+  "pk": 10,
+  "fields": {
+    "name": "Детский цифровой фотоаппарат розовый Кошечка/Котик с селфи-камерой + подарок / Подарок девочке / Подарок на праздник / Подарок на День рождения",
+    "article": "194830587",
+    "price": "3300.00",
+    "rating": "0.00",
+    "flag_limit": false,
+    "category": 2
+  }
+}
+]
