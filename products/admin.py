@@ -29,7 +29,7 @@ class CategoryAdmin(admin.ModelAdmin):
     actions = ("activate_categories", "deactivate_categories")
 
     @staticmethod
-    @admin.display(description=_("Иконка категории"))
+    @admin.display(description=_("иконка категории"))
     def icon_photo_view(obj: Category) -> str:
         return format_html(
             '<img src="{}" alt="{}" />',
@@ -38,7 +38,7 @@ class CategoryAdmin(admin.ModelAdmin):
         )
 
     @staticmethod
-    @admin.display(description=_("Описание"))
+    @admin.display(description=_("описание"))
     def description_view(obj: Category) -> str:
         return format_html(
             '<span title="{}">{}</span>'.format(
@@ -88,7 +88,7 @@ class ProductAdmin(admin.ModelAdmin):
     )
 
     @staticmethod
-    @admin.display(description=_("Категория каталога"))
+    @admin.display(description=_("категория каталога"))
     def category_view(obj: Product):
         """
         Выводит ссылку на категорию каталога
@@ -101,7 +101,7 @@ class ProductAdmin(admin.ModelAdmin):
         )
 
     @staticmethod
-    @admin.display(description=_("Рэйтинг"))
+    @admin.display(description=_("рэйтинг"))
     def rating_view(obj: Product):
         """
         Выводит рейтинг
@@ -120,7 +120,7 @@ class ProductAdmin(admin.ModelAdmin):
         )
 
     @staticmethod
-    @admin.display(description=_("Количество свойств"))
+    @admin.display(description=_("количество свойств"))
     def property_count_view(obj: Product):
         return obj.properties.count()
 
@@ -133,7 +133,7 @@ class PropertyAdmin(admin.ModelAdmin):
     search_fields = ("name", "tooltip")
 
     @staticmethod
-    @admin.display(description="Примечание")
+    @admin.display(description="примечание")
     def tooltip_view(obj: Property):
         return format_html(
             '<span title="{}">{}</span>'.format(

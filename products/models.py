@@ -9,14 +9,14 @@ class Category(models.Model):
     """
     activity = models.BooleanField(
         default=True,
-        verbose_name=_("Активность"),
+        verbose_name=_("активность"),
         help_text=_("Если категория активна, то она должна отображаться в главном меню сайта")
     )
     icon_photo = models.FileField(upload_to="categories/", max_length=500,
                                   validators=(FileExtensionValidator(["jpeg", "jpg", "png", "svg"]),),
-                                  verbose_name=_("Иконка категории"))
-    category_name = models.CharField(max_length=1000, unique=True, verbose_name=_("Название категории"))
-    description = models.TextField(blank=True, verbose_name=_("Описание"),
+                                  verbose_name=_("иконка категории"))
+    category_name = models.CharField(max_length=1000, unique=True, verbose_name=_("название категории"))
+    description = models.TextField(blank=True, verbose_name=_("описание"),
                                    help_text=_("Опишите, например, какие товары соответствуют данной категории"))
 
     class Meta:
@@ -32,19 +32,19 @@ class Product(models.Model):
     """
     Товар.
     """
-    name = models.CharField(max_length=1000, verbose_name=_("Название товара"))
-    article = models.CharField(max_length=100, verbose_name=_("Артикул"))
+    name = models.CharField(max_length=1000, verbose_name=_("название товара"))
+    article = models.CharField(max_length=100, verbose_name=_("артикул"))
     price = models.DecimalField(max_digits=12, decimal_places=2, default=1,
-                                validators=[MinValueValidator(1)], verbose_name=_("Цена"))
+                                validators=[MinValueValidator(1)], verbose_name=_("цена"))
     rating = models.DecimalField(max_digits=12, decimal_places=2, default=0,
-                                 validators=[MinValueValidator(0)], verbose_name=_("Рэйтинг"))
-    flag_limit = models.BooleanField(default=False, verbose_name=_("Товар заканчивается"))
+                                 validators=[MinValueValidator(0)], verbose_name=_("рэйтинг"))
+    flag_limit = models.BooleanField(default=False, verbose_name=_("товар заканчивается"))
     category = models.ForeignKey("Category", on_delete=models.CASCADE,
                                  related_name="products", related_query_name="product",
-                                 verbose_name=_("Категория каталога"))
+                                 verbose_name=_("категория каталога"))
     properties = models.ManyToManyField("Property", through="PropertyProduct",
                                         related_name="products", related_query_name="product",
-                                        verbose_name=_("Свойства товара"))
+                                        verbose_name=_("свойства товара"))
 
     class Meta:
         verbose_name = _("товар")
@@ -70,10 +70,10 @@ class Property(models.Model):
     """
     Свойство товара.
     """
-    name = models.CharField(max_length=300, unique=True, verbose_name=_("Имя свойства"))
+    name = models.CharField(max_length=300, unique=True, verbose_name=_("имя свойства"))
     tooltip = models.CharField(max_length=1000, blank=True, default='',
                                help_text=_("Опишите подробнее, что это за свойство товара"),
-                               verbose_name=_("Примечание"))
+                               verbose_name=_("примечание"))
 
     class Meta:
         verbose_name = _("свойство товара")
@@ -92,16 +92,16 @@ class PropertyProduct(models.Model):
     product = models.ForeignKey("Product", on_delete=models.CASCADE,
                                 related_name="product_properties",
                                 related_query_name="product_property",
-                                verbose_name=_("Товар"))
+                                verbose_name=_("товар"))
     property = models.ForeignKey("Property", on_delete=models.CASCADE,
                                  related_name="product_properties",
                                  related_query_name="product_property",
-                                 verbose_name=_("Свойство товара")
+                                 verbose_name=_("свойство товара")
                                  )
 
     # дополнительные данные
     value = models.CharField(max_length=1000, null=True, blank=True, default=None,
-                             verbose_name=_("Значение свойства"))
+                             verbose_name=_("значение свойства"))
 
     class Meta:
         verbose_name = _("параметр свойства товара")
