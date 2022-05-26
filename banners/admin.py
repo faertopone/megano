@@ -1,8 +1,12 @@
 from django.contrib import admin
+from django.db.models import QuerySet
+from django.http import HttpRequest
+from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from .models import Banners
 from .forms import BannersForm
 from django.utils.translation import gettext_lazy as _
+from django.template.defaultfilters import truncatewords
 
 # Админ панель для создания баннера
 @admin.register(Banners)
@@ -30,35 +34,44 @@ class BannersAdmin(admin.ModelAdmin):
             'fields': (('is_active'),)
         }),
 
-
     )
 
-    def active(self, requests, queryset ):
-        queryset.update(is_active=True)
+    @admin.display(description=_("активировать баннер"))
+    def active(self, request: HttpRequest, queryset: QuerySet):
+        """
+        Активирует выбранный баннер
+        """
+        update = queryset.update(is_active=True)
+        self.message_user(request, f'Активирован {update} баннер!')
 
-    def not_active(self, requests, queryset):
-        queryset.update(is_active=False)
+    @admin.display(description=_("отключить баннер"))
+    def not_active(self, request: HttpRequest, queryset: QuerySet):
+        """
+        Отключает выбранный баннер
+        """
+        update = queryset.update(is_active=False)
+        self.message_user(request, f'Выключен {update} баннер!')
 
-    active.short_description = _('Включить баннер')
-    not_active.short_description = _('Выключить баннер')
 
-    #Если фотографии нету, выберем в описании
-    def banner_photo(self, obj):
+    @staticmethod
+    @admin.display(description=_('изображение баннера'))
+    def banner_photo(obj: Banners):
         if not obj.photo:
             return 'Нету фотографии'
         return mark_safe('<img src="{}" width="50" height="50" />'.format(obj.photo.url))
 
-    banner_photo.short_description = _('Изображение баннера')
 
-    # Функция для отображения описания, только первые 30 символов
-    def min_description_admin(self, obj):
-        text_str = obj.description
-        text = list(text_str)
-        if len(text) > 30:
-            text_str = obj.description[:30] + '...'
-        return text_str
+    @staticmethod
+    @admin.display(description=_('Мини описание'))
+    def min_description_admin(obj: Banners):
+        return format_html(
+            '<span title="{}">{}</span>'.format(
+                obj.description,
+                truncatewords(obj.description, 5)
+            )
+        )
 
-    min_description_admin.short_description = _('Мини описание')
+
 
 
 
