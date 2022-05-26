@@ -25,6 +25,7 @@ wheels/
 pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
+.vagrant/
 .installed.cfg
 *.egg
 MANIFEST
