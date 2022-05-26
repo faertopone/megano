@@ -1,6 +1,10 @@
 from django.urls import path
 
-from .views import PaymentView, GoodsView, DiscountView, HistoryView, ProductComment, ProductComparison
+from .views import PaymentView, GoodsView, DiscountView, HistoryView, ProductComment, ProductComparison, \
+                   ProductListView
+
+
+app_name = "products"
 
 urlpatterns = [
     path("payment/", PaymentView.as_view(), name="payment"),
@@ -9,4 +13,5 @@ urlpatterns = [
     path("historyview/", HistoryView.as_view(), name="history view"),
     path("comment/<int:pk>/", ProductComment.as_view(), name="product comment"),
     path("comparison/<int:pk>/", ProductComparison.as_view(), name="product comparison"),
+    path("category/<int:pk>", ProductListView.as_view(), name="product_list"),
 ]

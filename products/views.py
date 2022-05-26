@@ -1,5 +1,7 @@
-from django.views import View
+from django.views import View, generic
 from django.shortcuts import render, HttpResponse
+
+from .models import Category, Product
 
 
 class GoodsView(View):
@@ -73,3 +75,27 @@ class ProductComparison(View):
              }
         ]
         return render(request, 'products/historyview.html', context=context)
+
+
+class ProductListView(generic.ListView):
+    template_name = "products/product_list.html"
+    model = Product
+    context_object_name = "products"
+    paginate_by = 10  # TODO: ссылки на страницы пагинации
+
+    category_id: int
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.__class__.category_id = self.request.resolver_match.kwargs["pk"]
+
+    def get_queryset(self):
+        return Product.objects.select_related("category") \
+            .filter(category=self.category_id)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        ctx = super().get_context_data(object_list=object_list, **kwargs)
+
+        # Добавляем категорию в контекст
+        ctx["category"] = Category.objects.get(pk=self.category_id)
+        return ctx

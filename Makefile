@@ -44,4 +44,4 @@ runserver:
 
 # Flake8
 flake8:
-	cd /vagrant && python3 -m flake8
+	cd /vagrant && python3 -m flake8 --exclude migrations
