@@ -139,3 +139,6 @@ dmypy.json
 !**/migrations/__init__.py
 /Инструкция.txt
 /my_setting.txt
+
+# Media
+media/*

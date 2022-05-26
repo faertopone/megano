@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <!--END-->
 <!--END--><!DOCTYPE html><!--[if IE 7]>
 <html class="ie7" lang="ru">
@@ -22,7 +21,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {% block head %}
-                <title>Megano</title>
+                <title>{% block title %}{{ _('Megano') }}{% endblock title %}</title>
           <meta name="description" content="Описание страницы">
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">

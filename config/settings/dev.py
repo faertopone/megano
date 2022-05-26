@@ -31,10 +31,11 @@ LOGGING = {
     },
 }
 
-INSTALLED_APPS.append('debug_toolbar')
-INSTALLED_APPS.append('django_extensions')
+INSTALLED_APPS.append('debug_toolbar')  # noqa: F405
+INSTALLED_APPS.append('django_extensions')  # noqa: F405
+INSTALLED_APPS.append('fixturemedia')  # noqa: F405
 
-MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: F405
 
 try:
     INTERNAL_IPS.append('127.0.0.1')  # noqa: F405

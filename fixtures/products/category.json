@@ -1,0 +1,42 @@
+[
+{
+  "model": "products.category",
+  "pk": 1,
+  "fields": {
+    "activity": true,
+    "icon_photo": "categories/8_r1xl5W3.svg",
+    "category_name": "Смартфоны",
+    "description": ""
+  }
+},
+{
+  "model": "products.category",
+  "pk": 2,
+  "fields": {
+    "activity": true,
+    "icon_photo": "categories/6.svg",
+    "category_name": "Камеры",
+    "description": ""
+  }
+},
+{
+  "model": "products.category",
+  "pk": 3,
+  "fields": {
+    "activity": true,
+    "icon_photo": "categories/4.svg",
+    "category_name": "Одежда",
+    "description": ""
+  }
+},
+{
+  "model": "products.category",
+  "pk": 4,
+  "fields": {
+    "activity": false,
+    "icon_photo": "categories/2_2iNKhne.svg",
+    "category_name": "Аксессуары",
+    "description": ""
+  }
+}
+]
