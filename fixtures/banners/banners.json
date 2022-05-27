@@ -4,13 +4,11 @@
   "pk": 24,
   "fields": {
     "name": "Баннер 1",
-    "name_product": "Видеокарта",
+    "product_banner": 2,
     "photo": "banners_photo/Баннер_1_photo_videoca.png",
-    "url_link": "skillbox.ru",
     "description": "Лучшая видеокарта в мире!",
     "is_active": true,
-    "creation_date": "2022-05-08T18:43:21.563Z",
-    "version": "2000"
+    "creation_date": "2022-05-08T18:43:21.563Z"
   }
 },
 {
@@ -18,13 +16,11 @@
   "pk": 25,
   "fields": {
     "name": "Баннер 2",
-    "name_product": "Квадракоптер",
+    "product_banner": 1,
     "photo": "banners_photo/Баннер_2_photo_slider.png",
-    "url_link": "skillbox.ru",
     "description": "С ним ваша жизнь станет лучше",
     "is_active": true,
-    "creation_date": "2022-05-08T18:43:45.477Z",
-    "version": "12"
+    "creation_date": "2022-05-08T18:43:45.477Z"
   }
 },
 {
@@ -32,13 +28,11 @@
   "pk": 26,
   "fields": {
     "name": "Баннер 3",
-    "name_product": "Ноутбук",
+    "product_banner": 2,
     "photo": "banners_photo/Баннер_3_photo_card.jpg",
-    "url_link": "skillbox.ru",
     "description": "Самый современный ноутбук в мире",
     "is_active": true,
-    "creation_date": "2022-05-08T18:44:14.845Z",
-    "version": "678"
+    "creation_date": "2022-05-08T18:44:14.845Z"
   }
 },
 {
@@ -46,13 +40,11 @@
   "pk": 27,
   "fields": {
     "name": "баннер 4",
-    "name_product": "ноутбук",
+    "product_banner": 1,
     "photo": "banners_photo/баннер_4_photo_card.jpg",
-    "url_link": "skillbox.ru",
     "description": "Тоже норм ноутбук  Тоже норм ноутбук Тоже норм ноутбук Тоже норм ноутбук Тоже норм ноутбук Тоже норм ноутбук  Тоже норм ноутбук Тоже норм ноутбук Тоже норм ноутбук Тоже норм ноутбук",
     "is_active": true,
-    "creation_date": "2022-05-08T18:44:53.378Z",
-    "version": "984"
+    "creation_date": "2022-05-08T18:44:53.378Z"
   }
 }
 ]

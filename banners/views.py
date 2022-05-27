@@ -8,7 +8,7 @@ class Index(View):
     def get(self, request):
         # Список случайных баннеров
         banner = BannersServices()
-        banners = banner.get_banners(max_banners=3)
+        banners = banner.get_banners()
         context = {'banners': banners}
 
         return render(request, 'index.html', context=context)

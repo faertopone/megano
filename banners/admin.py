@@ -4,6 +4,7 @@ from django.http import HttpRequest
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from .models import Banners
+from products.models import Product
 from .forms import BannersForm
 from django.utils.translation import gettext_lazy as _
 from django.template.defaultfilters import truncatewords
@@ -12,19 +13,16 @@ from django.template.defaultfilters import truncatewords
 @admin.register(Banners)
 class BannersAdmin(admin.ModelAdmin):
     form = BannersForm
-    list_display = ('name', 'id', 'url_link', 'banner_photo', 'min_description_admin', 'is_active', 'creation_date')
+    list_display = ('name', 'id', 'banner_photo', 'min_description_admin', 'is_active', 'creation_date')
     readonly_fields = ['banner_photo']
     list_filter = ['name', 'is_active', 'creation_date']
     actions = ['active', 'not_active']
-    search_fields = ['name']
+    search_fields = ['=name']
     fieldsets = (
         (_('Наименования банера и товара'), {
-            'fields': (('name', 'name_product', 'version'), )
+            'fields': (('name'), ('product_banner')),
         }),
-        (None, {
-            'fields': (('url_link'),)
-        }),
-        (_('Фотографии для баннера'), {
+        (_('Фотография для баннера'), {
             'fields': (('photo', 'banner_photo'),)
         }),
         (None, {
@@ -70,7 +68,6 @@ class BannersAdmin(admin.ModelAdmin):
                 truncatewords(obj.description, 5)
             )
         )
-
 
 
 
