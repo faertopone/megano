@@ -117,3 +117,33 @@ class PropertyProduct(models.Model):
 
     def __str__(self):
         return f"{self.property.name} = {self.value}"
+
+
+class ProductPhoto(models.Model):
+    """
+    Модель с фотографиями магазинов
+    """
+    photo = models.ImageField(upload_to='products_photo', default='default.jpg', verbose_name=_('product_photo'))
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('product'))
+
+    class Meta:
+        verbose_name = _('products photo')
+        verbose_name_plural = _('products photos')
+
+
+class UserReviews(models.Model):
+    """
+    Модель добавления комментария к товару
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('пользователь'))
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('товар'))
+    reviews = models.TextField(max_length=1024, blank=True, verbose_name=_('отзыв'))
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("комментарий к товару")
+        verbose_name_plural = _("комментарии к товарам")
+        ordering = ("product",)
+
+    def __str__(self):
+        return f"{self.reviews}"
