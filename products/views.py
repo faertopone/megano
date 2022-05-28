@@ -57,10 +57,13 @@ def product_detail_review(request, *args, **kwargs):
     Отзыв могут оставлять только зарегистрированные пользователи.
     """
     context = dict()
+    product_info_set = Product.objects.prefetch_related(
+        "productphoto_set", "userreviews_set",
+    ).get(id=int(kwargs['pk']))
+    context['product'] = product_info_set
     context['properties'] = PropertyProduct.objects.filter(product_id=int(kwargs['pk'])).select_related('product')
-    context['reviews'] = UserReviews.objects.filter(product_id=int(kwargs['pk']))
-    context['product'] = context['properties'][0].product
-    context['photos'] = [i.photo.url for i in ProductPhoto.objects.filter(product_id=int(kwargs['pk']))]
+    context['reviews'] = [i for i in context['product'].userreviews_set.all()]
+    context['photos'] = [i.photo.url for i in context['product'].productphoto_set.all()]
     context['reviews_count'] = len(context['reviews'])
     # TODO здесь надо будет дорабатывать после окончательной работы над моделями,
     #  надо ещё добавить модель ProductShop
