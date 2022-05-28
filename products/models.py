@@ -18,6 +18,9 @@ class Category(models.Model):
     category_name = models.CharField(max_length=1000, unique=True, verbose_name=_("название категории"))
     description = models.TextField(blank=True, verbose_name=_("описание"),
                                    help_text=_("Опишите, например, какие товары соответствуют данной категории"))
+    properties = models.ManyToManyField("Property", through="PropertyCategory",
+                                        related_name="categories", related_query_name="category",
+                                        verbose_name=_("свойства товаров в категории"))
 
     class Meta:
         verbose_name = _("категория каталога товаров")
@@ -117,6 +120,40 @@ class PropertyProduct(models.Model):
 
     def __str__(self):
         return f"{self.property.name} = {self.value}"
+
+
+class PropertyCategory(models.Model):
+    """
+    Связующая модель для категорий и их свойств.
+    """
+    # связи
+    category = models.ForeignKey("Category", on_delete=models.CASCADE,
+                                 related_name="category_properties",
+                                 related_query_name="category_property",
+                                 verbose_name=_("категория"))
+    property = models.ForeignKey("Property", on_delete=models.CASCADE,
+                                 related_name="category_properties",
+                                 related_query_name="category_property",
+                                 verbose_name=_("свойство товаров в категории")
+                                 )
+
+    # дополнительные данные
+    # TODO: если нужно
+
+    class Meta:
+        verbose_name = _("параметр свойства категории")
+        verbose_name_plural = _("параметры свойства категории")
+        ordering = ("pk",)
+
+        constraints = (
+            models.UniqueConstraint(
+                fields=("category", "property"),
+                name="%(app_label)s_%(class)s_prop_unique_in_category",
+            ),
+        )
+
+    def __str__(self):
+        return f"{self.property.name}"
 
 
 class ProductPhoto(models.Model):
