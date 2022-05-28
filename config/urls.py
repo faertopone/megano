@@ -25,7 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('app_webshop.urls')),
     path('i18n', include('django.conf.urls.i18n')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] 
 
 if settings.DEBUG:
     urlpatterns += [
