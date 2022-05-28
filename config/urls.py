@@ -24,6 +24,8 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('app_webshop.urls')),
+    path("products/", include("products.urls")),
+    path("shops/", include("shops.urls")),
     path('i18n', include('django.conf.urls.i18n')),
 ] 
 
