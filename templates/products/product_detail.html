@@ -186,43 +186,4 @@
             </div>
         </div>
     </div>
-    <h1>Название: {{product.name}}</h1>
-    <p>Содержание: {{object.content}}</p>
-    <p>Дата публикации: {{object.date_of_publish}}</p>
-    <p>Автор: {{ object.author }}</p>
-    <div>
-        <span>Теги:</span>
-        {% for tag in tags %}
-            <a href="{% url 'news-tag' tag.pk %}">{{tag.substance}}</a>
-        {% endfor %}
-    </div>
-    <a href="{% url 'news-edit' news.pk %}">Редактировать новость</a>
-    <div>
-        <a href="{% url 'news' %}">Вернуться к списку новостей</a>
-    </div>
-
-    <h2>Комментарии</h2>
-    {% if comments %}
-    {% for comment in comments %}
-        {% if comment.name %}
-            <p>{{comment.name}}:</p>
-        {% else %}
-            <p>Аноним:</p>
-        {% endif %}
-        <p>{{comment.comment}}</p>
-    {% endfor %}
-    {% else %}
-        <p>Комментариев нет</p>
-    {% endif %}
-
-    <h2>Добавить комментарий</h2>
-    <form method="post">
-        {% csrf_token %}
-        {% if request.user.is_authenticated %}
-            <p>{{ comment_form.comment}}</p>
-        {% else %}
-            {{ comment_form.as_p }}
-        {% endif %}
-        <button type="submit">Добавить комментарий</button>
-    </form>
 {% endblock %}
