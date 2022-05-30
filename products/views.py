@@ -1,5 +1,12 @@
-from django.views import View
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, HttpResponse
+from django.urls import reverse
+from django.views import View
+from django.views.generic import DetailView, ListView
+from rest_framework.request import Request
+
+from models import Product, Tag
+from products.forms import ReviewForm
 
 
 class GoodsView(View):
@@ -18,6 +25,48 @@ class DiscountView(View):
     #  так как скидка возможно будет вычисляемым полем если она есть,
     #  и автоматически применяться к товарам магазина
     pass
+
+
+class ProductDetailView(DetailView):
+    """ Представление для отображения детальной страницы товара """
+    model = Product
+    form_class = ReviewForm
+    template_name = "products/product_detail.html"
+
+
+    def get_context_data(self, **kwargs):
+        """ Отдаёт содержание страницы при get запросе """
+        context = super().get_context_data(**kwargs)
+        context['reviews'] = self.object.reviews.all()
+        context['review_form'] = ReviewForm()
+        context['shops'] = self.object.shops.all()
+        context['tags'] = self.object.tags.all()
+        return context
+
+    def post(self, request: Request, pk: int):
+        """ Добавление комментария к товару """
+        product = self.get_object()
+        review_form = ReviewForm(request.POST)
+
+        if review_form.is_valid():
+            review = review_form.save(commit=False)
+            review.product = product
+            if request.user.is_authenticated:
+                review.username = request.user.username
+                review.email = request.user.email
+            review.save()
+        return HttpResponseRedirect(reverse('review-detail', args=[pk]))
+
+
+class ProductTagListView(ListView):
+    model = Tag
+    template_name = 'products/products_list.html'
+
+    def get_context_data(self, **kwargs):
+        """ Показывает список товаров по get запросу """
+        context = super().get_context_data(**kwargs)
+        context['products'] = Tag.objects.get(id=self.kwargs['pk']).products.all()
+        return context
 
 
 class HistoryView(View):
@@ -70,6 +119,6 @@ class ProductComparison(View):
                 'new_price': '2999',
                 'old_price': '3000',
                 'sale': '-1%'
-             }
+            }
         ]
         return render(request, 'products/historyview.html', context=context)
