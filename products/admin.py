@@ -1,4 +1,7 @@
-from django.contrib import admin  # noqa: F401
+from typing import Optional
+
+import autocomplete_all
+from django.contrib import admin
 from django.contrib.admin import TabularInline
 from django.db.models import QuerySet
 from django.http import HttpRequest
@@ -7,12 +10,27 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from .models import Category, Product, Property, PropertyProduct
+from .models import Category, Product, Property, PropertyProduct, PropertyCategory, UserReviews, ProductPhoto
 
 
 # inlines
-class PropertyProductInline(TabularInline):
+class PropertyProductInline(autocomplete_all.TabularInline):
     model = PropertyProduct
+    extra = 0
+
+
+class PropertyCategoryInline(TabularInline):
+    model = PropertyCategory
+    extra = 0
+
+
+class ProductPhotoInline(TabularInline):
+    model = ProductPhoto
+    extra = 0
+
+
+class UserReviewsInline(TabularInline):
+    model = UserReviews
     extra = 0
 
 
@@ -20,11 +38,13 @@ class PropertyProductInline(TabularInline):
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display, list_display_links = (
-         ("category_name", "activity", "icon_photo_view", "description_view"),
+         ("category_name", "activity", "icon_photo_view", "description_view", "property_count_view"),
     ) * 2
 
     list_filter = ("activity",)
     search_fields = ("category_name", "description")
+
+    inlines = (PropertyCategoryInline,)
 
     actions = ("activate_categories", "deactivate_categories")
 
@@ -46,6 +66,11 @@ class CategoryAdmin(admin.ModelAdmin):
                 truncatewords(obj.description, 15)
             )
         )
+
+    @staticmethod
+    @admin.display(description=_("количество свойств"))
+    def property_count_view(obj: Category):
+        return obj.properties.count()
 
     @admin.display(description=_("Активировать выбранные категории"))
     def activate_categories(self, request: HttpRequest, queryset: QuerySet):
@@ -76,7 +101,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     readonly_fields = ("rating",)
 
-    inlines = (PropertyProductInline,)
+    inlines = (PropertyProductInline, ProductPhotoInline, UserReviewsInline)
 
     fieldsets = (
         (None, {
@@ -86,6 +111,9 @@ class ProductAdmin(admin.ModelAdmin):
             "fields": ("price", "flag_limit")
         }),
     )
+
+    class Media:
+        js = ('autocomplete_all/js/autocomplete_all.js', 'products/js/filter-props-by-category.js')
 
     @staticmethod
     @admin.display(description=_("категория каталога"))
@@ -110,7 +138,7 @@ class ProductAdmin(admin.ModelAdmin):
             color = "red"
         elif 100 < obj.rating <= 1000:
             color = "yellow"
-        elif obj.rating > 1000:
+        else:
             color = "green"
 
         return format_html(
@@ -126,7 +154,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 @admin.register(Property)
-class PropertyAdmin(admin.ModelAdmin):
+class PropertyAdmin(autocomplete_all.ModelAdmin):
     list_display = ("name", "tooltip_view")
     list_display_links = ("name",)
 
@@ -141,3 +169,11 @@ class PropertyAdmin(admin.ModelAdmin):
                 truncatewords(obj.tooltip, 15)
             )
         )
+
+    def get_search_results_ajax(self, queryset: QuerySet, referer: str, key: Optional[str], urlparams: dict):
+        if key and key is not None:
+            if referer.lower().startswith("products/product"):
+                # key - это значение id селекта, в котором выбираем свойство товара
+                if key.startswith("id_product_properties-") and key.endswith("-property"):
+                    queryset = queryset.prefetch_related("categories").filter(category=urlparams["category"][0])
+        return queryset

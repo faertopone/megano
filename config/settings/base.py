@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    "autocomplete_all",
     'accounts',
     'app_webshop',
     "products.apps.ProductsConfig",
