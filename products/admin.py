@@ -1,4 +1,6 @@
 from typing import Optional
+
+import autocomplete_all
 from django.contrib import admin
 from django.contrib.admin import TabularInline
 from django.db.models import QuerySet
@@ -8,17 +10,27 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from .models import Category, Product, Property, PropertyProduct, PropertyCategory
+from .models import Category, Product, Property, PropertyProduct, PropertyCategory, UserReviews, ProductPhoto
 
 
 # inlines
-class PropertyProductInline(TabularInline):
+class PropertyProductInline(autocomplete_all.TabularInline):
     model = PropertyProduct
     extra = 0
 
 
 class PropertyCategoryInline(TabularInline):
     model = PropertyCategory
+    extra = 0
+
+
+class ProductPhotoInline(TabularInline):
+    model = ProductPhoto
+    extra = 0
+
+
+class UserReviewsInline(TabularInline):
+    model = UserReviews
     extra = 0
 
 
@@ -89,7 +101,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     readonly_fields = ("rating",)
 
-    inlines = (PropertyProductInline,)
+    inlines = (PropertyProductInline, ProductPhotoInline, UserReviewsInline)
 
     fieldsets = (
         (None, {
@@ -100,7 +112,8 @@ class ProductAdmin(admin.ModelAdmin):
         }),
     )
 
-
+    class Media:
+        js = ('autocomplete_all/js/autocomplete_all.js', 'products/js/filter-props-by-category.js')
 
     @staticmethod
     @admin.display(description=_("категория каталога"))
@@ -139,3 +152,28 @@ class ProductAdmin(admin.ModelAdmin):
     def property_count_view(obj: Product):
         return obj.properties.count()
 
+
+@admin.register(Property)
+class PropertyAdmin(autocomplete_all.ModelAdmin):
+    list_display = ("name", "tooltip_view")
+    list_display_links = ("name",)
+
+    search_fields = ("name", "tooltip")
+
+    @staticmethod
+    @admin.display(description="примечание")
+    def tooltip_view(obj: Property):
+        return format_html(
+            '<span title="{}">{}</span>'.format(
+                obj.tooltip,
+                truncatewords(obj.tooltip, 15)
+            )
+        )
+
+    def get_search_results_ajax(self, queryset: QuerySet, referer: str, key: Optional[str], urlparams: dict):
+        if key and key is not None:
+            if referer.lower().startswith("products/product"):
+                # key - это значение id селекта, в котором выбираем свойство товара
+                if key.startswith("id_product_properties-") and key.endswith("-property"):
+                    queryset = queryset.prefetch_related("categories").filter(category=urlparams["category"][0])
+        return queryset

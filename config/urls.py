@@ -1,4 +1,3 @@
-import debug_toolbar
 """config URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -18,16 +17,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from django.urls import path, include
-from django.conf import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('app_webshop.urls')),
+    path("admin/", admin.site.urls),
+    path("accounts/", include("accounts.urls")),
+    path("", include("app_webshop.urls")),
     path("products/", include("products.urls")),
     path("shops/", include("shops.urls")),
-    path('i18n', include('django.conf.urls.i18n')),
-] 
+]
 
 if settings.DEBUG:
     urlpatterns += [
