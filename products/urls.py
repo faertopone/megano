@@ -10,5 +10,5 @@ urlpatterns = [
     path("comment/<int:pk>/", views.ProductComment.as_view(), name="product comment"),
     path("comparison/<int:pk>/", views.ProductComparison.as_view(), name="product comparison"),
     path('product_detail/<int:pk>/', views.ProductDetailView.as_view(), name='product-detail'),
-    path("products/", views.ProductTagListView.as_view(), name="product-tag")
+    path("products/<int:pk>/", views.ProductTagListView.as_view(), name="product-tag")
 ]
