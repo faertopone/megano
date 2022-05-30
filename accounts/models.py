@@ -11,7 +11,7 @@ class Client(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("пользователь")
     )
-    postcode = models.IntegerField(_("почтовый индекс"))
+    postcode = models.IntegerField(_("почтовый индекс"), blank=True, null=True)
     photo = models.ImageField(_("фотография"), upload_to='accounts/', null=True)
     phoneNumberRegex = RegexValidator(
         regex=r"^\+?7?\d{8,15}$",
@@ -21,11 +21,15 @@ class Client(models.Model):
         'контактный номер',
         validators=[phoneNumberRegex],
         max_length=16,
+        blank=True
     )
-    city = models.CharField(_('город'), max_length=256)
-    street = models.CharField(_("улица"), max_length=256)
-    house_number = models.IntegerField(_("номер дома"))
-    apartment_number = models.IntegerField(_("номер квартиры"))
+    city = models.CharField(_('город'), max_length=256, blank=True)
+    street = models.CharField(_("улица"), max_length=256, blank=True)
+    house_number = models.IntegerField(_("номер дома"), blank=True, null=True)
+    apartment_number = models.IntegerField(
+        _("номер квартиры"),
+        blank=True, null=True
+    )
     spent_money = models.DecimalField(
         _("потратил денег"),
         max_digits=9,
