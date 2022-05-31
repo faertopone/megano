@@ -1,0 +1,12 @@
+{%  extends 'base_templates/base.html'  %}
+{% block title %}{{ _('Восстановление пароля') }}{% endblock title %}
+{% block content %}
+    {% if 'email' in request.path %}
+        <h3>{{ _('Проверьте почту. Вам отправлена инструкция по восстановлению пароля.') }} </h3>
+    {% elif  'complete' in request.path %}
+        <h3>{{ _('Пароль успешно восстановлен') }}</h3>
+        <div><a href="{{ url("login") }}">{{ _('Войти') }}</a></div>
+    {% endif%}
+{% endblock %}
+
+

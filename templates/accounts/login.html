@@ -1,0 +1,35 @@
+{%  extends 'base_templates/base.html'  %}
+{% block title %}{{ _('Вход на сайт') }}{% endblock title %}
+{% block content %}
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h3 class="Middle-title">{{ _('Вход') }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="wrap-content">
+    <form class="form" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+    {% if form.errors %}
+        <div class="form-error" >{{ _('Такого пользователя нет, проверьте данные') }}</div>
+    {% endif %}
+    <p>
+      <label for="id_username">{{ _('Имя пользователя:') }}</label>
+      <input type="text" name="username" maxlength="64" autofocus required id="id_username">
+    </p>
+    <p>
+      <label for="id_password1">{{ _('Пароль:') }}</label>
+      <input type="password" name="password" autocomplete="new-password" required id="id_password1">
+    </p>
+
+    <button class="btn btn_success wrap" type="submit">Войти</button>
+    <div>
+        <a href="{{ url('password_reset') }}">{{ _("Восстановить пароль")}} </a>
+    </div>
+
+    </form>
+    </div>
+{% endblock %}
+
+

@@ -1,0 +1,69 @@
+{%  extends 'base_templates/base.html'  %}
+{% block title %}{{ _('Регистрация') }}{% endblock title %}
+{% block content %}
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h3 class="Middle-title">{{ _('Регистрация') }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="wrap-content">
+    <form class="form" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+    <p>
+      <label for="id_username">{{ _('Имя пользователя:') }}</label>
+      {% if not form.errors.username %}
+         <input type="text" name="username" maxlength="64" autofocus required id="id_username">
+      {% else  %}
+        <input class="form-input_error" type="text" name="username" maxlength="64" autofocus required id="id_username">
+        <div class="form-error" >{{  form.errors.username }}</div>
+      {% endif %}
+
+    </p>
+
+    <p>
+      <label for="id_email">Email:</label>
+      {% if not form.errors.email %}
+         <input type="email" name="email" required id="id_email">
+      {% else  %}
+        <input class="form-input_error" type="email" name="email" required id="id_email">
+        <div class="form-error" >{{  form.errors.email }}</div>
+      {% endif %}
+    </p>
+
+    <p>
+      <label for="id_password1">{{ _('Пароль:') }}</label>
+      {% if not form.errors.password2 %}
+        <input type="password" name="password1" autocomplete="new-password" required id="id_password1">
+      {% else %}
+        <input class="form-input_error" type="password" name="password1" autocomplete="new-password" required id="id_password1">
+        {% for error in form.errors.password2 %}
+            {% if 'не совпадают' not in error %}
+            <li class="form-error">{{ error }}</li>
+            {% endif %}
+        {% endfor %}
+      {% endif %}
+    </p>
+
+    <p>
+      <label for="id_password2">{{ _('Подтверждение пароля:') }}</label>
+      {% if not form.errors.password2 %}
+        <input type="password" name="password2" autocomplete="new-password" required id="id_password2">
+      {% else %}
+        <input class="form-input_error" type="password" name="password2" autocomplete="new-password" required id="id_password2">
+        {% for error in form.errors.password2 %}
+          {% if 'не совпадают' in error %}
+            <li class="form-error">{{ error }}</li>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </p>
+
+    <button class="btn btn_success" type="submit">Зарегистрироваться</button>
+    </form>
+    </div>
+{% endblock %}
+
+
