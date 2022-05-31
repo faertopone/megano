@@ -1,11 +1,13 @@
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponseNotFound
+from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_str
+from django.views import View
 
 from accounts.forms import RegistrationForm
 from accounts.models import Client
@@ -50,3 +52,21 @@ def account_activate(request, uidb64, token):
         return redirect('/')
     else:
         return HttpResponseNotFound('Ошибка, обратитесь в службу поддержки')
+
+
+class ProfileView(View):
+    """
+    Класс личного кабинета пользователя, который авторизован, и не является суперпользователем.
+    """
+
+    def get(self, request):
+        user_info = request.user
+        # Проверим, что пользователь авторизован и не супер пользователь
+        if user_info.is_authenticated and not user_info.is_superuser:
+            client = Client.objects.select_related('user').get(user=user_info)
+        else:
+            return HttpResponseRedirect(reverse('login'))
+
+        context = {'client': client}
+
+        return render(request, 'accounts/profile.html', context=context)

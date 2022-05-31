@@ -58,3 +58,5 @@ class PwdResetForm(PasswordResetForm):
             subject='Восстановление пароля',
             template='password_reset'
         )
+
+
