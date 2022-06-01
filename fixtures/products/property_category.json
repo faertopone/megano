@@ -4,7 +4,9 @@
   "pk": 1,
   "fields": {
     "category": 1,
-    "property": 15
+    "property": 15,
+    "filtered": false,
+    "filter_position": 1
   }
 },
 {
@@ -12,7 +14,9 @@
   "pk": 2,
   "fields": {
     "category": 1,
-    "property": 14
+    "property": 14,
+    "filtered": false,
+    "filter_position": 1
   }
 },
 {
@@ -20,7 +24,9 @@
   "pk": 3,
   "fields": {
     "category": 1,
-    "property": 11
+    "property": 11,
+    "filtered": true,
+    "filter_position": 2
   }
 },
 {
@@ -28,7 +34,9 @@
   "pk": 4,
   "fields": {
     "category": 1,
-    "property": 3
+    "property": 3,
+    "filtered": true,
+    "filter_position": 1
   }
 },
 {
@@ -36,7 +44,9 @@
   "pk": 5,
   "fields": {
     "category": 1,
-    "property": 6
+    "property": 6,
+    "filtered": true,
+    "filter_position": 3
   }
 },
 {
@@ -44,7 +54,9 @@
   "pk": 6,
   "fields": {
     "category": 1,
-    "property": 16
+    "property": 16,
+    "filtered": true,
+    "filter_position": 4
   }
 },
 {
@@ -52,7 +64,9 @@
   "pk": 7,
   "fields": {
     "category": 1,
-    "property": 13
+    "property": 13,
+    "filtered": false,
+    "filter_position": 1
   }
 },
 {
@@ -60,7 +74,9 @@
   "pk": 8,
   "fields": {
     "category": 2,
-    "property": 29
+    "property": 29,
+    "filtered": true,
+    "filter_position": 3
   }
 },
 {
@@ -68,7 +84,9 @@
   "pk": 9,
   "fields": {
     "category": 2,
-    "property": 3
+    "property": 3,
+    "filtered": true,
+    "filter_position": 1
   }
 },
 {
@@ -76,7 +94,9 @@
   "pk": 10,
   "fields": {
     "category": 2,
-    "property": 16
+    "property": 16,
+    "filtered": true,
+    "filter_position": 4
   }
 },
 {
@@ -84,7 +104,9 @@
   "pk": 11,
   "fields": {
     "category": 2,
-    "property": 6
+    "property": 6,
+    "filtered": true,
+    "filter_position": 3
   }
 },
 {
@@ -92,7 +114,9 @@
   "pk": 12,
   "fields": {
     "category": 2,
-    "property": 15
+    "property": 15,
+    "filtered": false,
+    "filter_position": 1
   }
 },
 {
@@ -100,7 +124,9 @@
   "pk": 13,
   "fields": {
     "category": 2,
-    "property": 11
+    "property": 11,
+    "filtered": true,
+    "filter_position": 2
   }
 },
 {
@@ -108,7 +134,9 @@
   "pk": 14,
   "fields": {
     "category": 2,
-    "property": 14
+    "property": 14,
+    "filtered": false,
+    "filter_position": 1
   }
 },
 {
@@ -116,7 +144,9 @@
   "pk": 15,
   "fields": {
     "category": 3,
-    "property": 7
+    "property": 7,
+    "filtered": true,
+    "filter_position": 3
   }
 },
 {
@@ -124,7 +154,9 @@
   "pk": 16,
   "fields": {
     "category": 3,
-    "property": 4
+    "property": 4,
+    "filtered": true,
+    "filter_position": 2
   }
 },
 {
@@ -132,7 +164,9 @@
   "pk": 17,
   "fields": {
     "category": 3,
-    "property": 13
+    "property": 13,
+    "filtered": true,
+    "filter_position": 2
   }
 },
 {
@@ -140,7 +174,9 @@
   "pk": 18,
   "fields": {
     "category": 3,
-    "property": 19
+    "property": 19,
+    "filtered": true,
+    "filter_position": 2
   }
 },
 {
@@ -148,7 +184,9 @@
   "pk": 19,
   "fields": {
     "category": 3,
-    "property": 3
+    "property": 3,
+    "filtered": true,
+    "filter_position": 1
   }
 },
 {
@@ -156,7 +194,9 @@
   "pk": 20,
   "fields": {
     "category": 3,
-    "property": 11
+    "property": 11,
+    "filtered": true,
+    "filter_position": 4
   }
 },
 {
@@ -164,7 +204,9 @@
   "pk": 21,
   "fields": {
     "category": 3,
-    "property": 6
+    "property": 6,
+    "filtered": true,
+    "filter_position": 4
   }
 },
 {
@@ -172,7 +214,9 @@
   "pk": 22,
   "fields": {
     "category": 3,
-    "property": 5
+    "property": 5,
+    "filtered": true,
+    "filter_position": 3
   }
 },
 {
@@ -180,7 +224,9 @@
   "pk": 23,
   "fields": {
     "category": 3,
-    "property": 10
+    "property": 10,
+    "filtered": false,
+    "filter_position": 1
   }
 },
 {
@@ -188,7 +234,9 @@
   "pk": 24,
   "fields": {
     "category": 3,
-    "property": 9
+    "property": 9,
+    "filtered": false,
+    "filter_position": 1
   }
 },
 {
@@ -196,7 +244,9 @@
   "pk": 25,
   "fields": {
     "category": 4,
-    "property": 3
+    "property": 3,
+    "filtered": true,
+    "filter_position": 1
   }
 },
 {
@@ -204,7 +254,9 @@
   "pk": 26,
   "fields": {
     "category": 4,
-    "property": 4
+    "property": 4,
+    "filtered": true,
+    "filter_position": 2
   }
 },
 {
@@ -212,7 +264,9 @@
   "pk": 27,
   "fields": {
     "category": 4,
-    "property": 5
+    "property": 5,
+    "filtered": true,
+    "filter_position": 3
   }
 },
 {
@@ -220,7 +274,9 @@
   "pk": 28,
   "fields": {
     "category": 4,
-    "property": 6
+    "property": 6,
+    "filtered": true,
+    "filter_position": 3
   }
 },
 {
@@ -228,7 +284,9 @@
   "pk": 29,
   "fields": {
     "category": 4,
-    "property": 7
+    "property": 7,
+    "filtered": true,
+    "filter_position": 2
   }
 },
 {
@@ -236,7 +294,9 @@
   "pk": 30,
   "fields": {
     "category": 4,
-    "property": 8
+    "property": 8,
+    "filtered": false,
+    "filter_position": 1
   }
 },
 {
@@ -244,7 +304,9 @@
   "pk": 31,
   "fields": {
     "category": 4,
-    "property": 9
+    "property": 9,
+    "filtered": false,
+    "filter_position": 1
   }
 },
 {
@@ -252,7 +314,9 @@
   "pk": 32,
   "fields": {
     "category": 4,
-    "property": 10
+    "property": 10,
+    "filtered": false,
+    "filter_position": 1
   }
 },
 {
@@ -260,7 +324,9 @@
   "pk": 33,
   "fields": {
     "category": 4,
-    "property": 12
+    "property": 12,
+    "filtered": false,
+    "filter_position": 1
   }
 },
 {
@@ -268,7 +334,9 @@
   "pk": 34,
   "fields": {
     "category": 4,
-    "property": 11
+    "property": 11,
+    "filtered": true,
+    "filter_position": 3
   }
 },
 {
@@ -276,7 +344,9 @@
   "pk": 35,
   "fields": {
     "category": 4,
-    "property": 13
+    "property": 13,
+    "filtered": true,
+    "filter_position": 2
   }
 },
 {
@@ -284,7 +354,9 @@
   "pk": 36,
   "fields": {
     "category": 4,
-    "property": 14
+    "property": 14,
+    "filtered": false,
+    "filter_position": 1
   }
 },
 {
@@ -292,7 +364,9 @@
   "pk": 37,
   "fields": {
     "category": 4,
-    "property": 15
+    "property": 15,
+    "filtered": false,
+    "filter_position": 1
   }
 },
 {
@@ -300,7 +374,9 @@
   "pk": 38,
   "fields": {
     "category": 4,
-    "property": 16
+    "property": 16,
+    "filtered": true,
+    "filter_position": 5
   }
 }
 ]

@@ -72,13 +72,13 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
    ```
    python manage.py loaddata fixtures\superuser.json
    ```
-   2. Загрузить категории каталога
+   2. Загрузить категории каталога и товары
    ```
-   python manage.py loaddata fixtures\products\category.json
+   python manage.py loaddata fixtures\products\category.json fixtures\products\product.json
    ```
-   3. Загрузить товары и их свойства
+   3. Загрузить свойства товаров и их связи с товарами и категориями
    ```
-   python manage.py loaddata fixtures\products\product.json fixtures\products\property.json fixtures\products\property_product.json
+   python manage.py loaddata fixtures\products\property.json fixtures\products\property_product.json fixtures\products\property_category.json
    ```
    
    :warning: Не забываем добавлять здесь, как загружать новые фикстуры!

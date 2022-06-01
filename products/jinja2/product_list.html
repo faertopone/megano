@@ -21,53 +21,12 @@
               <strong class="Section-title">{{ _('Фильтр') }}</strong>
             </header>
             <div class="Section-columnContent">
-              <form class="form" action="#" method="post">
-                <div class="form-group">
-                  <div class="range Section-columnRange">
-                    <input class="range-line" id="price" name="price" type="text" data-type="double" data-min="7" data-max="50" data-from="7" data-to="27"/>
-                    <div class="range-price">{{ _('Цена') }}:&#32;
-                      <div class="rangePrice"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <input class="form-input form-input_full" id="title" name="title" type="text" placeholder="{{ _('Название') }}"/>
-                </div>
-                <div class="form-group">
-                  <!-- - var options = setOptions(items, ['value', 'selected', 'disabled']);-->
-                  <select class="form-select">
-                    <option value="seller" selected="selected" disabled="disabled">{{ _('Продавец') }}
-                    </option>
-                    <option value="kkk">Kkkk
-                    </option>
-                    <option value="sdfsdf">sdfsdf
-                    </option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="toggle">
-                    <input type="checkbox"/><span class="toggle-box"></span><span class="toggle-text">{{ _('Только товары в наличии') }}</span>
-                  </label>
-                </div>
-                <div class="form-group">
-                  <label class="toggle">
-                    <input type="checkbox"/><span class="toggle-box"></span><span class="toggle-text">{{ _('С бесплатной доставкой') }}</span>
-                  </label>
-                </div>
-                <div class="form-group">
-                  <div class="buttons"><a class="btn btn_square btn_dark btn_narrow" href="#">{{ _('Фильтр') }}</a>
-                  </div>
+              <form method="get">
+                {{ filter.form.as_p() }}
+                <div class="buttons">
+                  <input class="btn btn_square btn_dark btn_narrow" type="submit" value="{{ _('Фильтр') }}">
                 </div>
               </form>
-            </div>
-          </div>
-          <div class="Section-columnSection">
-            <header class="Section-header">
-              <strong class="Section-title">{{ _('Популярные тэги') }}</strong>
-            </header>
-            <div class="Section-columnContent">
-              <div class="buttons"><a class="btn btn_default btn_sm" href="#">Video</a><a class="btn btn_default btn_sm" href="#">Development</a><a class="btn btn_default btn_sm" href="#">Gaming</a><a class="btn btn_default btn_sm" href="#">Asus</a><a class="btn btn_default btn_sm" href="#">Development</a><a class="btn btn_default btn_sm" href="#">Video</a>
-              </div>
             </div>
           </div>
         </div>

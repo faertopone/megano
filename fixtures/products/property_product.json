@@ -529,5 +529,41 @@
     "property": 6,
     "value": "Розовый"
   }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 63,
+  "fields": {
+    "product": 8,
+    "property": 6,
+    "value": "Черный"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 64,
+  "fields": {
+    "product": 8,
+    "property": 11,
+    "value": "Китай"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 65,
+  "fields": {
+    "product": 9,
+    "property": 6,
+    "value": "Черный"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 66,
+  "fields": {
+    "product": 9,
+    "property": 11,
+    "value": "Китай"
+  }
 }
 ]

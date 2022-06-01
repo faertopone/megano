@@ -4,7 +4,8 @@
   "pk": 3,
   "fields": {
     "name": "Тип",
-    "tooltip": ""
+    "tooltip": "",
+    "alias": "product_type"
   }
 },
 {
@@ -12,7 +13,8 @@
   "pk": 4,
   "fields": {
     "name": "Пол",
-    "tooltip": ""
+    "tooltip": "",
+    "alias": "gender"
   }
 },
 {
@@ -20,7 +22,8 @@
   "pk": 5,
   "fields": {
     "name": "Коллекция",
-    "tooltip": ""
+    "tooltip": "",
+    "alias": "collection"
   }
 },
 {
@@ -28,7 +31,8 @@
   "pk": 6,
   "fields": {
     "name": "Цвет",
-    "tooltip": ""
+    "tooltip": "",
+    "alias": "color"
   }
 },
 {
@@ -36,7 +40,8 @@
   "pk": 7,
   "fields": {
     "name": "Сезон",
-    "tooltip": ""
+    "tooltip": "",
+    "alias": "season"
   }
 },
 {
@@ -44,7 +49,8 @@
   "pk": 8,
   "fields": {
     "name": "Ширина, см",
-    "tooltip": ""
+    "tooltip": "",
+    "alias": "width_cm"
   }
 },
 {
@@ -52,7 +58,8 @@
   "pk": 9,
   "fields": {
     "name": "Российский размер",
-    "tooltip": ""
+    "tooltip": "",
+    "alias": "russian_size"
   }
 },
 {
@@ -60,7 +67,8 @@
   "pk": 10,
   "fields": {
     "name": "Размер производителя",
-    "tooltip": ""
+    "tooltip": "",
+    "alias": "manufacturer_size"
   }
 },
 {
@@ -68,7 +76,8 @@
   "pk": 11,
   "fields": {
     "name": "Страна-изготовитель",
-    "tooltip": ""
+    "tooltip": "",
+    "alias": "manufacturer_country"
   }
 },
 {
@@ -76,7 +85,8 @@
   "pk": 12,
   "fields": {
     "name": "Длина изделия, см",
-    "tooltip": ""
+    "tooltip": "",
+    "alias": "product_length_cm"
   }
 },
 {
@@ -84,7 +94,8 @@
   "pk": 13,
   "fields": {
     "name": "Материал",
-    "tooltip": ""
+    "tooltip": "",
+    "alias": "material"
   }
 },
 {
@@ -92,7 +103,8 @@
   "pk": 14,
   "fields": {
     "name": "Размеры, мм",
-    "tooltip": ""
+    "tooltip": "",
+    "alias": "size_mm"
   }
 },
 {
@@ -100,7 +112,8 @@
   "pk": 15,
   "fields": {
     "name": "Вес товара, г",
-    "tooltip": ""
+    "tooltip": "",
+    "alias": "weight"
   }
 },
 {
@@ -108,7 +121,8 @@
   "pk": 16,
   "fields": {
     "name": "Гарантийный срок",
-    "tooltip": "Гарантийный срок – это период, в течение которого изготовитель гарантирует качество товара и обязуется принять данный товар у потребителя для проведения проверки качества (экспертизы) и выполнения предусмотренных законом требований."
+    "tooltip": "Гарантийный срок – это период, в течение которого изготовитель гарантирует качество товара и обязуется принять данный товар у потребителя для проведения проверки качества (экспертизы) и выполнения предусмотренных законом требований.",
+    "alias": "guarantee_period"
   }
 },
 {
@@ -116,7 +130,8 @@
   "pk": 19,
   "fields": {
     "name": "Рост",
-    "tooltip": ""
+    "tooltip": "",
+    "alias": "growth"
   }
 },
 {
@@ -124,7 +139,8 @@
   "pk": 29,
   "fields": {
     "name": "Вспышка",
-    "tooltip": ""
+    "tooltip": "",
+    "alias": "flash"
   }
 }
 ]

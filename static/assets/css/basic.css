@@ -2536,3 +2536,19 @@ button.link {
 .wrap-content {
   margin: 0 auto;
 }
+.Section-columnContent p > label {
+    font-weight: bold;
+}
+.range-widget {
+  display: flex;
+  align-items: center;
+}
+input[type="text"].range-widget__input {
+  max-width: 38.7%;
+  min-width: 0;
+}
+.range-widget-sep {
+  margin-left: 5px;
+  margin-right: 5px;
+  font-weight: bold;
+}
