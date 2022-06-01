@@ -1,8 +1,12 @@
+from django.db import models
 from django.views import View, generic
 from django.shortcuts import render, HttpResponse
-from .models import Product, ProductPhoto, UserReviews, PropertyProduct
+from django_filters import ModelMultipleChoiceFilter
 
-from .models import Category, Product
+from .filters import filterset_factory, CustomFilterSet
+from .models import (Product, ProductPhoto, UserReviews, PropertyProduct,
+                     Category)
+from .widgets import CustomCheckboxSelectMultiple
 
 
 class GoodsView(View):
@@ -117,24 +121,66 @@ class ProductComparison(View):
 
 
 class ProductListView(generic.ListView):
-    template_name = "products/product_list.html"
+    template_name = "product_list.html"
     model = Product
     context_object_name = "products"
     paginate_by = 10  # TODO: ссылки на страницы пагинации
 
-    category_id: int
+    category: Category
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
-        self.__class__.category_id = self.request.resolver_match.kwargs["pk"]
+
+        category_id = self.request.resolver_match.kwargs["pk"]
+        self.__class__.category = Category.objects.get(pk=category_id)
 
     def get_queryset(self):
-        return Product.objects.select_related("category") \
-            .filter(category=self.category_id)
+        return Product.objects.select_related("category").filter(category=self.category.pk)
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        ctx = super().get_context_data(object_list=object_list, **kwargs)
+        # фильтр
+        category_filter = self._get_filter()
 
-        # Добавляем категорию в контекст
-        ctx["category"] = Category.objects.get(pk=self.category_id)
+        ctx = super().get_context_data(object_list=category_filter.qs, **kwargs)
+        # добавляем категорию в контекст
+        ctx["category"] = self.category
+        # добавляем фильтр в контекст
+        ctx["filter"] = category_filter
+
         return ctx
+
+    def _get_filter_class(self):
+        # выбираем все свойства, участвующие в фильтре в данной категории.
+        # При этом значения свойств должны быть не пустыми
+        cond = models.Q(category_property__filtered=True) & \
+               models.Q(product_property__product__category=self.category.pk) & \
+               ~models.Q(product_property__value__isnull=True) & \
+               ~models.Q(product_property__value="")
+        filtered_props = self.category.properties.filter(cond)\
+                             .order_by("category_property__filter_position", "name")\
+                             .distinct()
+
+        # формируем поля для filterset
+        filterset_fields = {}
+        for prop in filtered_props:
+            # Подзапросом выбираем все уникальные значения для одного свойства товара.
+            # Distinct не поможет, потому что он всегда добавляет id в select.
+            subquery = PropertyProduct.objects.filter(
+                product__category=self.category.pk,
+                property__alias=prop.alias
+            ).values("value").annotate(id=models.Min("id")).values("id")
+
+            filterset_fields[prop.alias] = ModelMultipleChoiceFilter(
+                label=prop.name,
+                field_name="product_property__value",
+                to_field_name="value",
+                widget=CustomCheckboxSelectMultiple,
+                queryset=PropertyProduct.objects.filter(id__in=subquery).only("value").order_by("value")
+            )
+
+        # возвращаем настроенный фильтр
+        return filterset_factory(self.model, filterset=CustomFilterSet, model_fields=(), fields=filterset_fields)
+
+    def _get_filter(self):
+        filter_class = self._get_filter_class()
+        return filter_class(self.request.GET, queryset=self.get_queryset())

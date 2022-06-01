@@ -12,25 +12,29 @@ apply-migrations: makemigrations migrate
 load-superuser:
 	cd /vagrant && python3 manage.py loaddata fixtures/superuser.json
 
-load-categories:
-	cd /vagrant && python3 manage.py loaddata fixtures/products/category.json
-
 load-products:
-	cd /vagrant && python3 manage.py loaddata fixtures/products/product.json \
-		fixtures/products/property.json \
-		fixtures/products/property_product.json
+	cd /vagrant && \
+		python3 manage.py loaddata fixtures/products/category.json fixtures/products/product.json
 
-load-fixtures: load-superuser load-categories load-products
+load-props:
+	cd /vagrant && \
+		python3 manage.py loaddata fixtures/products/property.json \
+			fixtures/products/property_product.json \
+			fixtures/products/property_category.json
+
+load-fixtures: load-superuser load-products load-props
 
 
 # Dump fixtures
 dump-categories:
-	cd /vagrant && python3 -Xtf8 manage.py dumpdata products.Category --indent 2 -o fixtures/products/category.json
+	cd /vagrant && \
+		python3 -Xtf8 manage.py dumpdata products.Category --indent 2 -o fixtures/products/category.json && \
+		python3 -Xtf8 manage.py dumpdata products.PropertyCategory --indent 2 -o fixtures/products/property_category.json
 
 dump-products:
 	cd /vagrant && \
-		python3 -Xtf8 manage.py dumpdata products.Product --indent 2 -o fixtures/products/product.json \
-		python3 -Xtf8 manage.py dumpdata products.Property --indent 2 -o fixtures/products/property.json \
+		python3 -Xtf8 manage.py dumpdata products.Product --indent 2 -o fixtures/products/product.json && \
+		python3 -Xtf8 manage.py dumpdata products.Property --indent 2 -o fixtures/products/property.json && \
 		python3 -Xtf8 manage.py dumpdata products.PropertyProduct --indent 2 -o fixtures/products/property_product.json
 
 dump-fixtures: dump-categories dump-products

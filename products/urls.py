@@ -14,5 +14,5 @@ urlpatterns = [
     path("comment/<int:pk>/", ProductComment.as_view(), name="product comment"),
     path("review/<int:pk>/", product_detail_review, name="product review"),
     path("comparison/<int:pk>/", ProductComparison.as_view(), name="product comparison"),
-    path("category/<int:pk>", ProductListView.as_view(), name="product_list"),
+    path("category/<int:pk>/", ProductListView.as_view(), name="product_list"),
 ]
