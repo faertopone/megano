@@ -132,8 +132,6 @@ class ProductListView(generic.ListView):
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
 
-        print(request.__dict__)
-
         category_id = self.request.resolver_match.kwargs["pk"]
         self.__class__.category = Category.objects.get(pk=category_id)
 
@@ -188,10 +186,10 @@ class ProductListView(generic.ListView):
         for prop in filtered_props:
             # Подзапросом выбираем все уникальные значения для одного свойства товара.
             # Distinct не поможет, потому что он всегда добавляет id в select.
-            subquery = PropertyProduct.objects.filter(
+            subquery = models.Subquery(PropertyProduct.objects.filter(
                 product__category=self.category.pk,
                 property__alias=prop.alias
-            ).values("value").annotate(id=models.Min("id")).values("id")
+            ).values("value").annotate(id=models.Min("id")).values("id"))
 
             filterset_fields[prop.alias] = ModelMultipleChoiceFilter(
                 label=prop.name,
