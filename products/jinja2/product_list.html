@@ -35,10 +35,8 @@
             <div class="Sort-title">{{ _('Сортировать по') }}:
             </div>
             <div class="Sort-variants">
-                <a class="Sort-sortBy Sort-sortBy_dec" href="#">{{ _('Популярности') }}</a>
-                <a class="Sort-sortBy" href="#">{{ _('Цене') }}</a>
-                <a class="Sort-sortBy" href="#">{{ _('Отзывам') }}</a>
-                <a class="Sort-sortBy Sort-sortBy_inc" href="#">{{ _('Новизне') }}</a>
+                <a class="Sort-sortBy {{ sort_params['rating']['class'] }}" data-sort="{{ sort_params['rating']['sort'] }}" href="">{{ _('Популярности') }}</a>
+                <a class="Sort-sortBy {{ sort_params['price']['class'] }}" data-sort="{{ sort_params['price']['sort'] }}" href="">{{ _('Цене') }}</a>
             </div>
           </div>
 

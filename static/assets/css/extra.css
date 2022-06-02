@@ -5138,6 +5138,7 @@ a.Cart-title {
   margin-right: 20px;
   position: relative;
   color: #424650;
+  border-bottom: 1px dotted #424650;
 }
 @media screen and (min-width: 990px) {
   .Sort-sortBy:hover {

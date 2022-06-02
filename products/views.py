@@ -132,21 +132,31 @@ class ProductListView(generic.ListView):
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
 
+        print(request.__dict__)
+
         category_id = self.request.resolver_match.kwargs["pk"]
         self.__class__.category = Category.objects.get(pk=category_id)
 
     def get_queryset(self):
-        return Product.objects.select_related("category").filter(category=self.category.pk)
+        products = Product.objects.select_related("category").filter(category=self.category.pk)
+
+        self.sort_params = self._get_sort_params()
+        if (order := self.sort_params["order_by"]) is not None:
+            products = products.order_by(order)
+
+        return products
 
     def get_context_data(self, *, object_list=None, **kwargs):
         # фильтр
         category_filter = self._get_filter()
 
         ctx = super().get_context_data(object_list=category_filter.qs, **kwargs)
-        # добавляем категорию в контекст
+        # категория каталога товаров
         ctx["category"] = self.category
-        # добавляем фильтр в контекст
+        # фильтр товаров
         ctx["filter"] = category_filter
+        # параметры сортировки
+        ctx["sort_params"] = self.sort_params
 
         return ctx
 
@@ -197,3 +207,55 @@ class ProductListView(generic.ListView):
     def _get_filter(self):
         filter_class = self._get_filter_class()
         return filter_class(self.request.GET, queryset=self.get_queryset())
+
+    def _get_sort_params(self):
+        # sorts
+        price_asc = "price_asc"
+        price_desc = "price_desc"
+        rating_asc = "rating_asc"
+        rating_desc = "rating_desc"
+
+        # CSS classes
+        sort_asc_class = "Sort-sortBy_inc"
+        sort_desc_class = "Sort-sortBy_dec"
+
+        # defaults
+        sort_params = {
+            "price": {
+                "sort": price_asc,
+                "class": None,
+            },
+            "rating": {
+                "sort": rating_asc,
+                "class": None,
+            },
+            "order_by": None,  # field name for model sorting
+        }
+
+        if sort_kind := self.request.GET.get("sort"):
+            if sort_kind == price_asc:
+                sort_params["price"].update({
+                    "sort": price_desc,
+                    "class": sort_desc_class,
+                })
+                sort_params["order_by"] = "price"
+            elif sort_kind == price_desc:
+                sort_params["price"].update({
+                    "sort": price_asc,
+                    "class": sort_asc_class,
+                })
+                sort_params["order_by"] = "-price"
+            elif sort_kind == rating_asc:
+                sort_params["rating"].update({
+                    "sort": rating_desc,
+                    "class": sort_desc_class,
+                })
+                sort_params["order_by"] = "rating"
+            elif sort_kind == rating_desc:
+                sort_params["rating"].update({
+                    "sort": rating_asc,
+                    "class": sort_asc_class,
+                })
+                sort_params["order_by"] = "-rating"
+
+        return sort_params

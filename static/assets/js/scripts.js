@@ -589,8 +589,19 @@ var Compare = function(){
 };
 Compare().init();
 var Sort = function(){
+    var $sort = $('.Sort');
+    var $sortVariants = $sort.find('.Sort-sortBy');
     return {
         init: function(){
+            $sortVariants.on('click', function($e){
+                // $e.preventDefault();
+                var $sortVal = $( $e.target).attr('data-sort');
+                if ($sortVal !== undefined) {
+                    const url = new URL(window.location);  // == window.location.href
+                    url.searchParams.set('sort', $sortVal);
+                    history.pushState(null, null, url);    // == url.href
+                }
+            });
         }
     };
 };
