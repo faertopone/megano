@@ -84,4 +84,8 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
       ```
       python manage.py loaddata fixtures\banners\banners.json
        ```
+      5. Загрузить 1 профиль (покупатель)  
+       ```
+      python manage.py loaddata fixtures/accounts/client.json
+       ```
       :warning: Не забываем добавлять здесь, как загружать новые фикстуры!
