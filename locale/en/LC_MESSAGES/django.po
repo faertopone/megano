@@ -1,0 +1,100 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-06 22:31+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\app_webshop\templates\base_templates\footer.html:7
+msgid ""
+"Не следует, однако забывать, что укрепление и развитие структуры позволяет "
+"выполнять важные задания по разработке существенных финансовых и "
+"административных условий. Равным образом реализация намеченных плановых "
+"заданий представляет собой интересный эксперимент проверки направлений "
+"прогрессивного развития."
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:24
+msgid "Полезные ссылки"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:29
+msgid "Моя корзина"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:31
+msgid "Доставка"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:33
+msgid "Информация о заказе"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:35
+msgid "Правила"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:37
+msgid "Условия"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:43
+msgid "Мой аккаунт"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:46
+msgid "Аксессуары"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:48
+msgid "Сумки"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:50
+msgid "Видеокамеры"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:52
+msgid "Одежда"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:54
+msgid "Электроника"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:56
+msgid "Мода"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:62
+msgid "Контакты"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:64
+msgid "Телефон"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:64
+msgid "Адрес"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:72
+msgid "Все права защищены"
+msgstr ""
+
+#: .\app_webshop\templates\base_templates\footer.html:74
+msgid "Прием платежей"
+msgstr ""
