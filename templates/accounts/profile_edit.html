@@ -9,7 +9,7 @@
           <h1 class="Middle-title">Профиль
           </h1>
           <ul class="breadcrumbs Middle-breadcrumbs">
-            <li class="breadcrumbs-item"><a href="index.html">home</a>
+            <li class="breadcrumbs-item"><a href="{{ url('index') }}"> {{ _('Домой') }}</a>
             </li>
             <li class="breadcrumbs-item breadcrumbs-item_current"><span>Профиль</span>
             </li>
@@ -28,13 +28,13 @@
             <div class="Section-columnContent">
               <div class="NavigateProfile">
                 <ul class="menu menu_vt">
-                  <li class="menu-item"><a class="menu-link" href="account.html">Личный кабинет</a>
+                  <li class="menu-item"><a class="menu-link" href="{{ url('profile') }}">{{ _('Личный кабинет') }}</a>
                   </li>
-                  <li class="menu-item"><a class="menu-link" href="profile.html">Профиль</a>
+                  <li class="menu-item"><a class="menu-link" href="{{ url('profile_edit', args=[client.pk]) }}">{{ _('Профиль') }}</a>
                   </li>
-                  <li class="menu-item"><a class="menu-link" href="historyorder.html">История заказов</a>
+                  <li class="menu-item"><a class="menu-link" href="#">{{ _('История заказов') }}</a>
                   </li>
-                  <li class="menu-item"><a class="menu-link" href="historyview.html">История просмотра</a>
+                  <li class="menu-item"><a class="menu-link" href="#">{{ _('История просмотра') }}</a>
                   </li>
                 </ul>
               </div>
@@ -43,50 +43,64 @@
         </div>
         <div class="Section-content">
           <div class="Profile">
-            <form class="form Profile-form" action="#" method="post">
+            <form class="form Profile-form"  method="post" enctype="multipart/form-data">
+            {# Jinja2 токен csrf_token #}
+             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            {{ form.id_client }}
               <div class="row">
                 <div class="row-block">
                   <div class="form-group">
-                    <label class="form-label" for="avatar">Аватар
+                    <label class="form-label" for="photo">{{ _('Аватар')}}
+                        {{ form.photo.errors }}
+
                     </label>
                     <div class="Profile-avatar">
-                      <div class="Profile-img"><img src="assets/img/content/home/card.jpg" alt="card.jpg"/>
+                      <div class="Profile-img">
+                           {% if client.photo %}
+                                <img src="{{ client.photo.url }}" alt="{{ client.user.first_name }}"/>
+                            {% else %}
+                               <img src="{{ static('assets/img/icons/user_icon_no_ava.svg') }}" alt="user_icon.svg"/>
+                            {% endif %}
                       </div>
-                      <label class="Profile-fileLabel" for="avatar">Выберите аватар
+                      <label class="Profile-fileLabel" for="photo">{{ _('Выберите аватар') }}
                       </label>
-                      <input class="Profile-file form-input" id="avatar" name="avatar" type="file"/>
+                      <input class="Profile-file form-input" id="id_photo" name="photo" type="file" data-validate="onlyImgAvatar">
+
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="name">ФИО
+                    <label class="form-label" for="name">{{ _('ФИО')}}
                     </label>
-                    <input class="form-input" id="name" name="name" type="text" value="Иванов Иван Иванович"/>
+                    {{ form.FIO }}
                   </div>
                 </div>
                 <div class="row-block">
                   <div class="form-group">
-                    <label class="form-label" for="phone">Телефон
+                    <label class="form-label" for="phone">{{ _('Телефон') }}
                     </label>
-                    <input class="form-input" id="phone" name="phone" type="text" value="+70000000000"/>
+                      {{ form.phone }}
+                      {{ form.phone.errors }}
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="mail">E-mail
+                    <label class="form-label" for="email"> {{ _('E-mail') }}
                     </label>
-                    <input class="form-input" id="mail" name="mail" type="text" value="send@test.test"/>
+                    {{ form.email }}
+                      {{ form.email.errors }}
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="password">Пароль
+                    <label class="form-label" for="password1">{{ _('Пароль') }}
                     </label>
-                    <input class="form-input" id="password" name="password" type="password" placeholder="Тут можно изменить пароль"/>
+                      {{ form.password1 }}
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="passwordReply">Подтверждение пароля
+                    <label class="form-label" for="password2">{{ _('Подтверждение пароля') }}
                     </label>
-                    <input class="form-input" id="passwordReply" name="passwordReply" type="password" placeholder="Введите пароль повторно"/>
+                    {{ form.password2 }}
+                      {{ form.password2.errors }}
                   </div>
                   <div class="form-group">
                     <div class="Profile-btn">
-                      <button class="btn btn_success">Сохранить
+                      <button type="submit" class="btn btn_success">{{ _('Сохранить') }}
                       </button>
                     </div>
                   </div>

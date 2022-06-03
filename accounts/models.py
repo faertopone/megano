@@ -12,7 +12,7 @@ class Client(models.Model):
         verbose_name=_("пользователь")
     )
     postcode = models.IntegerField(_("почтовый индекс"), blank=True, null=True)
-    photo = models.ImageField(_("фотография"), upload_to='accounts/', null=True)
+    photo = models.ImageField(_("фотография"), upload_to='accounts/', null=True, blank=True)
     phoneNumberRegex = RegexValidator(
         regex=r"^\+?7?\d{8,15}$",
         message='Введите корректный номер, без пробелов (+79999999999)'
@@ -38,9 +38,11 @@ class Client(models.Model):
     )
     is_seller = models.BooleanField(_("продавец"), default=False)
 
+    family = models.CharField(max_length=15, blank=True, default='', verbose_name=_('Фамилия'))
+
     class Meta:
         verbose_name = 'клиент'
         verbose_name_plural = 'клиенты'
 
     def __str__(self):
-        return self.user.first_name
+        return self.user.username

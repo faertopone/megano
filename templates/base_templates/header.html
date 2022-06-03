@@ -30,7 +30,7 @@
                         {{ _('Выйти') }}
                     </a>
                      |
-                    <a class="ControlPanel-title" href="#">
+                    <a class="ControlPanel-title" href="{{ url('profile') }}">
                         {{ _('Личный кабинет') }} {{ request.user.username }}
                     </a>
                 {% else %}
