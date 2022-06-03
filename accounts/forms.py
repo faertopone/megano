@@ -73,22 +73,26 @@ class ProfileEditForm(forms.Form):
     photo = forms.ImageField(required=False, label=False,
                              widget=forms.FileInput(attrs={'class': 'form-input', 'type': 'file'}),
                              validators=[FileExtensionValidator(allowed_extensions=('gif', 'jpg', 'png'))],
-    error_messages={'invalid_extension': 'Этот формат не поддерживается'})
+                             error_messages={'invalid_extension': 'Этот формат не поддерживается'})
     phone = forms.CharField(label=False, required=False,
                             widget=forms.TextInput(attrs={'class': 'form-input'}),
                             validators=[RegexValidator(
-        regex=r"^\+?7?\d{8,15}$",
-        message='Введите корректный номер, без пробелов (+79999999999)'
-    )])
+                                regex=r"^\+?7?\d{8,15}$",
+                                message='Введите корректный номер, без пробелов (+79999999999)')]
+                            )
     email = forms.EmailField(label=False, required=False,
                              widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': _('Ваш email')}))
     FIO = forms.CharField(label=False, required=False, max_length=100,
                           widget=forms.TextInput(attrs={'class': 'form-input'}))
     password1 = forms.CharField(label=False, required=False,
-                                widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': _('Тут можно изменить пароль')}))
+                                widget=forms.PasswordInput(attrs={
+                                        'class': 'form-input', 'placeholder': _('Тут можно изменить пароль')})
+                                )
     password2 = forms.CharField(label=False, required=False,
-                                widget=forms.PasswordInput(
-                                    attrs={'class': 'form-input', 'placeholder': _('Введите пароль повторно')}))
+                                widget=forms.PasswordInput(attrs={
+                                        'class': 'form-input', 'placeholder': _('Введите пароль повторно')
+                                    })
+                                )
 
     id_client = forms.IntegerField(widget=HiddenInput)
 
@@ -114,7 +118,6 @@ class ProfileEditForm(forms.Form):
                 if email == email_in_bd.email:
 
                     errors['email'] = ValidationError('Такой email уже занят')
-
 
         password1 = cleaned_data.get('password1')
         password2 = cleaned_data.get('password2')
