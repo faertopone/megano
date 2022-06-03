@@ -7,8 +7,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
 
-from accounts.forms import ProfileEditForm
-from accounts.models import Client
+from .models import Client
 
 
 def send_client_email(user_id, domain, subject, template):
@@ -30,44 +29,30 @@ def send_client_email(user_id, domain, subject, template):
     )
 
 
-def initial_form_profile(pk: int) -> list:
+def initial_form_profile(request: HttpRequest, pk: int) -> list:
     """
     Функция инициализирует начальные значения Профиля
     """
+    user = User.objects.get(id=request.user.id)
     client = Client.objects.select_related('user').get(pk=pk)
     initial_client = {
         'phone': client.phone,
         'email': client.user.email,
         'family_name_lastname': client.family_name_lastname,
     }
-    return [initial_client, client]
+    return [initial_client, client, user]
 
 
-def get_context(request: HttpRequest, pk: int) -> object:
-    """
-    Представления Профиля при запросе GET
-    """
-    user = request.user
-    initial_data = initial_form_profile(pk=pk)
-    form = ProfileEditForm(instance=user, initial=initial_data[0])
-    context = {'form': form,
-               'client': initial_data[1]}
-    return context
-
-
-def post_context(request: HttpRequest, pk: int) -> object:
+def post_context(request: HttpRequest, pk: int, form) -> object:
     """
      Представления Профиля при запросе POST и изменения данных, которые были изменены
      """
-    user = request.user
-    initial_data_all = initial_form_profile(pk=pk)
-    initial_data = initial_data_all[0]
+    initial_data_all = initial_form_profile(request=request, pk=pk)
     client = initial_data_all[1]
-    form = ProfileEditForm(request.POST, request.FILES, instance=user, initial=initial_data)
+    form = form
     if form.is_valid():
         # Если изменения были в форме, то выполним это
         if form.has_changed():
-            form.save(commit=False)
             # Список какие поля были изменены
             change_data_list = form.changed_data
             # Извлечем данные с формы

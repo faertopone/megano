@@ -40,7 +40,7 @@ urlpatterns = [
          TemplateView.as_view(template_name='accounts/reset_status.html'),
          name='password_reset_complete'),
 
-    #urls Профилей пользователей
+    # urls Профилей пользователей
     path('profile/', ProfileView.as_view(), name='profile'),
     path('profile/edit/<int:pk>', ProfileEditView.as_view(), name='profile_edit')
 ]

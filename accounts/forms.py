@@ -3,10 +3,9 @@ from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, FileExtensionValidator, EmailValidator
-from django.forms import HiddenInput, EmailField, TextInput, PasswordInput
+from django.forms import TextInput, PasswordInput, FileInput
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import NON_FIELD_ERRORS
 from accounts.tasks import send_client_email_task
 
 
@@ -65,43 +64,39 @@ class PwdResetForm(PasswordResetForm):
         )
 
 
-wd1 = forms.FileInput(attrs={'class': 'form-input', 'type': 'file'})
-wd2 = forms.TextInput(attrs={'class': 'form-input'})
-
 class ProfileEditForm(forms.ModelForm):
     """
     Форма для редактирования профиля
     """
+    wd1 = FileInput(attrs={'class': 'form-input', 'type': 'file'})
+    wd2 = TextInput(attrs={'class': 'form-input'})
 
-    photo = forms.ImageField(required=False, label=False,
+    photo = forms.ImageField(required=False,
                              widget=wd1,
                              validators=[FileExtensionValidator(allowed_extensions=('gif', 'jpg', 'png'))],
-                             error_messages={'invalid_extension': 'Этот формат не поддерживается'})
-    phone = forms.CharField(label=False, required=False,
+                             error_messages={'invalid_image': 'Этот формат не поддерживается'})
+    phone = forms.CharField(required=False,
                             widget=wd2,
                             validators=[RegexValidator(
                                 regex=r"^\+?7?\d{8,15}$",
                                 message='Введите корректный номер, без пробелов (+79999999999)')]
                             )
-    family_name_lastname = forms.CharField(label=False, required=False, max_length=100, widget=wd2)
+    family_name_lastname = forms.CharField(required=False, widget=wd2 )
+
+    password1 = forms.CharField(required=False,
+                                widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': _('Тут можно изменить пароль')}))
+    password2 = forms.CharField(required=False,
+                                widget=forms.PasswordInput(
+                                    attrs={'class': 'form-input', 'placeholder': _('Введите пароль повторно')}))
 
     class Meta:
-
         model = User
-        fields = ('email', 'password1', 'password2')
+        fields = ['email', 'password1', 'password2', 'photo', 'phone', 'family_name_lastname']
         widgets = {'email': TextInput(attrs={
-                                        'class': 'form-input',
-                                        'placeholder': _('Ваш email')
-                                        }),
-                   'password1': PasswordInput(attrs={
-                                                'class': 'form-input',
-                                                'placeholder': _('Тут можно изменить пароль')
-                                                }),
-                   'password2': PasswordInput(attrs={
-                        'class': 'form-input',
-                        'placeholder': _('Введите пароль повторно')
-                                         }),
-                   }
+            'class': 'form-input',
+            'placeholder': _('Ваш email')
+        }),
+        }
 
     def clean_photo(self):
         # Ограничение размера файла не более 2Мбайт
@@ -113,6 +108,14 @@ class ProfileEditForm(forms.ModelForm):
                 raise ValidationError(err_msg)
         return photo
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError(
+                'Пользователь с такой почтой уже зарегистрирован'
+            )
+        return email
+
     def clean(self):
         cleaned_data = super().clean()
         errors = {}
@@ -122,5 +125,3 @@ class ProfileEditForm(forms.ModelForm):
             errors['password2'] = ValidationError('Ошибка, повторите пароль внимательнее!')
         if errors:
             raise ValidationError(errors)
-
-

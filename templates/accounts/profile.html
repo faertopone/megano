@@ -46,7 +46,7 @@
               <div class="Account-column">
                 <div class="Account-avatar">
                     {% if client.photo %}
-                    <img src="{{ client.photo.url }}" alt="{{ client.user.first_name }}"/>
+                    <img src="{{ client.photo.url }}" alt="{{ client.user.username }}"/>
                     {% else %}
                        <img src="{{ static('assets/img/icons/user_icon_no_ava.svg') }}" alt="user_icon.svg"/>
                     {% endif %}
@@ -54,8 +54,8 @@
               </div>
               <div class="Account-column">
                 <div class="Account-name">
-                    {% if client.family and client.user.first_name and client.user.last_name %}
-                        {{ client.user.first_name }} {{ client.family }} {{ client.user.last_name }} ({{ client.user.username }})
+                    {% if client.family_name_lastname %}
+                        {{ client.family_name_lastname }} ({{ client.user.username }})
                     {% else %}
                         {{ client.user.username }}
                     {% endif %}

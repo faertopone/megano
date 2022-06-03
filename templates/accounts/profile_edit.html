@@ -46,7 +46,6 @@
             <form class="form Profile-form"  method="post" enctype="multipart/form-data">
             {# Jinja2 токен csrf_token #}
              <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-            {{ form.id_client }}
               <div class="row">
                 <div class="row-block">
                   <div class="form-group">
@@ -71,7 +70,8 @@
                   <div class="form-group">
                     <label class="form-label" for="name">{{ _('ФИО')}}
                     </label>
-                    {{ form.FIO }}
+                    {{ form.family_name_lastname }}
+                      {{ form.family_name_lastname.errors }}
                   </div>
                 </div>
                 <div class="row-block">
@@ -84,7 +84,7 @@
                   <div class="form-group">
                     <label class="form-label" for="email"> {{ _('E-mail') }}
                     </label>
-                    {{ form.email }}
+                      {{ form.email }}
                       {{ form.email.errors }}
                   </div>
                   <div class="form-group">
@@ -95,7 +95,7 @@
                   <div class="form-group">
                     <label class="form-label" for="password2">{{ _('Подтверждение пароля') }}
                     </label>
-                    {{ form.password2 }}
+                      {{ form.password2 }}
                       {{ form.password2.errors }}
                   </div>
                   <div class="form-group">

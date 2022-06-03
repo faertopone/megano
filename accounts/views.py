@@ -1,4 +1,3 @@
-from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
@@ -9,11 +8,10 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_str
 from django.views import View
-
-from accounts.forms import RegistrationForm
-from accounts.models import Client
-from accounts.services import get_context, post_context
-from accounts.tasks import send_client_email_task
+from .forms import RegistrationForm, ProfileEditForm
+from .models import Client
+from .services import initial_form_profile, post_context
+from .tasks import send_client_email_task
 
 
 def registration_view(request):
@@ -76,10 +74,23 @@ class ProfileEditView(View):
     Класс редактирования личного кабинета пользователя
     """
     def get(self, request, pk):
-        context = get_context(request=request, pk=pk)
+
+        initial_data = initial_form_profile(request=request, pk=pk)
+        user = initial_data[1]
+        init_form = initial_data[0]
+        client = initial_data[1]
+        form = ProfileEditForm(instance=user, initial=init_form)
+        context = {'form': form,
+                   'client': client}
         return render(request, 'accounts/profile_edit.html', context=context)
 
     def post(self, request, pk):
-        context = post_context(request=request, pk=pk)
+        initial_data = initial_form_profile(request=request, pk=pk)
+        user = initial_data[1]
+        init_form = initial_data[0]
+        form = ProfileEditForm(request.POST, request.FILES, instance=user, initial=init_form)
+
+        context = post_context(request=request, form=form, pk=pk)
+
         return render(request, 'accounts/profile_edit.html', context=context)
 
