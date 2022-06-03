@@ -10,8 +10,9 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_str
 from django.views import View
 
-from accounts.forms import RegistrationForm, ProfileEditForm
+from accounts.forms import RegistrationForm
 from accounts.models import Client
+from accounts.services import get_context, post_context
 from accounts.tasks import send_client_email_task
 
 
@@ -59,7 +60,6 @@ class ProfileView(View):
     """
     Класс личного кабинета пользователя, который авторизован, и не является суперпользователем.
     """
-
     def get(self, request):
         user_info = request.user
         # Проверим, что пользователь авторизован и не супер пользователь
@@ -67,9 +67,7 @@ class ProfileView(View):
             client = Client.objects.select_related('user').get(user=user_info)
         else:
             return HttpResponseRedirect(reverse('login'))
-
         context = {'client': client}
-
         return render(request, 'accounts/profile.html', context=context)
 
 
@@ -77,82 +75,11 @@ class ProfileEditView(View):
     """
     Класс редактирования личного кабинета пользователя
     """
-
     def get(self, request, pk):
-        client = Client.objects.select_related('user').get(pk=pk)
-        FIO = client.user.first_name + ' ' + str(client.family) + ' ' + client.user.last_name
-        initial_client = {
-            'phone': client.phone,
-            'email': client.user.email,
-            'FIO': FIO,
-            'id_client': str(request.user.id)
-        }
-        form = ProfileEditForm(initial=initial_client)
-        context = {'client': client,
-                   'form': form,
-                   }
+        context = get_context(request=request, pk=pk)
         return render(request, 'accounts/profile_edit.html', context=context)
 
     def post(self, request, pk):
-        client = Client.objects.select_related('user').get(pk=pk)
-        FIO = client.user.first_name + ' ' + str(client.family) + ' ' + client.user.last_name
-        initial_client = {
-            'phone': client.phone,
-            'email': client.user.email,
-            'FIO': FIO,
-            'id_client': str(request.user.id)
-        }
-        form = ProfileEditForm(request.POST, request.FILES, initial=initial_client)
-        if form.is_valid():
-            avatar = form.cleaned_data.get('photo')
-            phone = form.cleaned_data.get('phone')
-            email = form.cleaned_data.get('email')
-            FIO = form.cleaned_data.get('FIO')
-            password = form.cleaned_data.get('password1')
-
-            #Логика как из строки ФИО раскидать по нужным параметрам данные
-            FIO = FIO.split()
-            if len(FIO) == 0:
-                first_name = ''
-                name = ''
-                last_name = ''
-            elif len(FIO) == 1:
-                first_name = FIO[0]
-                name = ''
-                last_name = ''
-            elif len(FIO) == 2:
-                first_name = FIO[0]
-                name = FIO[1]
-                last_name = ''
-            elif len(FIO) == 3:
-                first_name = FIO[0]
-                name = FIO[1]
-                last_name = FIO[2]
-            else:
-                first_name = FIO[0]
-                name = FIO[1]
-                long_name = ''
-                for i in range(2, len(FIO)):
-                    long_name += FIO[i] + ' '
-                last_name = long_name
-
-            if avatar:
-                client.photo = avatar
-            client.phone = phone
-            client.user.first_name = first_name
-            client.family = name
-            client.user.last_name = last_name
-            client.user.email = email
-            if password:
-                client.user.set_password(password)
-            client.user.save()
-            client.save()
-
-            messages.success(request, 'Настройки успешно обновлены!')
-
-        context = {'form': form,
-                   'client': client}
-
-
+        context = post_context(request=request, pk=pk)
         return render(request, 'accounts/profile_edit.html', context=context)
 

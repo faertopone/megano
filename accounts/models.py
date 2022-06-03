@@ -38,7 +38,8 @@ class Client(models.Model):
     )
     is_seller = models.BooleanField(_("продавец"), default=False)
 
-    family = models.CharField(max_length=15, blank=True, default='', verbose_name=_('Фамилия'))
+    family_name_lastname = models.CharField(max_length=15, blank=True, default='',
+                                            verbose_name=_('Фамилия Имя Отчество'))
 
     class Meta:
         verbose_name = 'клиент'
