@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, FileExtensionValidator, EmailValidator
-from django.forms import TextInput, PasswordInput, FileInput
+from django.forms import TextInput, PasswordInput, FileInput, HiddenInput
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import gettext_lazy as _
 from accounts.tasks import send_client_email_task
@@ -21,7 +21,7 @@ class RegistrationForm(UserCreationForm):
             'password2',
         )
 
-    def clean_user_name(self):
+    def clean_username(self):
         username = self.cleaned_data['username'].lower()
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError('Такой пользователь уже существует')
@@ -97,6 +97,8 @@ class ProfileEditForm(forms.ModelForm):
             'placeholder': _('Ваш email')
         }),
         }
+    # Скрытое поля, для проверки email - текущего пользователя
+    id_user = forms.IntegerField(widget=HiddenInput)
 
     def clean_photo(self):
         # Ограничение размера файла не более 2Мбайт
@@ -108,17 +110,19 @@ class ProfileEditForm(forms.ModelForm):
                 raise ValidationError(err_msg)
         return photo
 
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError(
-                'Пользователь с такой почтой уже зарегистрирован'
-            )
-        return email
-
     def clean(self):
         cleaned_data = super().clean()
+        id_user = cleaned_data.get('id_user')
+        user = User.objects.get(id=id_user)
+        email = cleaned_data.get('email')
         errors = {}
+        print(user.email, email)
+        if User.objects.filter(email=email).exists():
+            email_in_bd = User.objects.filter(email=email).first()
+            print(user.email, email, email_in_bd.email)
+            if user.email != email and email == email_in_bd.email:
+                errors['email'] = ValidationError('Такой email уже занят')
+
         password1 = cleaned_data.get('password1')
         password2 = cleaned_data.get('password2')
         if password1 != password2:

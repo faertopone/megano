@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
@@ -39,6 +40,7 @@ def initial_form_profile(request: HttpRequest, pk: int) -> list:
         'phone': client.phone,
         'email': client.user.email,
         'family_name_lastname': client.family_name_lastname,
+        'id_user': request.user.id,
     }
     return [initial_client, client, user]
 
@@ -67,6 +69,7 @@ def post_context(request: HttpRequest, pk: int, form) -> object:
             if 'phone' in change_data_list:
                 client.phone = phone
             if 'email' in change_data_list:
+
                 client.user.email = email
             if 'family_name_lastname' in change_data_list:
                 client.family_name_lastname = family_name_lastname
@@ -74,7 +77,6 @@ def post_context(request: HttpRequest, pk: int, form) -> object:
                 client.user.set_password(password)
 
             client.save()
-            client.user.save()
 
     context = {'form': form,
                'client': client}

@@ -46,6 +46,7 @@
             <form class="form Profile-form"  method="post" enctype="multipart/form-data">
             {# Jinja2 токен csrf_token #}
              <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            {{ form.id_user }}
               <div class="row">
                 <div class="row-block">
                   <div class="form-group">
