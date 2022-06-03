@@ -3187,7 +3187,8 @@ a.Cart-title {
   display: none;
 }
 @media screen and (min-width: 990px) {
-  .Pagination-element:hover {
+  .Pagination-page:hover,
+  .Pagination-button:hover {
     color: #0063d1;
     background: #a5cfff;
     border-bottom-color: transparent;

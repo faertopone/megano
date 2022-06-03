@@ -125,9 +125,10 @@ class ProductListView(generic.ListView):
     template_name = "product_list.html"
     model = Product
     context_object_name = "products"
-    paginate_by = 10  # TODO: ссылки на страницы пагинации
+    paginate_by = 30
 
     category: Category
+    displayed_pages = 15  # Количество страниц отображаемых в пагинаторе
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
@@ -155,6 +156,20 @@ class ProductListView(generic.ListView):
         ctx["filter"] = category_filter
         # параметры сортировки
         ctx["sort_params"] = self.sort_params
+        # пагинатор
+        if (page_num := ctx["page_obj"].number) <= self.displayed_pages:
+            ctx["first_page_num"] = 1
+
+            # если число отображаемых страниц меньше общего кол-ва страниц, ...
+            if self.displayed_pages <= (num_pages := ctx["paginator"].num_pages):
+                # ... то выводим число отображаемых страниц
+                ctx["last_page_num"] = self.displayed_pages
+            else:
+                # ... в противном случае выводим общее кол-во страниц
+                ctx["last_page_num"] = num_pages
+        else:
+            ctx["first_page_num"] = page_num - self.displayed_pages + 1
+            ctx["last_page_num"] = ctx["page_obj"].number
 
         return ctx
 

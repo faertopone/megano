@@ -35,8 +35,8 @@
             <div class="Sort-title">{{ _('Сортировать по') }}:
             </div>
             <div class="Sort-variants">
-                <a class="Sort-sortBy {{ sort_params['rating']['class'] }}" data-sort="{{ sort_params['rating']['sort'] }}" href="">{{ _('Популярности') }}</a>
-                <a class="Sort-sortBy {{ sort_params['price']['class'] }}" data-sort="{{ sort_params['price']['sort'] }}" href="">{{ _('Цене') }}</a>
+                <a class="Sort-sortBy{% if sort_params['rating']['class'] %} {{ sort_params['rating']['class'] }}{% endif %}" data-sort="{{ sort_params['rating']['sort'] }}" href="">{{ _('Популярности') }}</a>
+                <a class="Sort-sortBy{% if sort_params['price']['class'] %} {{ sort_params['price']['class'] }}{% endif %}" data-sort="{{ sort_params['price']['sort'] }}" href="">{{ _('Цене') }}</a>
             </div>
           </div>
 
@@ -78,24 +78,17 @@
 
           <div class="Pagination">
             <div class="Pagination-ins">
-                <!-- TODO: ссылки на страницы пагинации -->
-                <a class="Pagination-element Pagination-element_prev" href="#">
+                <a class="Pagination-element{% if page_obj.has_previous() %} Pagination-button{% endif %}"{% if page_obj.has_previous() %} href="" data-page="{{ page_obj.previous_page_number() }}"{% endif %}>
                     <img src="{{ static('assets/img/icons/prevPagination.svg') }}" alt="prevPagination.svg"/>
                 </a>
 
-                <a class="Pagination-element Pagination-element_current" href="#">
-                    <span class="Pagination-text">1</span>
+                {% for page_num in range(first_page_num, last_page_num + 1) %}
+                <a class="Pagination-element Pagination-page{% if page_num == page_obj.number %} Pagination-element_current{% endif %}" href="" data-page="{{ page_num }}">
+                    <span class="Pagination-text">{{ page_num }}</span>
                 </a>
+                {% endfor %}
 
-                <a class="Pagination-element" href="#">
-                    <span class="Pagination-text">2</span>
-                </a>
-
-                <a class="Pagination-element" href="#">
-                    <span class="Pagination-text">3</span>
-                </a>
-
-                <a class="Pagination-element Pagination-element_prev" href="#">
+                <a class="Pagination-element{% if page_obj.has_next() %} Pagination-button{% endif %}"{% if page_obj.has_next() %} href="" data-page="{{ page_obj.next_page_number() }}"{% endif %}>
                     <img src="{{ static('assets/img/icons/nextPagination.svg') }}" alt="nextPagination.svg"/>
                 </a>
             </div>

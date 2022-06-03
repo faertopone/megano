@@ -549,8 +549,18 @@ var Map = function(){
 };
 Map().init();
 var Pagination = function(){
+    var $pagination = $('.Pagination-ins');
+    var $paginators = $pagination.find('.Pagination-element');
     return {
         init: function(){
+            $paginators.on('click', function($e){
+                var $page = $( this ).attr('data-page');
+                if ($page !== undefined) {
+                    const url = new URL(window.location);  // == window.location.href
+                    url.searchParams.set('page', $page);
+                    history.pushState(null, null, url);    // == url.href
+                }
+            });
         }
     };
 };
@@ -594,8 +604,7 @@ var Sort = function(){
     return {
         init: function(){
             $sortVariants.on('click', function($e){
-                // $e.preventDefault();
-                var $sortVal = $( $e.target).attr('data-sort');
+                var $sortVal = $( this ).attr('data-sort');
                 if ($sortVal !== undefined) {
                     const url = new URL(window.location);  // == window.location.href
                     url.searchParams.set('sort', $sortVal);
