@@ -49,9 +49,12 @@
       | для правильного отображения сайта.
   -->
 {% include 'base_templates/header.html' %}
+  {% block banners %}
+      {# swiper banners #}
+  {% endblock %}
 
  {%  block content %}
-
+     {# mian content #}
  {% endblock content %}
 
 {% include 'base_templates/footer.html' %}

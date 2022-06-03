@@ -116,10 +116,8 @@ class ProfileEditForm(forms.ModelForm):
         user = User.objects.get(id=id_user)
         email = cleaned_data.get('email')
         errors = {}
-        print(user.email, email)
         if User.objects.filter(email=email).exists():
             email_in_bd = User.objects.filter(email=email).first()
-            print(user.email, email, email_in_bd.email)
             if user.email != email and email == email_in_bd.email:
                 errors['email'] = ValidationError('Такой email уже занят')
 

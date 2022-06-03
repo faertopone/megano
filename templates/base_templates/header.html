@@ -131,41 +131,5 @@
         </div>
       </div>
     </div>
-    <div class="Header-slider">
-      <div class="Slider Slider_main">
-        <div class="Slider-box">
-
-            {% if banners %}
-                    {% for item_banner in banners %}
-                         <div class="Slider-item">
-            <div class="Slider-content">
-              <div class="row">
-                <div class="row-block">
-                  <strong class="Slider-title"> {{ item_banner.get_name_not_digital() }}
-                     {% if item_banner.get_version() %} <span class="text_primary"> {{ item_banner.get_version() }}</span>{% endif %}
-                  </strong>
-                  <div class="Slider-text">{{ item_banner.description }}
-                  </div>
-                  <div class="Slider-footer"><a class="btn btn_primary" href="#">{{ _('Начать') }}</a>
-                  </div>
-                </div>
-                <div class="row-block">
-                  <div class="Slider-img"><img src="{% if item_banner.photo %}{{ item_banner.photo.url }} {% else %} {{ static('assets/img/logo.png') }}{% endif %}" alt="{{ item_banner.name }}"/>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-                    {% endfor %}
-            {% endif %}
-
-        </div>
-        <div class="Slider-navigateWrap">
-          <div class="Slider-navigate">
-          </div>
-        </div>
-      </div>
-    </div>
 {% endblock %}
-
 </header>
