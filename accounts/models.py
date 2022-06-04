@@ -49,7 +49,7 @@ class Client(models.Model):
     def __str__(self):
         return self.user.username
 
-    # Переопределил метод save, чтобы методом save обьекта Client -  сразу сохранять и изменения в поле user через OneToOne
+    # Переопределил метод save, чтобы методом save объекта Client-сразу сохранять и изменения в поле user через OneToOne
     def save(self, *args, **kwargs):
         self.user.save(*args, **kwargs)
         super(Client, self).save(*args, **kwargs)
