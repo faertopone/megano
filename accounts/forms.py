@@ -2,10 +2,12 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.core.validators import RegexValidator, FileExtensionValidator, EmailValidator
-from django.forms import TextInput, PasswordInput, FileInput, HiddenInput
+from django.core.validators import RegexValidator, FileExtensionValidator
+from django.forms import TextInput, FileInput
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import gettext_lazy as _
+
+from accounts.models import Client
 from accounts.tasks import send_client_email_task
 
 
@@ -84,7 +86,7 @@ class ProfileEditForm(forms.ModelForm):
                                 regex=r"^\+?7?\d{8,15}$",
                                 message='Введите корректный номер, без пробелов (+79999999999)')]
                             )
-    patronymic = forms.CharField(required=False, widget=wd3)
+    patronymic = forms.CharField(required=True, widget=wd3)
 
     password1 = forms.CharField(required=False,
                                 widget=forms.PasswordInput(
@@ -92,7 +94,7 @@ class ProfileEditForm(forms.ModelForm):
     password2 = forms.CharField(required=False,
                                 widget=forms.PasswordInput(
                                     attrs={'class': 'form-input', 'placeholder': _('Введите пароль повторно')}))
-    id_user = forms.HiddenInput()
+    id_user = forms.IntegerField(widget=forms.HiddenInput())
 
     class Meta:
         model = User
@@ -103,16 +105,15 @@ class ProfileEditForm(forms.ModelForm):
         }),
             'first_name': TextInput(attrs={
                 'class': 'form-input',
-                'placeholder': _('Данных нет')
+                'placeholder': _('Данных нет'),
+                'required': True
             }),
             'last_name': TextInput(attrs={
                 'class': 'form-input',
-                'placeholder': _('Данных нет')
+                'placeholder': _('Данных нет'),
+                'required': True
             }),
         }
-
-    # Скрытое поля, для проверки email - текущего пользователя
-    id_user = forms.IntegerField(widget=HiddenInput)
 
     def clean_photo(self):
         # Ограничение размера файла не более 2Мбайт
@@ -128,12 +129,19 @@ class ProfileEditForm(forms.ModelForm):
         cleaned_data = super().clean()
         id_user = cleaned_data.get('id_user')
         user = User.objects.get(id=id_user)
+        client = Client.objects.get(user=user)
+        phone = cleaned_data.get('phone')
         email = cleaned_data.get('email')
         errors = {}
         if User.objects.filter(email=email).exists():
             email_in_bd = User.objects.filter(email=email).first()
             if user.email != email and email == email_in_bd.email:
                 errors['email'] = ValidationError('Такой email уже занят')
+
+        if Client.objects.filter(phone=phone).exists():
+            client_in_bd = Client.objects.filter(phone=phone).first()
+            if client.phone != phone and phone == client_in_bd.phone:
+                errors['phone'] = ValidationError('Такой телефон уже занят')
 
         password1 = cleaned_data.get('password1')
         password2 = cleaned_data.get('password2')

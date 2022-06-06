@@ -17,12 +17,11 @@ class Client(models.Model):
         regex=r"^\+?7?\d{8,15}$",
         message='Введите корректный номер, без пробелов (+79999999999)'
     )
-    phone = models.CharField(
-        'контактный номер',
-        validators=[phoneNumberRegex],
-        max_length=16,
-        blank=True
-    )
+    phone = models.CharField(unique=True, null=True,
+                             verbose_name=_('контактный номер'),
+                             validators=[phoneNumberRegex],
+                             max_length=16,
+                             )
     city = models.CharField(_('город'), max_length=256, blank=True)
     street = models.CharField(_("улица"), max_length=256, blank=True)
     house_number = models.IntegerField(_("номер дома"), blank=True, null=True)
@@ -38,9 +37,9 @@ class Client(models.Model):
     )
     is_seller = models.BooleanField(_("продавец"), default=False)
 
-    patronymic = models.CharField(blank=True, default='', max_length=50,
-                                            error_messages={'max_length': 'Слишком длинное Отчество!'},
-                                            verbose_name=_('Отчество'))
+    patronymic = models.CharField(default='', max_length=50,
+                                  error_messages={'max_length': 'Слишком длинное Отчество!'},
+                                  verbose_name=_('Отчество'))
 
     class Meta:
         verbose_name = 'клиент'
