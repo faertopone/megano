@@ -38,11 +38,13 @@ def initial_form_profile(request: HttpRequest, pk: int) -> list:
     client = Client.objects.select_related('user').get(pk=pk)
     initial_client = {
         'phone': client.phone,
-        'email': client.user.email,
-        'family_name_lastname': client.family_name_lastname,
-        'id_user': request.user.id,
+        'patronymic': client.patronymic,
+        'id_user': user.id,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'email': user.email
     }
-    return [initial_client, client, user]
+    return [initial_client, client]
 
 
 def post_context(request: HttpRequest, pk: int, form) -> object:
@@ -58,12 +60,18 @@ def post_context(request: HttpRequest, pk: int, form) -> object:
             # Список какие поля были изменены
             change_data_list = form.changed_data
             # Извлечем данные с формы
+            first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
             avatar = form.cleaned_data.get('photo')
             phone = form.cleaned_data.get('phone')
             email = form.cleaned_data.get('email')
-            family_name_lastname = form.cleaned_data.get('family_name_lastname')
+            patronymic = form.cleaned_data.get('patronymic')
             password = form.cleaned_data.get('password1')
 
+            if 'first_name' in change_data_list:
+                client.user.first_name = first_name
+            if 'last_name' in change_data_list:
+                client.user.last_name = last_name
             if 'photo' in change_data_list:
                 client.photo = avatar
             if 'phone' in change_data_list:
@@ -71,8 +79,8 @@ def post_context(request: HttpRequest, pk: int, form) -> object:
             if 'email' in change_data_list:
 
                 client.user.email = email
-            if 'family_name_lastname' in change_data_list:
-                client.family_name_lastname = family_name_lastname
+            if 'patronymic' in change_data_list:
+                client.patronymic = patronymic
             if 'password1' in change_data_list:
                 client.user.set_password(password)
 

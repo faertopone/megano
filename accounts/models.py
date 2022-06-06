@@ -38,9 +38,9 @@ class Client(models.Model):
     )
     is_seller = models.BooleanField(_("продавец"), default=False)
 
-    family_name_lastname = models.CharField(blank=True, default='', max_length=50,
-                                            error_messages={'max_length': 'Слишком длинное ФИО'},
-                                            verbose_name=_('Фамилия Имя Отчество'))
+    patronymic = models.CharField(blank=True, default='', max_length=50,
+                                            error_messages={'max_length': 'Слишком длинное Отчество!'},
+                                            verbose_name=_('Отчество'))
 
     class Meta:
         verbose_name = 'клиент'

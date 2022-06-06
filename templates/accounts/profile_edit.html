@@ -69,10 +69,16 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="name">{{ _('ФИО')}}
+                    <label class="form-label" for="name">{{ _('Фамилия')}}
                     </label>
-                    {{ form.family_name_lastname }}
-                      {{ form.family_name_lastname.errors }}
+                      {{ form.last_name }}
+                     <label class="form-label" for="name">{{ _('Имя')}}
+                    </label>
+                    {{ form.first_name }}
+                       <label class="form-label" for="name">{{ _('Отчество')}}
+                    </label>
+                      {{ form.patronymic }}
+                      {{ form.patronymic.errors }}
                   </div>
                 </div>
                 <div class="row-block">

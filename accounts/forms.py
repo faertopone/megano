@@ -68,8 +68,11 @@ class ProfileEditForm(forms.ModelForm):
     """
     Форма для редактирования профиля
     """
+
+    # Добавление класса в inputs
     wd1 = FileInput(attrs={'class': 'form-input', 'type': 'file'})
     wd2 = TextInput(attrs={'class': 'form-input'})
+    wd3 = TextInput(attrs={'class': 'form-input', 'placeholder': _('Данных нет')})
 
     photo = forms.ImageField(required=False,
                              widget=wd1,
@@ -81,22 +84,33 @@ class ProfileEditForm(forms.ModelForm):
                                 regex=r"^\+?7?\d{8,15}$",
                                 message='Введите корректный номер, без пробелов (+79999999999)')]
                             )
-    family_name_lastname = forms.CharField(required=False, widget=wd2 )
+    patronymic = forms.CharField(required=False, widget=wd3)
 
     password1 = forms.CharField(required=False,
-                                widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': _('Тут можно изменить пароль')}))
+                                widget=forms.PasswordInput(
+                                    attrs={'class': 'form-input', 'placeholder': _('Тут можно изменить пароль')}))
     password2 = forms.CharField(required=False,
                                 widget=forms.PasswordInput(
                                     attrs={'class': 'form-input', 'placeholder': _('Введите пароль повторно')}))
+    id_user = forms.HiddenInput()
 
     class Meta:
         model = User
-        fields = ['email', 'password1', 'password2', 'photo', 'phone', 'family_name_lastname']
+        fields = ['email', 'password1', 'password2', 'photo', 'phone', 'patronymic', 'first_name', 'last_name']
         widgets = {'email': TextInput(attrs={
             'class': 'form-input',
-            'placeholder': _('Ваш email')
+            'placeholder': _('Данных нет')
         }),
+            'first_name': TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': _('Данных нет')
+            }),
+            'last_name': TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': _('Данных нет')
+            }),
         }
+
     # Скрытое поля, для проверки email - текущего пользователя
     id_user = forms.IntegerField(widget=HiddenInput)
 

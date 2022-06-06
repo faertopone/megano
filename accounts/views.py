@@ -76,19 +76,17 @@ class ProfileEditView(View):
     def get(self, request, pk):
 
         initial_data = initial_form_profile(request=request, pk=pk)
-        user = initial_data[1]
         init_form = initial_data[0]
         client = initial_data[1]
-        form = ProfileEditForm(instance=user, initial=init_form)
+        form = ProfileEditForm(initial=init_form)
         context = {'form': form,
                    'client': client}
         return render(request, 'accounts/profile_edit.html', context=context)
 
     def post(self, request, pk):
         initial_data = initial_form_profile(request=request, pk=pk)
-        user = initial_data[1]
         init_form = initial_data[0]
-        form = ProfileEditForm(request.POST, request.FILES, instance=user, initial=init_form)
+        form = ProfileEditForm(request.POST, request.FILES, initial=init_form)
 
         context = post_context(request=request, form=form, pk=pk)
 
