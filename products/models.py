@@ -1,6 +1,7 @@
 from django.core.validators import FileExtensionValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
 from accounts.models import Client
 
@@ -20,6 +21,9 @@ class Category(models.Model):
     category_name = models.CharField(max_length=1000, unique=True, verbose_name=_("название категории"))
     description = models.TextField(blank=True, verbose_name=_("описание"),
                                    help_text=_("Опишите, например, какие товары соответствуют данной категории"))
+    properties = models.ManyToManyField("Property", through="PropertyCategory",
+                                        related_name="categories", related_query_name="category",
+                                        verbose_name=_("свойства товаров в категории"))
 
     class Meta:
         verbose_name = _("категория каталога товаров")
@@ -39,7 +43,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=2, default=1,
                                 validators=[MinValueValidator(1)], verbose_name=_("цена"))
     rating = models.DecimalField(max_digits=12, decimal_places=2, default=0,
-                                 validators=[MinValueValidator(0)], verbose_name=_("рэйтинг"))
+                                 validators=[MinValueValidator(0)], verbose_name=_("рейтинг"))
     flag_limit = models.BooleanField(default=False, verbose_name=_("товар заканчивается"))
     category = models.ForeignKey("Category", on_delete=models.CASCADE,
                                  related_name="products", related_query_name="product",
@@ -134,3 +138,67 @@ class PropertyProduct(models.Model):
 
     def __str__(self):
         return f"{self.property.name} = {self.value}"
+
+
+class PropertyCategory(models.Model):
+    """
+    Связующая модель для категорий и их свойств.
+    """
+    # связи
+    category = models.ForeignKey("Category", on_delete=models.CASCADE,
+                                 related_name="category_properties",
+                                 related_query_name="category_property",
+                                 verbose_name=_("категория"))
+    property = models.ForeignKey("Property", on_delete=models.CASCADE,
+                                 related_name="category_properties",
+                                 related_query_name="category_property",
+                                 verbose_name=_("свойство товаров в категории")
+                                 )
+
+    # дополнительные данные
+    # TODO: если нужно
+
+    class Meta:
+        verbose_name = _("параметр свойства категории")
+        verbose_name_plural = _("параметры свойства категории")
+        ordering = ("pk",)
+
+        constraints = (
+            models.UniqueConstraint(
+                fields=("category", "property"),
+                name="%(app_label)s_%(class)s_prop_unique_in_category",
+            ),
+        )
+
+    def __str__(self):
+        return f"{self.property.name}"
+
+
+class ProductPhoto(models.Model):
+    """
+    Модель с фотографиями магазинов
+    """
+    photo = models.ImageField(upload_to='products_photo', default='default.jpg', verbose_name=_('product_photo'))
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('product'))
+
+    class Meta:
+        verbose_name = _('products photo')
+        verbose_name_plural = _('products photos')
+
+
+class UserReviews(models.Model):
+    """
+    Модель добавления комментария к товару
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('пользователь'))
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('товар'))
+    reviews = models.TextField(max_length=1024, blank=True, verbose_name=_('отзыв'))
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("комментарий к товару")
+        verbose_name_plural = _("комментарии к товарам")
+        ordering = ("product",)
+
+    def __str__(self):
+        return f"{self.reviews}"

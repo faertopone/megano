@@ -62,23 +62,26 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
    python manage.py makemigrations
    python manage.py migrate
    ```
-2. Загрузить фикстуры.
+   1. Загрузить фикстуры.
    
-   :warning: Порядок загружки фикстур имеет значение, потому что таблицы имеют связи.
+      :warning: Порядок загружки фикстур имеет значение, потому что таблицы имеют связи.
    
-   :ok_hand: Необязательно загружать все фикстуры. Можно загрузить только те, которых не хватает. Главное чтобы они загружались в правильном порядке.   
+      :ok_hand: Необязательно загружать все фикстуры. Можно загрузить только те, которых не хватает. Главное чтобы они загружались в правильном порядке.   
    
-   1. Загрузить суперпользователя
-   ```
-   python manage.py loaddata fixtures\superuser.json
-   ```
-   2. Загрузить категории каталога
-   ```
-   python manage.py loaddata fixtures\products\category.json
-   ```
-   3. Загрузить товары и их свойства
-   ```
-   python manage.py loaddata fixtures\products\product.json fixtures\products\property.json fixtures\products\property_product.json
-   ```
-   
-   :warning: Не забываем добавлять здесь, как загружать новые фикстуры!
+      1. Загрузить суперпользователя
+      ```
+      python manage.py loaddata fixtures\superuser.json
+      ```
+      2. Загрузить категории каталога
+      ```
+      python manage.py loaddata fixtures\products\category.json
+      ```
+      3. Загрузить товары и их свойства
+      ```
+      python manage.py loaddata fixtures\products\product.json fixtures\products\property.json fixtures\products\property_product.json
+      ```
+      4. Загрузить баннеры
+      ```
+      python manage.py loaddata fixtures\banners\banners.json
+       ```
+      :warning: Не забываем добавлять здесь, как загружать новые фикстуры!
