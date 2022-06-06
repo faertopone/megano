@@ -70,35 +70,6 @@ class Product(models.Model):
         return f"({self.article}) {self.name}"
 
 
-class Review(models.Model):
-    """ Модель отзывов о товаре """
-    username = models.CharField(max_length=50, verbose_name=_('имя пользователя'), blank=True)
-    email = models.EmailField(max_length=50, verbose_name=_("электронная почта"), blank=True)
-    content = models.CharField(max_length=1000, verbose_name=_('текст комментария'), blank=True)
-    client = models.ForeignKey(
-        Client,
-        on_delete=models.CASCADE,
-        related_name='comments',
-        blank=True,
-        verbose_name=_('пользователь'),
-        null=True
-    )
-    product = models.ForeignKey(
-        'Product',
-        on_delete=models.CASCADE,
-        related_name='reviews',
-        verbose_name=_('новость')
-    )
-
-    def __str__(self):
-        return f'{self.username}.({self.content})'
-
-    class Meta:
-        verbose_name = _('комментарий')
-        verbose_name_plural = _('комментарии')
-        db_table = 'Review'
-
-
 class Tag(models.Model):
     """ Модель тегов для товара """
     substance = models.CharField(max_length=30, unique=True)
