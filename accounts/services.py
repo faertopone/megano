@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
@@ -7,7 +6,6 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
-
 from .models import Client
 
 
@@ -89,3 +87,4 @@ def post_context(request: HttpRequest, pk: int, form) -> object:
     context = {'form': form,
                'client': client}
     return context
+

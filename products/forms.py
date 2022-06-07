@@ -1,10 +1,10 @@
 from django import forms
 
-from products.models import Review
+from products.models import UserReviews
 
 
 class ReviewForm(forms.ModelForm):
     """ Форма для добавления комментария """
     class Meta:
-        model = Review
+        model = UserReviews
         exclude = ['product', 'client']

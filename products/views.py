@@ -5,7 +5,7 @@ from django.views import View
 from django.views.generic import DetailView, ListView
 from rest_framework.request import Request
 
-from models import Product, Tag
+from .models import Product, Tag
 from products.forms import ReviewForm
 
 

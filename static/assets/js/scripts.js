@@ -152,16 +152,25 @@ var form = function(){
                     $('.selectList').removeClass('selectList_OPEN');
                 }
             });
-            
+
+            let validate = $("[data-validate='require']");
+            validate.each(function (v){
+                console.log($(this).attr('data-validate'))
+            })
+
             // Валидация полей
             $input.on('blur', function(){
-                var $this = $(this),
-                    validate = $this.data('validate'),
+                let $this = $(this),
                     message = '',
                     error = false;
-                validate = validate.split(' ');
-                validate.forEach(function(v){
-                    switch (v){
+                    validate = $("[data-validate='require']");
+                    // Я тут подправил код для работы со своей формой валидации, потому что изменил поля ввода формы
+
+                // validate = $this.data('validate'),
+                // validate = validate.split(' ');
+                // validate.forEach(function(){
+                validate.each(function (){
+                    switch ($(this).attr('data-validate')){
                         case 'require':
                             if (!$this.val()) {
                                 message = 'Это поле обязательно для заполнения. ';

@@ -1,7 +1,9 @@
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinValueValidator
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Client(models.Model):
@@ -44,6 +46,7 @@ class Client(models.Model):
     class Meta:
         verbose_name = 'клиент'
         verbose_name_plural = 'клиенты'
+        db_table = 'Client'
 
     def __str__(self):
         return self.user.username
@@ -52,3 +55,31 @@ class Client(models.Model):
     def save(self, *args, **kwargs):
         self.user.save(*args, **kwargs)
         super(Client, self).save(*args, **kwargs)
+
+
+class HistoryReview(models.Model):
+    """ Модель истории просмотров пользователя """
+
+    client = models.OneToOneField(
+        Client,
+        on_delete=models.CASCADE,
+        verbose_name=_("пользователь_чья история")
+    )
+
+    item_view = models.ManyToManyField('products.Product', verbose_name=_('Товары, которые смотрел пользователь'),
+                                       blank=True, null=True)
+    limit_items_views = models.IntegerField(verbose_name=_('Сколько максимум показывать товаров'),
+                                            help_text=_('Тут можно изменить это значение, по умолчанию 40'),
+                                            default=40, validators=[MinValueValidator(1)])
+
+    # После создания клиента созадем ему сразу в БД модель просмотров
+    @receiver(post_save, sender=Client)
+    def created_history(sender, **kwargs):
+        instance = kwargs['instance']
+        HistoryReview.objects.create(client=instance)
+
+    class Meta:
+        verbose_name = 'История просмотра'
+        verbose_name_plural = 'Истории просмотров'
+        db_table = 'HistoryReview'
+        ordering = ("id",)
