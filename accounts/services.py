@@ -1,10 +1,14 @@
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
+
+from .models import Client
 
 
 def send_client_email(user_id, domain, subject, template):
@@ -24,3 +28,64 @@ def send_client_email(user_id, domain, subject, template):
         recipient_list=[user.email],
         fail_silently=False,
     )
+
+
+def initial_form_profile(request: HttpRequest, pk: int) -> list:
+    """
+    Функция инициализирует начальные значения Профиля
+    """
+    user = User.objects.get(id=request.user.id)
+    client = Client.objects.select_related('user').get(pk=pk)
+    initial_client = {
+        'phone': client.phone,
+        'patronymic': client.patronymic,
+        'id_user': user.id,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'email': user.email
+    }
+    return [initial_client, client]
+
+
+def post_context(request: HttpRequest, pk: int, form) -> object:
+    """
+     Представления Профиля при запросе POST и изменения данных, которые были изменены
+     """
+    initial_data_all = initial_form_profile(request=request, pk=pk)
+    client = initial_data_all[1]
+    form = form
+    if form.is_valid():
+        # Если изменения были в форме, то выполним это
+        if form.has_changed():
+            # Список какие поля были изменены
+            change_data_list = form.changed_data
+            # Извлечем данные с формы
+            first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
+            avatar = form.cleaned_data.get('photo')
+            phone = form.cleaned_data.get('phone')
+            email = form.cleaned_data.get('email')
+            patronymic = form.cleaned_data.get('patronymic')
+            password = form.cleaned_data.get('password1')
+
+            if 'first_name' in change_data_list:
+                client.user.first_name = first_name
+            if 'last_name' in change_data_list:
+                client.user.last_name = last_name
+            if 'photo' in change_data_list:
+                client.photo = avatar
+            if 'phone' in change_data_list:
+                client.phone = phone
+            if 'email' in change_data_list:
+
+                client.user.email = email
+            if 'patronymic' in change_data_list:
+                client.patronymic = patronymic
+            if 'password1' in change_data_list:
+                client.user.set_password(password)
+
+            client.save()
+
+    context = {'form': form,
+               'client': client}
+    return context

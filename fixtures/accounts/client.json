@@ -1,0 +1,19 @@
+[
+{
+  "model": "accounts.client",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "postcode": null,
+    "photo": "accounts/2021-07-14-21-24-18-590.jpg",
+    "phone": "+79999999998",
+    "city": "Москва",
+    "street": "",
+    "house_number": null,
+    "apartment_number": null,
+    "spent_money": "0.00",
+    "is_seller": false,
+    "patronymic": "Петрушкина"
+  }
+}
+]

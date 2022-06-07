@@ -17,7 +17,10 @@ class BannersAdmin(admin.ModelAdmin):
     readonly_fields = ['banner_photo']
     list_filter = ['name', 'is_active', 'creation_date']
     actions = ['active', 'not_active']
-    search_fields = ['=name']
+    # Поиск по имени и совпадение с началом слова типа startswith
+    search_fields = ['^name',]
+    # Добавляют полю с FK и M2M поиск, так же не забыть добавить в search_fields, имя поля с поиском из FK , M2M
+    autocomplete_fields = ['product_banner']
     fieldsets = (
         (_('Наименования банера и товара'), {
             'fields': (('name'), ('product_banner')),
