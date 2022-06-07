@@ -136,10 +136,11 @@ class ProductListView(generic.ListView):
         category_id = self.request.resolver_match.kwargs["pk"]
         self.__class__.category = Category.objects.get(pk=category_id)
 
+        self.sort_params = self._get_sort_params()
+
     def get_queryset(self):
         products = Product.objects.select_related("category").filter(category=self.category.pk)
 
-        self.sort_params = self._get_sort_params()
         if (order := self.sort_params["order_by"]) is not None:
             products = products.order_by(order)
 
@@ -193,6 +194,7 @@ class ProductListView(generic.ListView):
                                           "class": "form-input form-input_full",
                                           "placeholder": _("Название товара"),
                                        }),),
+            # Фильтр по цене
             "product_price": RangeFilter(label=_("Цена"), field_name="price",
                                          widget=CustomRangeWidget(attrs={
                                             "class": "range-widget__input"
@@ -206,6 +208,7 @@ class ProductListView(generic.ListView):
                 property__alias=prop.alias
             ).values("value").annotate(id=models.Min("id")).values("id"))
 
+            # Добавляем фильтр для свойства товара
             filterset_fields[prop.alias] = ModelMultipleChoiceFilter(
                 label=prop.name,
                 field_name="product_property__value",
