@@ -72,11 +72,15 @@ class HistoryReview(models.Model):
                                             help_text=_('Тут можно изменить это значение, по умолчанию 40'),
                                             default=40, validators=[MinValueValidator(1)])
 
-    # После создания клиента созадем ему сразу в БД модель просмотров
+    # После сохранения модели Client, создаем ему сразу в БД модель просмотров
     @receiver(post_save, sender=Client)
-    def created_history(sender, **kwargs):
-        instance = kwargs['instance']
-        HistoryReview.objects.create(client=instance)
+    def created_history(sender, instance, created, **kwargs):
+        if created:
+            HistoryReview.objects.create(client=instance)
+        # instance = kwargs['instance']
+        # # Если у пользователя нет модели просмотров, то создадим ее
+        # if not HistoryReview.objects.filter(client=instance).exists():
+        #     HistoryReview.objects.create(client=instance)
 
     class Meta:
         verbose_name = 'История просмотра'
