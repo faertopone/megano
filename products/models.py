@@ -3,6 +3,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 
+from accounts.models import Client
+
 
 class Category(models.Model):
     """
@@ -49,6 +51,8 @@ class Product(models.Model):
     properties = models.ManyToManyField("Property", through="PropertyProduct",
                                         related_name="products", related_query_name="product",
                                         verbose_name=_("свойства товара"))
+    tag = models.TextField(max_length=100, verbose_name=_('теги'), blank=True)
+    tags = models.ManyToManyField('Tag', related_name='products')
 
     class Meta:
         verbose_name = _("товар")
@@ -68,6 +72,19 @@ class Product(models.Model):
         Возвращает полное название товара в виде '(артикул) название товара'.
         """
         return f"({self.article}) {self.name}"
+
+
+class Tag(models.Model):
+    """ Модель тегов для товара """
+    substance = models.CharField(max_length=30, unique=True)
+
+    class Meta:
+        verbose_name = _('тег')
+        verbose_name_plural = _('теги')
+        db_table = 'Tags'
+
+    def __str__(self):
+        return f'{self.substance}'
 
 
 class Property(models.Model):
