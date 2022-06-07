@@ -1,7 +1,13 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator, FileExtensionValidator
+from django.forms import TextInput, FileInput
+from django.template.defaultfilters import filesizeformat
+from django.utils.translation import gettext_lazy as _
 
+from accounts.models import Client
 from accounts.tasks import send_client_email_task
 
 
@@ -17,7 +23,7 @@ class RegistrationForm(UserCreationForm):
             'password2',
         )
 
-    def clean_user_name(self):
+    def clean_username(self):
         username = self.cleaned_data['username'].lower()
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError('Такой пользователь уже существует')
@@ -58,3 +64,88 @@ class PwdResetForm(PasswordResetForm):
             subject='Восстановление пароля',
             template='password_reset'
         )
+
+
+class ProfileEditForm(forms.ModelForm):
+    """
+    Форма для редактирования профиля
+    """
+
+    # Добавление класса в inputs
+    wd1 = FileInput(attrs={'class': 'form-input', 'type': 'file'})
+    wd2 = TextInput(attrs={'class': 'form-input'})
+    wd3 = TextInput(attrs={'class': 'form-input', 'placeholder': _('Данных нет')})
+
+    photo = forms.ImageField(required=False,
+                             widget=wd1,
+                             validators=[FileExtensionValidator(allowed_extensions=('gif', 'jpg', 'png'))],
+                             error_messages={'invalid_image': 'Этот формат не поддерживается'})
+    phone = forms.CharField(required=False,
+                            widget=wd2,
+                            validators=[RegexValidator(
+                                regex=r"^\+?7?\d{8,15}$",
+                                message='Введите корректный номер, без пробелов (+79999999999)')]
+                            )
+    patronymic = forms.CharField(required=True, widget=wd3)
+
+    password1 = forms.CharField(required=False,
+                                widget=forms.PasswordInput(
+                                    attrs={'class': 'form-input', 'placeholder': _('Тут можно изменить пароль')}))
+    password2 = forms.CharField(required=False,
+                                widget=forms.PasswordInput(
+                                    attrs={'class': 'form-input', 'placeholder': _('Введите пароль повторно')}))
+    id_user = forms.IntegerField(widget=forms.HiddenInput())
+
+    class Meta:
+        model = User
+        fields = ['email', 'password1', 'password2', 'photo', 'phone', 'patronymic', 'first_name', 'last_name']
+        widgets = {'email': TextInput(attrs={
+            'class': 'form-input',
+            'placeholder': _('Данных нет')
+        }),
+            'first_name': TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': _('Данных нет'),
+                'required': True
+            }),
+            'last_name': TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': _('Данных нет'),
+                'required': True
+            }),
+        }
+
+    def clean_photo(self):
+        # Ограничение размера файла не более 2Мбайт
+        MAX_FILE_ZISE = 2097152
+        photo = self.files.get('photo')
+        if photo:
+            if photo.size > MAX_FILE_ZISE:
+                err_msg = 'Размер файла не должен превышать {}'.format(filesizeformat(MAX_FILE_ZISE))
+                raise ValidationError(err_msg)
+        return photo
+
+    def clean(self):
+        cleaned_data = super().clean()
+        id_user = cleaned_data.get('id_user')
+        user = User.objects.get(id=id_user)
+        client = Client.objects.get(user=user)
+        phone = cleaned_data.get('phone')
+        email = cleaned_data.get('email')
+        errors = {}
+        if User.objects.filter(email=email).exists():
+            email_in_bd = User.objects.filter(email=email).first()
+            if user.email != email and email == email_in_bd.email:
+                errors['email'] = ValidationError('Такой email уже занят')
+
+        if Client.objects.filter(phone=phone).exists():
+            client_in_bd = Client.objects.filter(phone=phone).first()
+            if client.phone != phone and phone == client_in_bd.phone:
+                errors['phone'] = ValidationError('Такой телефон уже занят')
+
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+        if password1 != password2:
+            errors['password2'] = ValidationError('Ошибка, повторите пароль внимательнее!')
+        if errors:
+            raise ValidationError(errors)

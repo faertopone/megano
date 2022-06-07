@@ -5,6 +5,7 @@ from django.views.generic import TemplateView
 
 from accounts import views
 from accounts.forms import PwdResetForm
+from accounts.views import ProfileView, ProfileEditView
 
 urlpatterns = [
     path('registration/', views.registration_view, name='registration'),
@@ -38,4 +39,8 @@ urlpatterns = [
     path('password_reset_complete/',
          TemplateView.as_view(template_name='accounts/reset_status.html'),
          name='password_reset_complete'),
+
+    # urls Профилей пользователей
+    path('profile/', ProfileView.as_view(), name='profile'),
+    path('profile/edit/<int:pk>', ProfileEditView.as_view(), name='profile_edit')
 ]
