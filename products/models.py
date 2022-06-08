@@ -43,7 +43,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=2, default=1,
                                 validators=[MinValueValidator(1)], verbose_name=_("цена"))
     rating = models.DecimalField(max_digits=12, decimal_places=2, default=0,
-                                 validators=[MinValueValidator(0)], verbose_name=_("рэйтинг"))
+                                 validators=[MinValueValidator(0)], verbose_name=_("рейтинг"))
     flag_limit = models.BooleanField(default=False, verbose_name=_("товар заканчивается"))
     category = models.ForeignKey("Category", on_delete=models.CASCADE,
                                  related_name="products", related_query_name="product",
@@ -51,6 +51,8 @@ class Product(models.Model):
     properties = models.ManyToManyField("Property", through="PropertyProduct",
                                         related_name="products", related_query_name="product",
                                         verbose_name=_("свойства товара"))
+    tag = models.TextField(max_length=100, verbose_name=_('теги'), blank=True)
+    tags = models.ManyToManyField('Tag', related_name='products')
 
     class Meta:
         verbose_name = _("товар")
@@ -70,6 +72,19 @@ class Product(models.Model):
         Возвращает полное название товара в виде '(артикул) название товара'.
         """
         return f"({self.article}) {self.name}"
+
+
+class Tag(models.Model):
+    """ Модель тегов для товара """
+    substance = models.CharField(max_length=30, unique=True)
+
+    class Meta:
+        verbose_name = _('тег')
+        verbose_name_plural = _('теги')
+        db_table = 'Tags'
+
+    def __str__(self):
+        return f'{self.substance}'
 
 
 class Property(models.Model):

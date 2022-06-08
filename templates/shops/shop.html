@@ -121,12 +121,21 @@
         </div>
         <div class="Section-content">
           <div class="row row_verticalCenter row_maxHalf">
-            {% for photo in photos %}
+
+
+
             <div class="row-block">
-              <div class="pict"><img src="{{ photo }}" alt="{{ photo }}"/>
+              <div class="ProductCard-look">
+                <div class="ProductCard-photo">
+                  <img src="{{ photos[0] }}" alt="{{ photos[0] }}"/>
+                </div>
+                <div class="ProductCard-picts">
+                  {% for photo in photos %}
+                    <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="{{ photo }}"><img src="{{ photo }}" alt="{{ photo }}"/></a>
+                  {% endfor %}
+                </div>
               </div>
             </div>
-            {% endfor %}
             <div class="row-block">
               <h2>{{ _('Информация о магазине') }} {{ shop.name }}
               </h2>
@@ -154,12 +163,12 @@
           </header>
           <div class="Cards">
             {% for product in products %}
-              <div class="Card"><a class="Card-picture" href="#"><img src="{{ product.photo.url }}" alt="card.jpg"/></a>
+              <div class="Card"><a class="Card-picture" href="#"><img src="{{ product.photo_url }}" alt="card.jpg"/></a>
                 <div class="Card-content">
-                  <strong class="Card-title"><a href="{{ product.href }}">{{ product.name }}</a>
+                  <strong class="Card-title"><a href="#">{{ product.product.name }}</a>
                   </strong>
                   <div class="Card-description">
-                    <div class="Card-cost"><span class="Card-priceOld">{{ product.old_price }}</span><span class="Card-price">{{ product.new_price }}</span>
+                    <div class="Card-cost"><span class="Card-priceOld">{{ product.price_in_shop }}</span><span class="Card-price">{{ product.special_price }}</span>
                     </div>
                     <div class="Card-category">Games / xbox
                     </div>
@@ -167,7 +176,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="Card-sale">{{ product.sale }}
+                <div class="Card-sale">-{{ product.sale }}%
                 </div>
               </div>
             {% endfor %}

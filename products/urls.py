@@ -1,18 +1,18 @@
 from django.urls import path
 
-from .views import PaymentView, GoodsView, DiscountView, HistoryView, \
-                   ProductComment, ProductComparison, product_detail_review, ProductListView
+from . import views
 
 
 app_name = "products"
 
 urlpatterns = [
-    path("payment/", PaymentView.as_view(), name="payment"),
-    path("add_goods/<int:pk>/", GoodsView.as_view(), name="add_goods"),
-    path("discount/<int:pk>/", DiscountView.as_view(), name="discount"),
-    path("historyview/", HistoryView.as_view(), name="history view"),
-    path("comment/<int:pk>/", ProductComment.as_view(), name="product comment"),
-    path("review/<int:pk>/", product_detail_review, name="product review"),
-    path("comparison/<int:pk>/", ProductComparison.as_view(), name="product comparison"),
-    path("category/<int:pk>/", ProductListView.as_view(), name="product_list"),
+    path("payment/", views.PaymentView.as_view(), name="payment"),
+    path("add_goods/<int:pk>/", views.GoodsView.as_view(), name="add_goods"),
+    path("discount/<int:pk>/", views.DiscountView.as_view(), name="discount"),
+    path("historyview/", views.HistoryView.as_view(), name="history view"),
+    path("comment/<int:pk>/", views.ProductComment.as_view(), name="product comment"),
+    path("comparison/<int:pk>/", views.ProductComparison.as_view(), name="product comparison"),
+    path("category/<int:pk>/", views.ProductListView.as_view(), name="product_list"),
+    path('product_detail/<int:pk>/', views.ProductDetailView.as_view(), name='product-detail'),
+    path("products/<int:pk>/", views.ProductTagListView.as_view(), name="product-tag")
 ]

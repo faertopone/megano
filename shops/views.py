@@ -1,30 +1,32 @@
 from django.views import View, generic
-from .models import Shops, ShopPhoto
-from django.shortcuts import render, HttpResponse
+from .models import Shops, ShopPhoto, ShopProduct
 
 
-def shop_info(request, *args, **kwargs):
+class ShopDetailVew(generic.DetailView):
 	"""
-	Выводит детальную информацию о магазине (о продавце)
-	с товарами данного магазина, отфильтрованными по рейтингу
+	Returns information about a specific object from the model 'ShopProfile'
 	"""
-	context = dict()
-	shop_photo_list = ShopPhoto.objects.filter(shop=kwargs['pk']).select_related('shop')
-	context['photos'] = [i.photo.url for i in shop_photo_list]
-	context['shop'] = shop_photo_list[1].shop
-	context['products'] = [{
-		'name': 'test_name',
-		'href': '#',
-		'photo': {'url': 'http://127.0.0.1:8000/static/assets/img/content/home/test.jpg'},
-		'new_price': '1999',
-		'old_price': '5000',
-		'sale': '-70%'
-	}, {
-		'name': 'test_name_1',
-		'href': '#',
-		'photo': {'url': 'http://127.0.0.1:8000/static/assets/img/content/home/card.jpg'},
-		'new_price': '2999',
-		'old_price': '3000',
-		'sale': '-1%'
-	}]
-	return render(request, 'shops/shop.html', context=context)
+	model = Shops
+	template_name = 'shops/shop.html'
+	context_object_name = 'shop'
+
+	def get(self, *args, **kwargs):
+		try:
+			self.extra_context = dict()
+			self.extra_context['products'] = ShopProduct.objects.select_related(
+				"shop", "product", "promotion"
+			).filter(shop_id=kwargs['pk'])
+			self.extra_context['photos'] = [
+				i.photo.url for i in self.extra_context['products'][0].shop.shopphoto_set.all()
+			]
+			return super().get(*args, **kwargs)
+		except:
+			obj = Shops.objects.select_related(
+				"promotion"
+			).prefetch_related(
+				"shopphoto_set", "shopproduct_set"
+			).get(id=kwargs['pk'])
+			self.extra_context = dict()
+			self.extra_context['photos'] = [i.photo.url for i in obj.shopphoto_set.all()]
+			self.extra_context['products'] = obj.shopproduct_set.all()
+			return super().get(*args, **kwargs)

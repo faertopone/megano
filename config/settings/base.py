@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "autocomplete_all",
     'accounts',
     'app_webshop',
+    'banners.apps.BannersConfig',
     "products.apps.ProductsConfig",
     'shops.apps.ShopsConfig',
 ]

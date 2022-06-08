@@ -12,17 +12,16 @@ class Client(models.Model):
         verbose_name=_("пользователь")
     )
     postcode = models.IntegerField(_("почтовый индекс"), blank=True, null=True)
-    photo = models.ImageField(_("фотография"), upload_to='accounts/', null=True)
+    photo = models.ImageField(_("фотография"), upload_to='accounts/', null=True, blank=True)
     phoneNumberRegex = RegexValidator(
         regex=r"^\+?7?\d{8,15}$",
         message='Введите корректный номер, без пробелов (+79999999999)'
     )
-    phone = models.CharField(
-        'контактный номер',
-        validators=[phoneNumberRegex],
-        max_length=16,
-        blank=True
-    )
+    phone = models.CharField(unique=True, null=True,
+                             verbose_name=_('контактный номер'),
+                             validators=[phoneNumberRegex],
+                             max_length=16,
+                             )
     city = models.CharField(_('город'), max_length=256, blank=True)
     street = models.CharField(_("улица"), max_length=256, blank=True)
     house_number = models.IntegerField(_("номер дома"), blank=True, null=True)
@@ -38,9 +37,18 @@ class Client(models.Model):
     )
     is_seller = models.BooleanField(_("продавец"), default=False)
 
+    patronymic = models.CharField(default='', max_length=50,
+                                  error_messages={'max_length': 'Слишком длинное Отчество!'},
+                                  verbose_name=_('Отчество'))
+
     class Meta:
         verbose_name = 'клиент'
         verbose_name_plural = 'клиенты'
 
     def __str__(self):
-        return self.user.first_name
+        return self.user.username
+
+    # Переопределил метод save, чтобы методом save объекта Client-сразу сохранять и изменения в поле user через OneToOne
+    def save(self, *args, **kwargs):
+        self.user.save(*args, **kwargs)
+        super(Client, self).save(*args, **kwargs)

@@ -2552,3 +2552,6 @@ input[type="text"].range-widget__input {
   margin-right: 5px;
   font-weight: bold;
 }
+.errorlist {
+  color: red;
+}

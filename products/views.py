@@ -1,13 +1,16 @@
 from django.db import models
+from django.http import HttpRequest, HttpResponseRedirect
+from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views import View, generic
+from django.views import View
 from django.shortcuts import render, HttpResponse
+from django.views.generic import DetailView, ListView
 from django_filters import ModelMultipleChoiceFilter, CharFilter, RangeFilter
 
 from .filters import filterset_factory, CustomFilterSet
-from .models import (Product, ProductPhoto, UserReviews, PropertyProduct,
-                     Category)
+from .models import (Product, PropertyProduct, Category, Tag)
 from .widgets import CustomCheckboxSelectMultiple, CustomTextInput, CustomRangeWidget
+from .forms import ReviewForm
 
 
 class GoodsView(View):
@@ -26,6 +29,47 @@ class DiscountView(View):
     #  так как скидка возможно будет вычисляемым полем если она есть,
     #  и автоматически применяться к товарам магазина
     pass
+
+
+class ProductDetailView(DetailView):
+    """ Представление для отображения детальной страницы товара """
+    model = Product
+    form_class = ReviewForm
+    template_name = "products/product_detail.html"
+
+    def get_context_data(self, **kwargs):
+        """ Отдаёт содержание страницы при get запросе """
+        context = super().get_context_data(**kwargs)
+        context['reviews'] = self.object.reviews.all()
+        context['review_form'] = ReviewForm()
+        context['shops'] = self.object.shops.all()
+        context['tags'] = self.object.tags.all()
+        return context
+
+    def post(self, request: HttpRequest, pk: int):
+        """ Добавление комментария к товару """
+        product = self.get_object()
+        review_form = ReviewForm(request.POST)
+
+        if review_form.is_valid():
+            review = review_form.save(commit=False)
+            review.product = product
+            if request.user.is_authenticated:
+                review.username = request.user.username
+                review.email = request.user.email
+            review.save()
+        return HttpResponseRedirect(reverse('review-detail', args=[pk]))
+
+
+class ProductTagListView(ListView):
+    model = Tag
+    template_name = 'products/products_list.html'
+
+    def get_context_data(self, **kwargs):
+        """ Показывает список товаров по get запросу """
+        context = super().get_context_data(**kwargs)
+        context['products'] = Tag.objects.get(id=self.kwargs['pk']).products.all()
+        return context
 
 
 class HistoryView(View):
@@ -58,44 +102,6 @@ class ProductComment(View):
         return HttpResponse(content=context.values())
 
 
-def product_detail_review(request, *args, **kwargs):
-    """
-    Выводит детальную информацию о товаре с возможностью добавить отзыв к нему.
-    Отзыв могут оставлять только зарегистрированные пользователи.
-    """
-    context = dict()
-    product_info_set = Product.objects.prefetch_related(
-        "productphoto_set", "userreviews_set",
-    ).get(id=int(kwargs['pk']))
-    context['product'] = product_info_set
-    context['properties'] = PropertyProduct.objects.filter(product_id=int(kwargs['pk'])).select_related('product')
-    context['reviews'] = [i for i in context['product'].userreviews_set.all()]
-    context['photos'] = [i.photo.url for i in context['product'].productphoto_set.all()]
-    context['reviews_count'] = len(context['reviews'])
-    # TODO здесь надо будет дорабатывать после окончательной работы над моделями,
-    #  надо ещё добавить модель ProductShop
-    context['shops'] = [
-        {'name': 'testshop1', 'price': 22000},
-        {'name': 'testshop2', 'price': 21700},
-        {'name': 'testshop3', 'price': 20100},
-        {'name': 'testshop4', 'price': 19999},
-    ]
-
-    if request.method == "GET":
-        return render(request, 'products/product_detail.html', context=context)
-
-    if request.method == "POST":
-        try:
-            UserReviews.objects.create(
-                user=request.user,
-                reviews=request.POST.get('review'),
-                product=context['product'])
-            return render(request, 'products/product_detail.html', context=context)
-        except:
-            context['users_review'] = '<h1>Вы не авторизированы.</h1>'
-            return HttpResponse(content=context['users_review'])
-
-
 class ProductComparison(View):
     def get(self, request, *args, **kwargs):
         context = dict()
@@ -116,12 +122,12 @@ class ProductComparison(View):
                 'new_price': '2999',
                 'old_price': '3000',
                 'sale': '-1%'
-             }
+            }
         ]
         return render(request, 'products/historyview.html', context=context)
 
 
-class ProductListView(generic.ListView):
+class ProductListView(ListView):
     template_name = "product_list.html"
     model = Product
     context_object_name = "products"

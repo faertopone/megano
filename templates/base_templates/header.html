@@ -1,4 +1,5 @@
 <header class="Header">
+{% block header %}
     <div class="ControlPanel">
       <div class="wrap">
         <div class="row ControlPanel-row">
@@ -30,7 +31,7 @@
                         {{ _('Выйти') }}
                     </a>
                      |
-                    <a class="ControlPanel-title" href="#">
+                    <a class="ControlPanel-title" href="{{ url('profile') }}">
                         {{ _('Личный кабинет') }} {{ request.user.username }}
                     </a>
                 {% else %}
@@ -130,4 +131,5 @@
         </div>
       </div>
     </div>
+{% endblock %}
 </header>
