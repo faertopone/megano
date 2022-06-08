@@ -1,9 +1,9 @@
-from django.core.validators import FileExtensionValidator, MinValueValidator
+import re
+
+from django.core.validators import FileExtensionValidator, MinValueValidator, RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
-
-from accounts.models import Client
 
 
 class Category(models.Model):
@@ -91,10 +91,16 @@ class Property(models.Model):
     """
     Свойство товара.
     """
+    _alias_regexp = re.compile(r"^[a-zA-Z][_a-zA-Z0-9]*$")
+
     name = models.CharField(max_length=300, unique=True, verbose_name=_("имя свойства"))
     tooltip = models.CharField(max_length=1000, blank=True, default='',
                                help_text=_("Опишите подробнее, что это за свойство товара"),
                                verbose_name=_("примечание"))
+    alias = models.CharField(max_length=300, unique=True, validators=[RegexValidator(regex=_alias_regexp)],
+                             verbose_name=_("Псевдоним"),
+                             help_text="Псевдоним участвует в построении фильтра для свойства"
+                                       " и должен соответствовать выражению " + _alias_regexp.pattern)
 
     class Meta:
         verbose_name = _("свойство товара")
@@ -137,7 +143,7 @@ class PropertyProduct(models.Model):
         )
 
     def __str__(self):
-        return f"{self.property.name} = {self.value}"
+        return f"{self.value}"
 
 
 class PropertyCategory(models.Model):
@@ -156,7 +162,13 @@ class PropertyCategory(models.Model):
                                  )
 
     # дополнительные данные
-    # TODO: если нужно
+    filtered = models.BooleanField(default=True, verbose_name=_("фильтр"),
+                                   help_text=_("Если отмечено, то можно будет"
+                                               " фильтровать товары по этому свойству"))
+    filter_position = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)],
+                                                  verbose_name=_("Позиция в фильтре"),
+                                                  help_text=_("Свойства в фильтре будут располагаться"
+                                                              " в порядке возрастания позиции"))
 
     class Meta:
         verbose_name = _("параметр свойства категории")

@@ -107,7 +107,7 @@
             <div class="CategoriesButton-content">
               {% for category in active_categories %}
               <div class="CategoriesButton-link">
-                  <a href="#">
+                  <a href="{{ url('products:product_list', kwargs={'pk': category.pk}) }}">
                     <div class="CategoriesButton-icon">
                         <img src="{{ category.icon_photo.url }}" alt="{{ category.category_name }}"/>
                     </div>

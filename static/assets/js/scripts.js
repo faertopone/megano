@@ -549,8 +549,18 @@ var Map = function(){
 };
 Map().init();
 var Pagination = function(){
+    var $pagination = $('.Pagination-ins');
+    var $paginators = $pagination.find('.Pagination-element');
     return {
         init: function(){
+            $paginators.on('click', function($e){
+                var $page = $( this ).attr('data-page');
+                if ($page !== undefined) {
+                    const url = new URL(window.location);  // == window.location.href
+                    url.searchParams.set('page', $page);
+                    history.pushState(null, null, url);    // == url.href
+                }
+            });
         }
     };
 };
@@ -589,8 +599,18 @@ var Compare = function(){
 };
 Compare().init();
 var Sort = function(){
+    var $sort = $('.Sort');
+    var $sortVariants = $sort.find('.Sort-sortBy');
     return {
         init: function(){
+            $sortVariants.on('click', function($e){
+                var $sortVal = $( this ).attr('data-sort');
+                if ($sortVal !== undefined) {
+                    const url = new URL(window.location);  // == window.location.href
+                    url.searchParams.set('sort', $sortVal);
+                    history.pushState(null, null, url);    // == url.href
+                }
+            });
         }
     };
 };

@@ -15,7 +15,7 @@
                               </strong>
                               <div class="Slider-text">{{ item_banner.description }}
                               </div>
-                              <div class="Slider-footer"><a class="btn btn_primary" href="{{ url('product review', args=[item_banner.product_banner.pk]) }}">{{ _('Начать') }}</a>
+                              <div class="Slider-footer"><a class="btn btn_primary" href="{{ url('products:product-detail', args=[item_banner.product_banner.pk]) }}">{{ _('Начать') }}</a>
                               </div>
                             </div>
                             <div class="row-block">

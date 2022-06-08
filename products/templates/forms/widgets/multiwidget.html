@@ -1,0 +1,8 @@
+<div class="form-group">
+  <div class="range-widget">
+    {% for widget in widget.subwidgets %}
+      {% include widget.template_name %}
+      {% if forloop.first %}<span class="range-widget-sep">-</span>{% endif %}
+    {% endfor %}
+  </div>
+</div>
