@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from django.http import HttpRequest
+from django.core import serializers
+from django.http import HttpRequest, JsonResponse
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -28,12 +29,12 @@ def send_client_email(user_id, domain, subject, template):
     )
 
 
-def initial_form_profile(request: HttpRequest, pk: int) -> list:
+def initial_form_profile(request: HttpRequest) -> list:
     """
     Функция инициализирует начальные значения Профиля
     """
-    user = User.objects.get(id=request.user.id)
-    client = Client.objects.select_related('user').get(pk=pk)
+    user = User.objects.get(pk=request.user.pk)
+    client = Client.objects.select_related('user').get(user=request.user)
     initial_client = {
         'phone': client.phone,
         'patronymic': client.patronymic,
@@ -45,11 +46,12 @@ def initial_form_profile(request: HttpRequest, pk: int) -> list:
     return [initial_client, client]
 
 
-def post_context(request: HttpRequest, pk: int, form) -> object:
+def post_context(request: HttpRequest, form) -> object:
     """
      Представления Профиля при запросе POST и изменения данных, которые были изменены
      """
-    initial_data_all = initial_form_profile(request=request, pk=pk)
+    messages = ''
+    initial_data_all = initial_form_profile(request=request)
     client = initial_data_all[1]
     form = form
     if form.is_valid():
@@ -83,8 +85,22 @@ def post_context(request: HttpRequest, pk: int, form) -> object:
                 client.user.set_password(password)
 
             client.save()
+            messages = 'Данные успешно сохранены!'
 
     context = {'form': form,
-               'client': client}
+               'client': client,
+               'msg': messages}
     return context
 
+
+def add_product_in_history(product: object, client: object):
+    """
+    Функция, добавляет просмотренный товар в БД
+    """
+    pass
+
+def add_product_in_history_session(request: HttpRequest):
+    """
+    Функция, добавляет просмотренный товар сессию пользователя
+    """
+    pass

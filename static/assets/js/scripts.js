@@ -153,16 +153,11 @@ var form = function(){
                 }
             });
 
-            let validate = $("[data-validate='require']");
-            validate.each(function (v){
-                console.log($(this).attr('data-validate'))
-            })
-
             // Валидация полей
             $input.on('blur', function(){
                 let $this = $(this),
                     message = '',
-                    error = false;
+                    error = false,
                     validate = $("[data-validate='require']");
                     // Я тут подправил код для работы со своей формой валидации, потому что изменил поля ввода формы
 
@@ -890,6 +885,20 @@ var Categories = function(){
         }
     };
 };
+// Мои скрипты для подсвечивания синим цветом текущею страницу навигации
+
+        //сравниваем текущую страницу с тем какую надо подсветить
+        $('.NavigateProfile .menu-item .menu-link').each(function (){
+            let page = $(this).attr('href')
+            let url = $(location).attr('pathname')
+            if (page === url){
+                $(this).parent().addClass('menu-item_ACTIVE')
+            }
+        })
+
+
+
+
 Categories().init();
 //ENDion.js
 //END

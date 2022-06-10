@@ -57,7 +57,7 @@ class Client(models.Model):
         super(Client, self).save(*args, **kwargs)
 
 
-class HistoryReview(models.Model):
+class HistoryView(models.Model):
     """ Модель истории просмотров пользователя """
 
     client = models.OneToOneField(
@@ -70,13 +70,18 @@ class HistoryReview(models.Model):
                                        blank=True, null=True)
     limit_items_views = models.IntegerField(verbose_name=_('Сколько максимум показывать товаров'),
                                             help_text=_('Тут можно изменить это значение, по умолчанию 40'),
-                                            default=40, validators=[MinValueValidator(1)])
+                                            default=40, validators=[MinValueValidator(4)])
+
+    def __str__(self):
+        return f'История просмотров для {self.client.user.username}'
 
     # После сохранения модели Client, создаем ему сразу в БД модель просмотров
     @receiver(post_save, sender=Client)
     def created_history(sender, instance, created, **kwargs):
         if created:
-            HistoryReview.objects.create(client=instance)
+            HistoryView.objects.create(client=instance)
+
+            # Способ №2
         # instance = kwargs['instance']
         # # Если у пользователя нет модели просмотров, то создадим ее
         # if not HistoryReview.objects.filter(client=instance).exists():
