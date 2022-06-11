@@ -106,11 +106,24 @@ def add_product_in_history(user: object, product_pk: int):
         client_history.item_view.add(product)
 
 
-def add_product_in_history_session(request: HttpRequest):
+def add_product_in_history_session(request: HttpRequest, product_pk: int):
     """
-    Функция, добавляет просмотренный товар сессию пользователя
+    Функция, добавляет просмотренный товар в сессию пользователя
     """
-    pass
+    product_history = Product.objects.get(pk=product_pk)
+    # если еще не было товаров в сессии, создадим список и добавим этот товар
+    if not request.session.get('products'):
+        product_history_list = list()
+        product_history_list.append(product_history)
+        request.session['products'] = product_history_list
+    else:
+        # если там уже добавлен товар, то сначала извлекаем список товаров
+        product_list = request.session.get('products')
+        # Добавляем новый товар если такого нет в списке
+        if not (product_history in product_list):
+            product_list.append(product_history)
+            # обновляем сессию с товарами
+            request.session['products'] = product_list
 
 
 def get_context_data(user) -> list:
@@ -170,4 +183,3 @@ def get_context_data_ajax(user, items_in_page) -> list:
         # обнулим переменную с адресом фотки
         photo = '#'
     return [list_in_page, flag_items_complete]
-

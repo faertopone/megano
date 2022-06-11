@@ -69,10 +69,10 @@ class HistoryView(models.Model):
     item_view = models.ManyToManyField('products.Product', verbose_name=_('Товары, которые смотрел пользователь'),
                                        blank=True, null=True)
     limit_items_views = models.IntegerField(verbose_name=_('Сколько максимум показывать товаров'),
-                                            help_text=_('Тут можно изменить это значение, по умолчанию 40 минимум 4.'),
-                                            default=40, validators=[MinValueValidator(4)])
+                                            help_text=_('Тут можно изменить это значение, по умолчанию 20 минимум 4.'),
+                                            default=20, validators=[MinValueValidator(4)])
     item_in_page_views = models.IntegerField(verbose_name=_('По сколько товаров выводить на странице'),
-                                             default=10,
+                                             default=8,
                                              help_text=_('По сколько товаров будет добавляться при нажатии на кнопку '
                                                          '"показать еще", но не больше чем разрешено'),
                                              validators=[MinValueValidator(2)])
