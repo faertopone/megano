@@ -77,7 +77,6 @@ def post_context(request: HttpRequest, form) -> object:
             if 'phone' in change_data_list:
                 client.phone = phone
             if 'email' in change_data_list:
-
                 client.user.email = email
             if 'patronymic' in change_data_list:
                 client.patronymic = patronymic
@@ -99,8 +98,42 @@ def add_product_in_history(product: object, client: object):
     """
     pass
 
+
 def add_product_in_history_session(request: HttpRequest):
     """
     Функция, добавляет просмотренный товар сессию пользователя
     """
     pass
+
+
+def add_product_in_page(list_item_views: list, limit_items_views: int, items_in_page: int) -> list:
+    """
+    Функция, возвращает список товаров которые нужно добавить на страницу
+    """
+
+    # Флаг, который говорит что все элементы передали и больше новых нет
+    flag_items_complete = False
+    end_item = limit_items_views / 3
+    if limit_items_views % 3 != 0:
+        end_item = limit_items_views // 3
+
+    end_elemet = items_in_page + end_item
+    if end_elemet >= len(list_item_views):
+        end_elemet = limit_items_views
+        flag_items_complete = True
+
+    list_item_views = list_item_views[items_in_page:end_elemet]
+    list_in_page = []
+    photo = '#'
+    for item in list_item_views:
+        for i in item.productphoto_set.all()[:1]:
+            photo = i.photo.url
+        list_in_page.append({'name': item.name,
+                             'price': item.price,
+                             'category': item.category.category_name,
+                             'item_pk': item.pk,
+                             'photo': photo,
+                             })
+        # обнулим переменную с адресом фотки
+        photo = '#'
+    return [list_in_page, flag_items_complete]
