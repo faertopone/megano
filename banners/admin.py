@@ -4,10 +4,10 @@ from django.http import HttpRequest
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from .models import Banners
-from products.models import Product
 from .forms import BannersForm
 from django.utils.translation import gettext_lazy as _
 from django.template.defaultfilters import truncatewords
+
 
 # Админ панель для создания баннера
 @admin.register(Banners)
@@ -18,21 +18,21 @@ class BannersAdmin(admin.ModelAdmin):
     list_filter = ['name', 'is_active', 'creation_date']
     actions = ['active', 'not_active']
     # Поиск по имени и совпадение с началом слова типа startswith
-    search_fields = ['^name',]
+    search_fields = ['^name', ]
     # Добавляют полю с FK и M2M поиск, так же не забыть добавить в search_fields, имя поля с поиском из FK , M2M
     autocomplete_fields = ['product_banner']
     fieldsets = (
         (_('Наименования банера и товара'), {
-            'fields': (('name'), ('product_banner')),
+            'fields': ('name', 'product_banner'),
         }),
         (_('Фотография для баннера'), {
             'fields': (('photo', 'banner_photo'),)
         }),
         (None, {
-            'fields': (('description'),)
+            'fields': ('description',)
         }),
         (None, {
-            'fields': (('is_active'),)
+            'fields': ('is_active',)
         }),
 
     )
@@ -53,14 +53,12 @@ class BannersAdmin(admin.ModelAdmin):
         update = queryset.update(is_active=False)
         self.message_user(request, f'Выключен {update} баннер!')
 
-
     @staticmethod
     @admin.display(description=_('изображение баннера'))
     def banner_photo(obj: Banners):
         if not obj.photo:
             return 'Нету фотографии'
         return mark_safe('<img src="{}" width="50" height="50" />'.format(obj.photo.url))
-
 
     @staticmethod
     @admin.display(description=_('Мини описание'))
@@ -71,10 +69,6 @@ class BannersAdmin(admin.ModelAdmin):
                 truncatewords(obj.description, 5)
             )
         )
-
-
-
-
 
 
 admin.site.site_title = _('Django Megano Admin')

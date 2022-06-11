@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.views.generic import ListView
 from banners.models import Banners
 from banners.services import get_banners

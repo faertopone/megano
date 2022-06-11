@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import FileExtensionValidator
 
@@ -47,7 +46,7 @@ class Banners(models.Model):
 
     def get_version(self):
         """
-        Возвращает цифры, если в названии товара они есть, или возвращает None если нету
+        Возвращает цифры, если в названии товара они есть, или возвращает None если нет
         """
         name = self.product_banner.name
         name_list = name.split()

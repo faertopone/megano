@@ -88,21 +88,14 @@ class HistoryView(models.Model):
             self.item_in_page_views = self.limit_items_views
         return self.item_in_page_views
 
-
     def __str__(self):
         return f'История просмотров для {self.client.user.username}'
 
     # После сохранения модели Client, создаем ему сразу в БД модель просмотров
     @receiver(post_save, sender=Client)
-    def created_history(sender, instance, created, **kwargs):
+    def created_history(self, instance, created):
         if created:
             HistoryView.objects.create(client=instance)
-
-            # Способ №2
-        # instance = kwargs['instance']
-        # # Если у пользователя нет модели просмотров, то создадим ее
-        # if not HistoryReview.objects.filter(client=instance).exists():
-        #     HistoryReview.objects.create(client=instance)
 
     class Meta:
         verbose_name = 'История просмотра'

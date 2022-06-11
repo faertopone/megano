@@ -144,12 +144,12 @@ def get_context_data(user) -> list:
     """
     try:
         client = Client.objects.select_related('user').get(user=user)
-        queryset_historyview = HistoryView.objects.prefetch_related('item_view').get(client=client)
-        item_in_page_views_check = queryset_historyview.item_in_page_views_check()
-        max_limit = queryset_historyview.limit_items_views
+        queryset_history = HistoryView.objects.prefetch_related('item_view').get(client=client)
+        item_in_page_views_check = queryset_history.item_in_page_views_check()
+        max_limit = queryset_history.limit_items_views
 
-        list_item_views = queryset_historyview.item_view.all()[::-1][:item_in_page_views_check]
-        if len(queryset_historyview.item_view.all()[:max_limit]) <= item_in_page_views_check:
+        list_item_views = queryset_history.item_view.all()[::-1][:item_in_page_views_check]
+        if len(queryset_history.item_view.all()[:max_limit]) <= item_in_page_views_check:
             all_items_complete = False
         else:
             all_items_complete = True
@@ -166,10 +166,10 @@ def get_context_data_ajax(user, items_in_page) -> list:
     Функция возвращает товары, которые нужно добавить на страницу просмотров
     """
     client = Client.objects.select_related('user').get(user=user)
-    queryset_historyview = HistoryView.objects.prefetch_related('item_view').get(client=client)
-    limit_items_views = queryset_historyview.limit_items_views
-    item_in_page_views_check = queryset_historyview.item_in_page_views_check()
-    list_item_views = queryset_historyview.item_view.all()[::-1][:limit_items_views]
+    queryset_history = HistoryView.objects.prefetch_related('item_view').get(client=client)
+    limit_items_views = queryset_history.limit_items_views
+    item_in_page_views_check = queryset_history.item_in_page_views_check()
+    list_item_views = queryset_history.item_view.all()[::-1][:limit_items_views]
 
     # Добавим на вывод на страницу N товаров
     # Флаг, который говорит что все элементы передали и больше новых нет
