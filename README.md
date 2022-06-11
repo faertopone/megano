@@ -62,30 +62,31 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
    python manage.py makemigrations
    python manage.py migrate
    ```
-   1. Загрузить фикстуры.
+2. Загрузить фикстуры.
+
+   :warning: Порядок загружки фикстур имеет значение, потому что таблицы имеют связи.
+
+   :ok_hand: Необязательно загружать все фикстуры. Можно загрузить только те, которых не хватает. Главное чтобы они загружались в правильном порядке.   
    
-      :warning: Порядок загружки фикстур имеет значение, потому что таблицы имеют связи.
+   1. Загрузить суперпользователя
+   ```
+   python manage.py loaddata fixtures\superuser.json
+   ```
+   2. Загрузить категории каталога и товары
+   ```
+   python manage.py loaddata fixtures\products\category.json fixtures\products\product.json
+   ```
+   3. Загрузить свойства товаров и их связи с товарами и категориями
+   ```
+   python manage.py loaddata fixtures\products\property.json fixtures\products\property_product.json fixtures\products\property_category.json
+   ```
+   4. Загрузить баннеры
+   ```
+   python manage.py loaddata fixtures\banners\banners.json
+    ```
+   5. Загрузить 1 профиль (покупатель)  
+    ```
+   python manage.py loaddata fixtures\accounts\client.json
+    ```
    
-      :ok_hand: Необязательно загружать все фикстуры. Можно загрузить только те, которых не хватает. Главное чтобы они загружались в правильном порядке.   
-   
-      1. Загрузить суперпользователя
-      ```
-      python manage.py loaddata fixtures\superuser.json
-      ```
-      2. Загрузить категории каталога
-      ```
-      python manage.py loaddata fixtures\products\category.json
-      ```
-      3. Загрузить товары и их свойства
-      ```
-      python manage.py loaddata fixtures\products\product.json fixtures\products\property.json fixtures\products\property_product.json
-      ```
-      4. Загрузить баннеры
-      ```
-      python manage.py loaddata fixtures\banners\banners.json
-       ```
-      5. Загрузить 1 профиль (покупатель)  
-       ```
-      python manage.py loaddata fixtures/accounts/client.json
-       ```
-      :warning: Не забываем добавлять здесь, как загружать новые фикстуры!
+   :warning: Не забываем добавлять здесь, как загружать новые фикстуры!

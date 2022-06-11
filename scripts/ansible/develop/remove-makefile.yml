@@ -1,0 +1,4 @@
+- name: Remove Makefile from ansible working dir
+  file:
+    path: Makefile
+    state: absent
