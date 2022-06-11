@@ -36,15 +36,18 @@ def initial_form_profile(request: HttpRequest) -> list:
     """
     user = User.objects.get(pk=request.user.pk)
     client = Client.objects.select_related('user').get(user=request.user)
+    history = HistoryView.objects.select_related('client').get(client=client)
     initial_client = {
         'phone': client.phone,
         'patronymic': client.patronymic,
         'id_user': user.id,
         'first_name': user.first_name,
         'last_name': user.last_name,
-        'email': user.email
+        'email': user.email,
+        'limit_items_views': history.limit_items_views,
+        'item_in_page_views': history.item_in_page_views
     }
-    return [initial_client, client]
+    return [initial_client, client, history]
 
 
 def post_context(request: HttpRequest, form) -> object:
@@ -54,6 +57,7 @@ def post_context(request: HttpRequest, form) -> object:
     messages = ''
     initial_data_all = initial_form_profile(request=request)
     client = initial_data_all[1]
+    history = initial_data_all[2]
     form = form
     if form.is_valid():
         # Если изменения были в форме, то выполним это
@@ -68,6 +72,8 @@ def post_context(request: HttpRequest, form) -> object:
             email = form.cleaned_data.get('email')
             patronymic = form.cleaned_data.get('patronymic')
             password = form.cleaned_data.get('password1')
+            limit_items_views = form.cleaned_data.get('limit_items_views')
+            item_in_page_views = form.cleaned_data.get('item_in_page_views')
 
             if 'first_name' in change_data_list:
                 client.user.first_name = first_name
@@ -83,7 +89,12 @@ def post_context(request: HttpRequest, form) -> object:
                 client.patronymic = patronymic
             if 'password1' in change_data_list:
                 client.user.set_password(password)
+            if 'limit_items_views' in change_data_list:
+                history.limit_items_views = limit_items_views
+            if 'item_in_page_views' in change_data_list:
+                history.item_in_page_views = item_in_page_views
 
+            history.save()
             client.save()
             messages = 'Данные успешно сохранены!'
 

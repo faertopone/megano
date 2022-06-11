@@ -85,6 +85,18 @@
                       {{ form.password2 }}
                       {{ form.password2.errors }}
                   </div>
+                    <div class="form-group">
+                    <label class="form-label" for="limit_items_views">{{ _('Сколько всего товаров показывать в "История просмотров" ') }}
+                    </label>
+                      {{ form.limit_items_views }}
+                      {{ form.limit_items_views.errors }}
+                  </div>
+                       <div class="form-group">
+                    <label class="form-label" for="item_in_page_views">{{ _('По сколько товаров отображать на странице "История просмотров"') }}
+                    </label>
+                      {{ form.item_in_page_views }}
+                      {{ form.item_in_page_views.errors }}
+                  </div>
                   <div class="form-group">
                     <div class="Profile-btn">
                       <button type="submit" class="btn btn_success">{{ _('Сохранить') }}

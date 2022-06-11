@@ -96,6 +96,9 @@ class ProfileEditForm(forms.ModelForm):
                                     attrs={'class': 'form-input', 'placeholder': _('Введите пароль повторно')}))
     id_user = forms.IntegerField(widget=forms.HiddenInput())
 
+    limit_items_views = forms.IntegerField(widget=wd2)
+    item_in_page_views = forms.IntegerField(widget=wd2)
+
     class Meta:
         model = User
         fields = ['email', 'password1', 'password2', 'photo', 'phone', 'patronymic', 'first_name', 'last_name']
@@ -127,6 +130,18 @@ class ProfileEditForm(forms.ModelForm):
                 err_msg = 'Размер файла не должен превышать {}'.format(filesizeformat(MAX_FILE_ZISE))
                 raise ValidationError(err_msg)
         return photo
+
+    def clean_item_in_page_views(self):
+        item_in_page_views = self.cleaned_data.get('item_in_page_views')
+        if item_in_page_views <= 2:
+            raise ValidationError('Не стоит устанавливать меньше 2!')
+        return item_in_page_views
+
+    def clean_limit_items_views(self):
+        limit_items_views = self.cleaned_data.get('limit_items_views')
+        if limit_items_views < 4:
+            raise ValidationError('Ну уж меньше 4, это не серьезно!')
+        return limit_items_views
 
     def clean(self):
         cleaned_data = super().clean()

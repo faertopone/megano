@@ -2,13 +2,13 @@ from .models import Banners
 from random import sample
 
 
-def get_banners():
+def get_banners() -> list:
     """
-    Функция для работы с баннерами
+    Функция возвращает список, с 3 случайными активными баннерами
     """
     # Проверка баннеров в БД
     if not Banners.objects.all().exists():
-        return None
+        return []
     list_banners = []
     banners = Banners.objects.filter(is_active=True)
     # Если баннеров мало, то просто выведем их
