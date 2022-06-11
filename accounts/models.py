@@ -71,6 +71,18 @@ class HistoryView(models.Model):
     limit_items_views = models.IntegerField(verbose_name=_('Сколько максимум показывать товаров'),
                                             help_text=_('Тут можно изменить это значение, по умолчанию 40 минимум 4.'),
                                             default=40, validators=[MinValueValidator(4)])
+    item_in_page_views = models.IntegerField(verbose_name=_('По сколько товаров выводить на странице'),
+                                             default=10,
+                                             help_text=_('По сколько товаров будет добавляться при нажатии на кнопку '
+                                                         '"показать еще", но не больше чем разрешено'),
+                                             validators=[MinValueValidator(2)])
+
+    # Проверяем, не больше ли чем позволено
+    def item_in_page_views_check(self):
+        if self.item_in_page_views >= self.limit_items_views:
+            self.item_in_page_views = self.limit_items_views
+        return self.item_in_page_views
+
 
     def __str__(self):
         return f'История просмотров для {self.client.user.username}'

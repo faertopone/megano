@@ -97,7 +97,7 @@ class Property(models.Model):
     tooltip = models.CharField(max_length=1000, blank=True, default='',
                                help_text=_("Опишите подробнее, что это за свойство товара"),
                                verbose_name=_("примечание"))
-    alias = models.CharField(max_length=300, unique=True, validators=[RegexValidator(regex=_alias_regexp)],
+    alias = models.CharField(max_length=300, unique=True, validators=[RegexValidator(regex=_alias_regexp)], null=True,
                              verbose_name=_("Псевдоним"),
                              help_text="Псевдоним участвует в построении фильтра для свойства"
                                        " и должен соответствовать выражению " + _alias_regexp.pattern)

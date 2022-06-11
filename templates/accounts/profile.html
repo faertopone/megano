@@ -88,11 +88,10 @@
                   </h2>
                 </header>
                 <div class="Cards Cards_account">
-
-                  {% for item in list_item_views %}
-                <div class="Card">
-
-                    <a class="Card-picture" href="{{ url('product-detail', kwargs = {'pk': item.pk}) }}">
+                 {%  if list_item_views %}
+                    {% for item in list_item_views %}
+                        <div class="Card">
+                    <a class="Card-picture" href="{{ url('products:product-detail', kwargs = {'pk': item.pk}) }}">
                         {# Тут выводим первую фотографию товара #}
                         {% for photos in  item.productphoto_set.all() %}
                             {% if loop.first %}
@@ -101,7 +100,7 @@
                         {% endfor %}
                     </a>
                   <div class="Card-content">
-                    <strong class="Card-title"><a href="{{ url('product-detail', kwargs = {'pk': item.pk}) }}">{{ item.name }}</a>
+                    <strong class="Card-title"><a href="{{ url('products:product-detail', kwargs = {'pk': item.pk}) }}">{{ item.name }}</a>
                     </strong>
                         <div class="Card-description">
                               <div class="Card-cost"><span class="Card-priceOld">{{ item.price }}</span><span class="Card-price">$85.00</span>
@@ -115,9 +114,13 @@
                   </div>
                   <div class="Card-sale">-60%</div>
                 </div>
-             {% endfor %}
+                    {% endfor %}
+                     <div class="Account-editLink Account-editLink_view"><a href="{{ url('history_user', kwargs={'pk': client.pk }) }}">{{ _('Перейти на полный список') }}</a>
+                 {% else %}
+                <h3 class="Middle-title">{{ _('Просмотренныех товаров еще нет!') }}</h3>
+                 {% endif %}
                 </div>
-                <div class="Account-editLink Account-editLink_view"><a href="{{ url('history_user', kwargs={'pk': client.pk }) }}">{{ _('Перейти на полный список') }}</a>
+
                 </div>
               </div>
             </div>

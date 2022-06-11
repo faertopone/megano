@@ -24,40 +24,47 @@
           {% include 'base_templates/navigation.html' %}
           {# ============ #}
         <div class="Section-content">
-          <div class="Cards">
+            {% if list_item_views %}
+                  <div class="Cards">
 
-              {% for item in list_item_views %}
-                <div class="Card">
+                      {% for item in list_item_views %}
+                        <div class="Card">
 
-                    <a class="Card-picture" href="{{ url('product-detail', kwargs = {'pk': item.pk}) }}">
-                        {# Тут выводим первую фотографию товара #}
-                        {% for photos in  item.productphoto_set.all() %}
-                            {% if loop.first %}
-                                <img src=" {{ photos.photo.url }}" alt="{{ photos.photo }} "/>
-                            {% endif %}
-                        {% endfor %}
-                    </a>
-                  <div class="Card-content">
-                    <strong class="Card-title"><a href="{{ url('product-detail', kwargs = {'pk': item.pk}) }}">{{ item.name }}</a>
-                    </strong>
-                        <div class="Card-description">
-                              <div class="Card-cost"><span class="Card-priceOld">{{ item.price }}</span><span class="Card-price">$85.00</span>
-                              </div>
-                            <div class="Card-category">{{ item.category }}
-                            </div>
+                            <a class="Card-picture" href="{{ url('products:product-detail', kwargs = {'pk': item.pk}) }}">
+                                {# Тут выводим первую фотографию товара #}
+                                {% for photos in  item.productphoto_set.all() %}
+                                    {% if loop.first %}
+                                        <img src=" {{ photos.photo.url }}" alt="{{ photos.photo }} "/>
+                                    {% endif %}
+                                {% endfor %}
+                            </a>
+                          <div class="Card-content">
+                            <strong class="Card-title"><a href="{{ url('products:product-detail', kwargs = {'pk': item.pk}) }}">{{ item.name }}</a>
+                            </strong>
+                                <div class="Card-description">
+                                      <div class="Card-cost"><span class="Card-priceOld">{{ item.price }}</span><span class="Card-price">$85.00</span>
+                                      </div>
+                                    <div class="Card-category">{{ item.category }}
+                                    </div>
 
-                          <div class="Card-hover"><a class="Card-btn"  data-history_item_pk = {{ item.pk }} href="#"><img src="{{ static('assets/img/icons/card/bookmark.svg')}}" alt="bookmark.svg"/></a><a class="Card-btn" href="#"><img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/></a><a class="Card-btn" href="#"><img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/></a>
+                                  <div class="Card-hover"><a class="Card-btn"  data-history_item_pk = {{ item.pk }} href="#"><img src="{{ static('assets/img/icons/card/bookmark.svg')}}" alt="bookmark.svg"/></a><a class="Card-btn" href="#"><img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/></a><a class="Card-btn" href="#"><img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/></a>
+                                  </div>
+                                </div>
                           </div>
+                          <div class="Card-sale">-60%</div>
                         </div>
+                     {% endfor %}
+
                   </div>
-                  <div class="Card-sale">-60%</div>
+                    {% if all_items_complete %}
+                        <div class ='next_product_more'>
+                            <button id="test_button" class="btn btn_primary" value="{{ csrf_token }}"> {{ _('Показать еще') }}</button>
+                    {% endif %}
+                {% else %}
+                <div class="Cards">
+                    <h3 class="Middle-title">{{ _('Просмотренныех товаров еще нет!') }}</h3>
                 </div>
-             {% endfor %}
-
-          </div>
-            <div class ='next_product_more'>
-                <button id="test_button" class="btn btn_primary" value="{{ csrf_token }}"> {{ _('Показать еще') }}</button>
-
+            {% endif %}
         </div>
 
         </div>

@@ -1,13 +1,14 @@
 from django.contrib.auth.models import User
-from django.core import serializers
-from django.http import HttpRequest, JsonResponse
+from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import Client
+
+from products.models import Product
+from .models import Client, HistoryView
 
 
 def send_client_email(user_id, domain, subject, template):
@@ -92,11 +93,17 @@ def post_context(request: HttpRequest, form) -> object:
     return context
 
 
-def add_product_in_history(product: object, client: object):
+def add_product_in_history(user: object, product_pk: int):
     """
     Функция, добавляет просмотренный товар в БД
     """
-    pass
+    client = Client.objects.select_related('user').get(user=user)
+    client_history = HistoryView.objects.prefetch_related('item_view').get(client=client)
+    product = Product.objects.get(pk=product_pk)
+    list_viewers_products = client_history.item_view.all()
+    # Если этого продукта нет еще в истории, то добавим его
+    if not (product in list_viewers_products):
+        client_history.item_view.add(product)
 
 
 def add_product_in_history_session(request: HttpRequest):
@@ -106,23 +113,49 @@ def add_product_in_history_session(request: HttpRequest):
     pass
 
 
-def add_product_in_page(list_item_views: list, limit_items_views: int, items_in_page: int) -> list:
+def get_context_data(user) -> list:
     """
-    Функция, возвращает список товаров которые нужно добавить на страницу
+    Функция для вычисления context['list_item_views'] - Вывод товаров для просмотра и
+    context['all_items_complete'] - флаг, что все допустимы товары вывели
     """
+    try:
+        client = Client.objects.select_related('user').get(user=user)
+        queryset_historyview = HistoryView.objects.prefetch_related('item_view').get(client=client)
+        item_in_page_views_check = queryset_historyview.item_in_page_views_check()
+        max_limit = queryset_historyview.limit_items_views
 
+        list_item_views = queryset_historyview.item_view.all()[::-1][:item_in_page_views_check]
+        if len(queryset_historyview.item_view.all()[:max_limit]) <= item_in_page_views_check:
+            all_items_complete = False
+        else:
+            all_items_complete = True
+
+    except BaseException:
+        list_item_views = []
+        all_items_complete = True
+
+    return [list_item_views, all_items_complete]
+
+
+def get_context_data_ajax(user, items_in_page) -> list:
+    """
+    Функция возвращает товары, которые нужно добавить на страницу просмотров
+    """
+    client = Client.objects.select_related('user').get(user=user)
+    queryset_historyview = HistoryView.objects.prefetch_related('item_view').get(client=client)
+    limit_items_views = queryset_historyview.limit_items_views
+    item_in_page_views_check = queryset_historyview.item_in_page_views_check()
+    list_item_views = queryset_historyview.item_view.all()[::-1][:limit_items_views]
+
+    # Добавим на вывод на страницу N товаров
     # Флаг, который говорит что все элементы передали и больше новых нет
     flag_items_complete = False
-    end_item = limit_items_views / 3
-    if limit_items_views % 3 != 0:
-        end_item = limit_items_views // 3
-
-    end_elemet = items_in_page + end_item
-    if end_elemet >= len(list_item_views):
-        end_elemet = limit_items_views
+    end_element = items_in_page + item_in_page_views_check
+    if end_element >= len(list_item_views):
+        end_element = limit_items_views
         flag_items_complete = True
 
-    list_item_views = list_item_views[items_in_page:end_elemet]
+    list_item_views = list_item_views[items_in_page:end_element]
     list_in_page = []
     photo = '#'
     for item in list_item_views:
@@ -137,3 +170,4 @@ def add_product_in_page(list_item_views: list, limit_items_views: int, items_in_
         # обнулим переменную с адресом фотки
         photo = '#'
     return [list_in_page, flag_items_complete]
+
