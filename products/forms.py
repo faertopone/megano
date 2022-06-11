@@ -1,6 +1,6 @@
 from django import forms
 
-from products.models import UserReviews
+from .models import UserReviews
 
 
 class ReviewForm(forms.ModelForm):

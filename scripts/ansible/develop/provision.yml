@@ -1,0 +1,48 @@
+- name: Provision development VM
+  # Common operation settings
+  hosts: all
+  become: true
+
+  # Tasks
+  tasks:
+    - name: Install python libs
+      apt:
+        name:
+          - python3-pip
+          - python3-venv
+          - python3-dev
+          - python3-virtualenv
+        state: latest
+        update_cache: true
+
+    - name: Install dev requirements
+      pip:
+        requirements: /vagrant/requirements/dev.txt
+
+    - include_tasks: remove-makefile.yml
+
+    - name: Copy Makefile to ansible working dir
+      copy:
+        dest: Makefile
+        src: ../../../Makefile
+      notify: Remove Makefile
+
+    - name: Copy Makefile to vagrant user dir
+      copy:
+        dest: /home/vagrant/Makefile
+        src: Makefile
+
+    - name: Apply migrations
+      command: make apply-migrations
+      register: result
+    - debug: var=result.stdout_lines
+
+    - name: Load fixtures
+      command: make load-fixtures
+      register: result
+    - debug: var=result.stdout_lines
+
+  # Handlers
+  handlers:
+    - name: Remove Makefile
+      include_tasks: remove-makefile.yml

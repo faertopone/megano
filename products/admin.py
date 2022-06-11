@@ -155,7 +155,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Property)
 class PropertyAdmin(autocomplete_all.ModelAdmin):
-    list_display = ("name", "tooltip_view")
+    list_display = ("name", "alias", "tooltip_view")
     list_display_links = ("name",)
 
     search_fields = ("name", "tooltip")

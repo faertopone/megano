@@ -33,7 +33,7 @@
   "model": "products.category",
   "pk": 4,
   "fields": {
-    "activity": false,
+    "activity": true,
     "icon_photo": "categories/2_2iNKhne.svg",
     "category_name": "Аксессуары",
     "description": ""

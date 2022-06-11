@@ -44,4 +44,6 @@ except Exception:
         '127.0.0.1',
     ]
 
-# STATIC_ROOT = 'static'
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": lambda request: True,
+}
