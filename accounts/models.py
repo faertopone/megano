@@ -1,3 +1,4 @@
+from django.contrib.auth import user_logged_in
 from django.core.validators import RegexValidator, MinValueValidator
 from django.db import models
 from django.contrib.auth.models import User
@@ -51,11 +52,6 @@ class Client(models.Model):
     def __str__(self):
         return self.user.username
 
-    # Переопределил метод save, чтобы методом save объекта Client-сразу сохранять и изменения в поле user через OneToOne
-    def save(self, *args, **kwargs):
-        self.user.save(*args, **kwargs)
-        super(Client, self).save(*args, **kwargs)
-
 
 class HistoryView(models.Model):
     """ Модель истории просмотров пользователя """
@@ -67,7 +63,7 @@ class HistoryView(models.Model):
     )
 
     item_view = models.ManyToManyField('products.Product', verbose_name=_('Товары, которые смотрел пользователь'),
-                                       blank=True, null=True)
+                                       blank=True)
     limit_items_views = models.IntegerField(verbose_name=_('Сколько максимум показывать товаров'),
                                             help_text=_('Тут можно изменить это значение, по умолчанию 20 минимум 4.'),
                                             default=20, validators=[MinValueValidator(4)],
@@ -91,14 +87,52 @@ class HistoryView(models.Model):
     def __str__(self):
         return f'История просмотров для {self.client.user.username}'
 
-    # После сохранения модели Client, создаем ему сразу в БД модель просмотров
-    @receiver(post_save, sender=Client)
-    def created_history(self, instance, created):
-        if created:
-            HistoryView.objects.create(client=instance)
-
     class Meta:
         verbose_name = 'История просмотра'
         verbose_name_plural = 'Истории просмотров'
         db_table = 'HistoryReview'
         ordering = ("id",)
+
+
+# После сохранения модели User, создаем ему сразу в БД модель Client
+@receiver(post_save, sender=User)
+def created_client(sender, instance, created, **kwargs):
+    if created:
+        Client.objects.create(user=instance)
+
+
+# После сохранения модели Client, сохраняем User
+@receiver(post_save, sender=Client)
+def client_save_user_save(sender, instance, created, **kwargs):
+    instance.user.save()
+
+
+# После сохранения модели Client, создаем ему сразу в БД модель просмотров
+@receiver(post_save, sender=Client)
+def created_history(sender, instance, created, **kwargs):
+    if created:
+        HistoryView.objects.create(client=instance)
+
+
+# После того как пользователь залогиниться, выполним слияние из сессии данных в модель
+@receiver(user_logged_in)
+def clone_history_items_after_login(sender, request, user, **kwargs):
+    client = Client.objects.get(user=user)
+    history_client = HistoryView.objects.get(client=client)
+    session_user_products = request.session.get('products')
+    limit = history_client.limit_items_views
+    # тут N последних просмотренных товаров
+    all_items_history = history_client.item_view.all()[:limit]
+    # Процесс добавления из сессии в модель
+    for i in session_user_products:
+        # Если этого товара нет в последних просмотренных, добавим в модель
+        if not (i in all_items_history):
+            history_client.item_view.add(i)
+
+    # Как правильнее?
+    # способ 1
+    del request.session['products']
+    # способ 2
+    request.session.clear()
+
+
