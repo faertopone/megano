@@ -44,24 +44,6 @@ class Client(models.Model):
                                   error_messages={'max_length': 'Слишком длинное Отчество!'},
                                   verbose_name=_('Отчество'))
 
-    class Meta:
-        verbose_name = 'клиент'
-        verbose_name_plural = 'клиенты'
-        db_table = 'Client'
-
-    def __str__(self):
-        return self.user.username
-
-
-class HistoryView(models.Model):
-    """ Модель истории просмотров пользователя """
-
-    client = models.OneToOneField(
-        Client,
-        on_delete=models.CASCADE,
-        verbose_name=_("пользователь_чья история")
-    )
-
     item_view = models.ManyToManyField('products.Product', verbose_name=_('Товары, которые смотрел пользователь'),
                                        blank=True)
     limit_items_views = models.IntegerField(verbose_name=_('Сколько максимум показывать товаров'),
@@ -85,13 +67,12 @@ class HistoryView(models.Model):
         return self.item_in_page_views
 
     def __str__(self):
-        return f'История просмотров для {self.client.user.username}'
+        return self.user.username
 
     class Meta:
-        verbose_name = 'История просмотра'
-        verbose_name_plural = 'Истории просмотров'
-        db_table = 'HistoryReview'
-        ordering = ("id",)
+        verbose_name = 'клиент'
+        verbose_name_plural = 'клиенты'
+        db_table = 'Client'
 
 
 # После сохранения модели User, создаем ему сразу в БД модель Client
@@ -107,32 +88,22 @@ def client_save_user_save(sender, instance, created, **kwargs):
     instance.user.save()
 
 
-# После сохранения модели Client, создаем ему сразу в БД модель просмотров
-@receiver(post_save, sender=Client)
-def created_history(sender, instance, created, **kwargs):
-    if created:
-        HistoryView.objects.create(client=instance)
-
-
 # После того как пользователь залогиниться, выполним слияние из сессии данных в модель
 @receiver(user_logged_in)
 def clone_history_items_after_login(sender, request, user, **kwargs):
-    client = Client.objects.get(user=user)
-    history_client = HistoryView.objects.get(client=client)
-    session_user_products = request.session.get('products')
-    limit = history_client.limit_items_views
-    # тут N последних просмотренных товаров
-    all_items_history = history_client.item_view.all()[:limit]
-    # Процесс добавления из сессии в модель
-    for i in session_user_products:
-        # Если этого товара нет в последних просмотренных, добавим в модель
-        if not (i in all_items_history):
-            history_client.item_view.add(i)
+    # Если это не админ входит
+    if not request.user.is_superuser:
+        client = Client.objects.get(user=user)
+        session_user_products = request.session.get('products')
+        if session_user_products:
+            limit = client.limit_items_views
+            # тут N последних просмотренных товаров
+            all_items_history = client.item_view.all()[:limit]
+            # Процесс добавления из сессии в модель
+            for i in session_user_products:
+                # Если этого товара нет в последних просмотренных, добавим в модель
+                if not (i in all_items_history):
+                    client.item_view.add(i)
 
-    # Как правильнее?
-    # способ 1
-    del request.session['products']
-    # способ 2
-    request.session.clear()
-
-
+            # удаление истории из кеша
+            del request.session['products']

@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 from products.models import Product
-from .models import Client, HistoryView
+from .models import Client
 
 
 def send_client_email(user_id, domain, subject, template):
@@ -34,9 +34,8 @@ def initial_form_profile(request: HttpRequest) -> list:
     """
     Функция инициализирует начальные значения Профиля
     """
-    user = User.objects.get(pk=request.user.pk)
-    client = Client.objects.select_related('user').get(user=request.user)
-    history = HistoryView.objects.select_related('client').get(client=client)
+    user = User.objects.select_related('client').get(pk=request.user.pk)
+    client = Client.objects.select_related('user').prefetch_related('item_view').get(user=user)
     initial_client = {
         'phone': client.phone,
         'patronymic': client.patronymic,
@@ -44,10 +43,10 @@ def initial_form_profile(request: HttpRequest) -> list:
         'first_name': user.first_name,
         'last_name': user.last_name,
         'email': user.email,
-        'limit_items_views': history.limit_items_views,
-        'item_in_page_views': history.item_in_page_views
+        'limit_items_views': client.limit_items_views,
+        'item_in_page_views': client.item_in_page_views
     }
-    return [initial_client, client, history]
+    return [initial_client, client]
 
 
 def post_context(request: HttpRequest, form) -> object:
@@ -57,7 +56,6 @@ def post_context(request: HttpRequest, form) -> object:
     messages = ''
     initial_data_all = initial_form_profile(request=request)
     client = initial_data_all[1]
-    history = initial_data_all[2]
     form = form
     if form.is_valid():
         # Если изменения были в форме, то выполним это
@@ -90,11 +88,10 @@ def post_context(request: HttpRequest, form) -> object:
             if 'password1' in change_data_list:
                 client.user.set_password(password)
             if 'limit_items_views' in change_data_list:
-                history.limit_items_views = limit_items_views
+                client.limit_items_views = limit_items_views
             if 'item_in_page_views' in change_data_list:
-                history.item_in_page_views = item_in_page_views
+                client.item_in_page_views = item_in_page_views
 
-            history.save()
             client.save()
             messages = 'Данные успешно сохранены!'
 
@@ -108,13 +105,12 @@ def add_product_in_history(user: object, product_pk: int):
     """
     Функция, добавляет просмотренный товар в БД
     """
-    client = Client.objects.select_related('user').get(user=user)
-    client_history = HistoryView.objects.prefetch_related('item_view').get(client=client)
+    client = Client.objects.select_related('user').prefetch_related('item_view').get(user=user)
     product = Product.objects.get(pk=product_pk)
-    list_viewers_products = client_history.item_view.all()
+    list_viewers_products = client.item_view.all()
     # Если этого продукта нет еще в истории, то добавим его
     if not (product in list_viewers_products):
-        client_history.item_view.add(product)
+        client.item_view.add(product)
 
 
 def add_product_in_history_session(request: HttpRequest, product_pk: int):
@@ -143,13 +139,12 @@ def get_context_data(user) -> list:
     context['all_items_complete'] - флаг, что все допустимы товары вывели
     """
     try:
-        client = Client.objects.select_related('user').get(user=user)
-        queryset_history = HistoryView.objects.prefetch_related('item_view').get(client=client)
-        item_in_page_views_check = queryset_history.item_in_page_views_check()
-        max_limit = queryset_history.limit_items_views
+        client = Client.objects.select_related('user').prefetch_related('item_view').get(user=user)
+        item_in_page_views_check = client.item_in_page_views_check()
+        max_limit = client.limit_items_views
 
-        list_item_views = queryset_history.item_view.all()[::-1][:item_in_page_views_check]
-        if len(queryset_history.item_view.all()[:max_limit]) <= item_in_page_views_check:
+        list_item_views = client.item_view.all()[::-1][:item_in_page_views_check]
+        if len(client.item_view.all()[:max_limit]) <= item_in_page_views_check:
             all_items_complete = False
         else:
             all_items_complete = True
@@ -165,11 +160,10 @@ def get_context_data_ajax(user, items_in_page) -> list:
     """
     Функция возвращает товары, которые нужно добавить на страницу просмотров
     """
-    client = Client.objects.select_related('user').get(user=user)
-    queryset_history = HistoryView.objects.prefetch_related('item_view').get(client=client)
-    limit_items_views = queryset_history.limit_items_views
-    item_in_page_views_check = queryset_history.item_in_page_views_check()
-    list_item_views = queryset_history.item_view.all()[::-1][:limit_items_views]
+    client = Client.objects.select_related('user').prefetch_related('item_view').get(user=user)
+    limit_items_views = client.limit_items_views
+    item_in_page_views_check = client.item_in_page_views_check()
+    list_item_views = client.item_view.all()[::-1][:limit_items_views]
 
     # Добавим на вывод на страницу N товаров
     # Флаг, который говорит что все элементы передали и больше новых нет

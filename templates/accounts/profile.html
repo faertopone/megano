@@ -36,7 +36,7 @@
               <div class="Account-column">
                 <div class="Account-name">
                         {{ client.user.last_name }} {{ client.user.first_name }} {{ client.patronymic }} ({{ _('Ваш логин: ') }}{{ client.user.username }})
-                </div><a class="Account-editLink" href="{{ url('profile_edit', args=[client.pk]) }}">{{ _('Редактировать профиль') }}</a>
+                </div><a class="Account-editLink" href="{{ url('profile_edit', kwargs={'pk': request.user.pk }) }}">{{ _('Редактировать профиль') }}</a>
               </div>
             </div>
             <div class="Account-group">

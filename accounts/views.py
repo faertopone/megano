@@ -10,7 +10,7 @@ from django.utils.encoding import force_str
 from django.views import View
 from django.views.generic import DetailView, ListView
 from .forms import RegistrationForm, ProfileEditForm
-from .models import Client, HistoryView
+from .models import Client
 from .services import initial_form_profile, post_context, get_context_data, get_context_data_ajax
 from .tasks import send_client_email_task
 
@@ -61,12 +61,12 @@ class ProfileView(ListView):
     template_name = 'accounts/profile.html'
 
     def get_queryset(self):
-        return Client.objects.select_related('user').get(user=self.request.user)
+        return Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
-            context['list_item_views'] = HistoryView.objects.get(client=self.get_queryset()).item_view.all()[::-1][:3]
+            context['list_item_views'] = self.get_queryset().item_view.all()[::-1][:3]
         except BaseException:
             context['list_item_views'] = []
         return context
