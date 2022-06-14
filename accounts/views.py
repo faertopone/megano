@@ -1,5 +1,6 @@
 from django.contrib.auth import login
 from django.contrib.auth.models import User
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponseNotFound, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
@@ -8,10 +9,11 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_str
 from django.views import View
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, FormView
 from .forms import RegistrationForm, ProfileEditForm
 from .models import Client
-from .services import initial_form_profile, post_context, get_context_data, get_context_data_ajax
+from .services import get_context_data, get_context_data_ajax, \
+    initial_form_profile_new, save_dop_parametrs
 from .tasks import send_client_email_task
 
 
@@ -79,36 +81,31 @@ class ProfileView(ListView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class ProfileEditView(View):
+class ProfileEditView(SuccessMessageMixin, FormView):
     """
     Класс редактирования личного кабинета пользователя
     """
+    template_name = 'accounts/profile_edit.html'
+    form_class = ProfileEditForm
+    success_message = 'Профиль успешно обновлен!'
 
-    def get(self, request, pk):
-        messages = ''
-        if not self.request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-        if self.request.user.is_superuser:
-            return HttpResponseRedirect('/admin/')
+    def get_initial(self):
+        return initial_form_profile_new(self.request)
 
-        initial_data = initial_form_profile(request=request)
-        init_form = initial_data[0]
-        client = initial_data[1]
-        form = ProfileEditForm(initial=init_form)
-        context = {'form': form,
-                   'client': client,
-                   'msg': messages}
+    def get_context_data(self, **kwargs):
+        context = super(ProfileEditView, self).get_context_data(**kwargs)
+        context['client'] = Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
+        return context
 
-        return render(request, 'accounts/profile_edit.html', context=context)
+    def form_valid(self, form):
+        # Дополнительно сохраним изменения
+        form.save(commit=False)
+        save_dop_parametrs(request=self.request, form=form)
+        return super().form_valid(form)
 
-    @staticmethod
-    def post(request, pk):
-        initial_data = initial_form_profile(request=request)
-        init_form = initial_data[0]
-        form = ProfileEditForm(request.POST, request.FILES, initial=init_form)
-        context = post_context(request=request, form=form)
-
-        return render(request, 'accounts/profile_edit.html', context=context)
+    def get_success_url(self):
+        client = Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
+        return reverse('profile_edit', kwargs={'pk': client.pk})
 
 
 class HistoryUserView(DetailView):

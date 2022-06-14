@@ -12,12 +12,6 @@ def created_client(sender, instance, created, **kwargs):
         Client.objects.create(user=instance)
 
 
-# После сохранения модели Client, сохраняем User
-@receiver(post_save, sender=Client)
-def client_save_user_save(sender, instance, created, **kwargs):
-    instance.user.save()
-
-
 # После того как пользователь залогиниться, выполним слияние из сессии данных в модель
 @receiver(user_logged_in)
 def clone_history_items_after_login(sender, request, user, **kwargs):

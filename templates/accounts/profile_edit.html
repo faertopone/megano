@@ -102,7 +102,12 @@
                       <button type="submit" class="btn btn_success">{{ _('Сохранить') }}
                       </button>
                     </div>
-                      <div class="Profile-success">{{ msg }}
+                      {% if messages %}
+                      <div class="Profile-success">
+                              {% for mes in messages %}
+                                  {{ mes }}
+                              {% endfor %}
+                      {%  endif %}
                     </div>
                   </div>
                 </div>

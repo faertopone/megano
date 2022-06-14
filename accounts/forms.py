@@ -72,7 +72,7 @@ class ProfileEditForm(forms.ModelForm):
     """
 
     # Добавление класса в inputs
-    wd1 = FileInput(attrs={'class': 'Profile-file form-input', 'type': 'file'})
+    wd1 = FileInput(attrs={'class': 'Profile-file', 'type': 'file'})
     wd2 = TextInput(attrs={'class': 'form-input'})
     wd3 = TextInput(attrs={'class': 'form-input', 'placeholder': _('Данных нет'), 'data-validate': 'require'})
 

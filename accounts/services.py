@@ -30,75 +30,61 @@ def send_client_email(user_id, domain, subject, template):
     )
 
 
-def initial_form_profile(request: HttpRequest) -> list:
+def initial_form_profile_new(request: HttpRequest) -> dict:
     """
     Функция инициализирует начальные значения Профиля
     """
-    user = User.objects.select_related('client').get(pk=request.user.pk)
-    client = Client.objects.select_related('user').prefetch_related('item_view').get(user=user)
+    client = Client.objects.select_related('user').prefetch_related('item_view').get(user=request.user)
     initial_client = {
         'phone': client.phone,
         'patronymic': client.patronymic,
-        'id_user': user.id,
-        'first_name': user.first_name,
-        'last_name': user.last_name,
-        'email': user.email,
+        'id_user': client.user.id,
+        'first_name': client.user.first_name,
+        'last_name': client.user.last_name,
+        'email': client.user.email,
         'limit_items_views': client.limit_items_views,
         'item_in_page_views': client.item_in_page_views
     }
-    return [initial_client, client]
+    return initial_client
 
 
-def post_context(request: HttpRequest, form) -> object:
-    """
-     Представления Профиля при запросе POST и изменения данных, которые были изменены
-     """
-    messages = ''
-    initial_data_all = initial_form_profile(request=request)
-    client = initial_data_all[1]
-    form = form
-    if form.is_valid():
-        # Если изменения были в форме, то выполним это
-        if form.has_changed():
-            # Список какие поля были изменены
-            change_data_list = form.changed_data
-            # Извлечем данные с формы
-            first_name = form.cleaned_data.get('first_name')
-            last_name = form.cleaned_data.get('last_name')
-            avatar = form.cleaned_data.get('photo')
-            phone = form.cleaned_data.get('phone')
-            email = form.cleaned_data.get('email')
-            patronymic = form.cleaned_data.get('patronymic')
-            password = form.cleaned_data.get('password1')
-            limit_items_views = form.cleaned_data.get('limit_items_views')
-            item_in_page_views = form.cleaned_data.get('item_in_page_views')
+def save_dop_parametrs(request: HttpRequest, form):
+    client = Client.objects.select_related('user').prefetch_related('item_view').get(user=request.user)
+    if form.has_changed():
+        # Список какие поля были изменены
+        change_data_list = form.changed_data
+        # Извлечем данные с формы
+        first_name = form.cleaned_data.get('first_name')
+        last_name = form.cleaned_data.get('last_name')
+        avatar = form.cleaned_data.get('photo')
+        phone = form.cleaned_data.get('phone')
+        email = form.cleaned_data.get('email')
+        patronymic = form.cleaned_data.get('patronymic')
+        password = form.cleaned_data.get('password1')
+        limit_items_views = form.cleaned_data.get('limit_items_views')
+        item_in_page_views = form.cleaned_data.get('item_in_page_views')
 
-            if 'first_name' in change_data_list:
-                client.user.first_name = first_name
-            if 'last_name' in change_data_list:
-                client.user.last_name = last_name
-            if 'photo' in change_data_list:
-                client.photo = avatar
-            if 'phone' in change_data_list:
-                client.phone = phone
-            if 'email' in change_data_list:
-                client.user.email = email
-            if 'patronymic' in change_data_list:
-                client.patronymic = patronymic
-            if 'password1' in change_data_list:
-                client.user.set_password(password)
-            if 'limit_items_views' in change_data_list:
-                client.limit_items_views = limit_items_views
-            if 'item_in_page_views' in change_data_list:
-                client.item_in_page_views = item_in_page_views
+        if 'first_name' in change_data_list:
+            client.user.first_name = first_name
+        if 'last_name' in change_data_list:
+            client.user.last_name = last_name
+        if 'photo' in change_data_list:
+            client.photo = avatar
+        if 'phone' in change_data_list:
+            client.phone = phone
+        if 'email' in change_data_list:
+            client.user.email = email
+        if 'patronymic' in change_data_list:
+            client.patronymic = patronymic
+        if 'password1' in change_data_list:
+            client.user.set_password(password)
+        if 'limit_items_views' in change_data_list:
+            client.limit_items_views = limit_items_views
+        if 'item_in_page_views' in change_data_list:
+            client.item_in_page_views = item_in_page_views
 
-            client.save()
-            messages = 'Данные успешно сохранены!'
-
-    context = {'form': form,
-               'client': client,
-               'msg': messages}
-    return context
+        client.user.save()
+        client.save()
 
 
 def add_product_in_history(user: object, product_pk: int):
