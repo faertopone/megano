@@ -49,7 +49,11 @@ def initial_form_profile_new(request: HttpRequest) -> dict:
 
 
 def save_dop_parametrs(request: HttpRequest, form):
+    """
+    Функция сохраняет данные, которые были изменены на странице редактирования профиля
+    """
     client = Client.objects.select_related('user').prefetch_related('item_view').get(user=request.user)
+    # Если данные были изменены, то:
     if form.has_changed():
         # Список какие поля были изменены
         change_data_list = form.changed_data

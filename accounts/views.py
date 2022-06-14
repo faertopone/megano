@@ -58,6 +58,9 @@ def account_activate(request, uidb64, token):
 
 
 class ProfileView(ListView):
+    """
+    Класс представления личного кабинета. Данные о пользователе
+    """
     model = Client
     context_object_name = 'client'
     template_name = 'accounts/profile.html'
@@ -106,6 +109,13 @@ class ProfileEditView(SuccessMessageMixin, FormView):
     def get_success_url(self):
         client = Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
         return reverse('profile_edit', kwargs={'pk': client.pk})
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('login'))
+        if self.request.user.is_superuser:
+            return HttpResponseRedirect('/admin/')
+        return super().dispatch(request, *args, **kwargs)
 
 
 class HistoryUserView(DetailView):

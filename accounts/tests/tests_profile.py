@@ -64,7 +64,8 @@ class ProfileTest(TestCase):
         self.client.login(username='TEST', password='password_TEST')
         # найдем профиль этого юзера
         my_client = Client.objects.get(user=User.objects.get(username='TEST'))
-        response = self.client.get('/accounts/profile/edit/1')
+        # Почему ВОТ ТУТ ОШИБКА?
+        response = self.client.get(reverse('profile_edit', kwargs={'pk': my_client.pk}))
         # Отлично, страница загрузилась!
         self.assertEqual(response.status_code, 200)
 
