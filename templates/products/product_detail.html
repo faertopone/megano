@@ -2,26 +2,42 @@
 
 {% block title %}{{ product.name }}{% endblock title %}
 {% block content %}
-    <div class="section">
+    <div class="Middle-top">
+        <div class="wrap">
+            <div class="Middle-header">
+                <h1 class="Middle-title">{{ product.name }}</h1>
+                <ul class="breadcrumbs Middle-breadcrumbs">
+                    <li class="breadcrumbs-item">
+                        <a href="/">{{ _("Главная") }}</a>
+                    </li>
+                    <li class="breadcrumbs-item breadcrumbs-item_current">
+                        <span>{{ product.name }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="Section">
         <div class="wrap">
             <div class="Product">
                 <div class="ProductCard">
                     <div class="ProductCard-look">
-                        <div class="ProductCard-photo">
-                            <div class="ProductCard-sale">-15%</div>
-                            <img src="" alt="">
-                        </div>
-                        <div class="ProductCard-picts">
-                            <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="#">
-                                <img src="" alt="">
-                            </a>
-                            <a class="ProductCard-pict" href="#">
-                                <img src="" alt="">
-                            </a>
-                            <a class="ProductCard-pict" href="#">
-                                <img src="" alt="">
-                            </a>
-                        </div>
+                        {% if product.product_photo.first().photo %}
+                            <div class="ProductCard-photo">
+                                <div class="ProductCard-sale">-15%</div>
+                                <img src="{{ product.product_photo.first().photo.url }}" alt="{{ product.product_photo.first().photo }}">
+                            </div>
+                            <div class="ProductCard-picts">
+                                <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="{{ product.product_photo.first().photo.url }}"><img src="{{ product.product_photo.first().photo.url }}" alt="{{ product.product_photo.first().photo }}"/></a>
+                                {% for photo in product.product_photo.all()[1:] %}
+                                    <a class="ProductCard-pict" href="{{ photo.photo.url }}"><img src="{{ photo.photo.url }}" alt="{{ photo }}"/></a>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="ProductCard-photo">
+                                У товара нет фотографий
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="ProductCard-desc">
                         <div class="ProductCard-header">
@@ -29,16 +45,20 @@
                             <div class="ProductCard-info">
                                 <div class="ProductCard-cost">
                                     <div class="ProductCard-price">{{ product.price }}</div>
-                                    <div class="ProductCard-priceOld">старая цена</div>
+                                    <div class="ProductCard-priceOld">{{ product.price }}</div>
                                 </div>
                                 <div class="ProductCard-compare">
                                     <a class="btn btn_default" href="#">
-                                        <img class="btn-icon" src="" alt="">
+                                        <img class="btn-icon" src="{{ static("assets/img/icons/card/change.svg") }}" alt="change.svg">
                                     </a>
                                 </div>
                             </div>
                         </div>
-                        <div class="ProductCard-text">{{ product.description }}</div>
+                        {% if product.description %}
+                            <div class="ProductCard-text">{{ product.description }}</div>
+                        {% else %}
+                            <div class="ProductCard-text">{{ _("У товара нет описания") }}</div>
+                        {% endif %}
                         <div class="ProductCard-cart">
                             <div class="ProductCard-cartElement ProductCard-cartElement_amount">
                                 <div class="Amount Amount_product">
@@ -57,8 +77,8 @@
                         <div class="ProductCard-footer">
                             <div class="ProductCard-tags">
                                 <strong class="ProductCard-tagsTitle">{{ _("Теги") }}:</strong>
-                                {% for tag in tags %}
-                                    <a href="{% url 'product-tag' tag.pk %}">{{tag.substance}}</a>
+                                {% for tag in product.tags.all() %}
+                                    <a href="{{ url('product-tag', args=[tag.pk]) }}">{{tag.substance}}</a>
                                 {% endfor %}
                             </div>
                         </div>
@@ -76,26 +96,22 @@
                             <span>{{ _("Дополнительная информация") }}</span>
                         </a>
                         <a class="Tabs-link" href="#reviews">
-                            <span>{{ _("Отзывы")(reviews.count()) }}</span>
+                            <span id="count-reviews-1">{{ _("Отзывы") }} ({{ (reviews.count()) }})</span>
                         </a>
-                        {% if comments %}
-                            {% for review in reviews %}
-                                {% if review.username %}
-                                    <p>{{review.username}}:</p>
-                                {% else %}
-                                    <p>Аноним:</p>
-                                {% endif %}
-                                <p>{{review.content}}</p>
-                            {% endfor %}
-                        {% else %}
-                            <p>Отзывов нет</p>
-                        {% endif %}
                     </div>
                     <div class="Tabs-wrap">
                         <div class="Tabs-block" id="description">
-                            <h2>{{ product.shop.name }}</h2>
-                            <p>{{ product.shop.description }}</p>
-                            <img class=" pict pict_right" src="" alt="">
+                            <h2>{{ product.name }}</h2>
+                            {% if product.description %}
+                                <p>{{ product.description }}</p>
+                            {% else %}
+                                <p>{{ _("У товара нет описания") }}</p>
+                            {% endif %}
+                            {% if product.product_photo.first().photo %}
+                                <img class=" pict pict_right" src="{{ product.product_photo.first().photo.url }}" alt="product.png">
+                            {% else %}
+                                <p class=" pict pict_right">У товара нет фотографий</p>
+                            {% endif %}
                             <div class="clearfix"></div>
                             <div class="table">
                                 <table>
@@ -104,26 +120,32 @@
                                             <th>Характеристика</th>
                                             <th>Значение</th>
                                         </tr>
+                                        {% for property in properties %}
+                                            <tr>
+                                                <th>{{ property[0] }}</th>
+                                                <th>{{ property[1] }}</th>
+                                            </tr>
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                         <div class="Tabs-block" id="sellers">
                             <div class="Categories Categories_product">
-                                {% for shop in shops %}
+                                {% for shop in product.shop_product.all() %}
                                     <div class="Categories-row">
                                         <div class="Categories-block Categories-block_info">
                                             <div class="Categories-info">
-                                                <strong></strong>
+                                                <strong>{{ shop.name }}</strong>
                                             </div>
                                         </div>
                                         <div class="Categories-splitProps"></div>
                                         <div class="Categories-block Categories-price">
-                                            <strong></strong>
+                                            <strong>{{ shop.price_in_shop }} {{ _("$") }}</strong>
                                         </div>
                                         <div class="Categories-block Categories-button">
                                             <a class="btn btn_primary" href="#">
-                                                <img class="img-icon" src="" alt="">
+                                                <img class="img-icon" src="{{ static('assets/img/icons/card/cart_white.svg') }}" alt="cart_white.svg">
                                                 <span class="btn-content">{{ _("Купить") }}</span>
                                             </a>
                                         </div>
@@ -137,49 +159,64 @@
                             </div>
                         </div>
                         <div class="Tabs-block" id="reviews">
-                            <header class="Section-header">
-                                <h3 class="Section-title"></h3>
-                                <div class="Comments">
-                                    <div class="Comment">
-                                        <div class="Comment-column Comment-column-pict">
-                                            <div class="Comment-avatar"></div>
-                                        </div>
-                                    </div>
-                                    <div class="Comment-column">
-                                        <header class="Comment-header">
-                                            <div>
-                                                <strong class="Comment-title"></strong>
-                                                <span class="Comment-date"></span>
+                            {% if reviews %}
+                                <header class="Section-header">
+                                    <h3 class="Section-title" id="count-reviews-2">{{ (reviews.count()) }} {{ _("Отзывов") }}</h3>
+                                </header>
+                                {% for review in reviews %}
+                                    <div class="Comments">
+                                        <div class="Comment">
+                                            <div class="Comment-column Comment-column-pict">
+                                                {% if review.user.client.photo %}
+                                                    <div class="Comment-avatar">
+                                                        <img src="{{ review.user.client.photo.url }}" alt="{{ review.user.client.photo.name }}">
+                                                    </div>
+                                                {% else %}
+                                                    <div class="Comment-avatar"></div>
+                                                {% endif %}
                                             </div>
-                                        </header>
-                                        <div class="Comment-content">
-
+                                            <div class="Comment-column">
+                                                <header class="Comment-header">
+                                                    <div>
+                                                        <strong class="Comment-title">{{ review.user.username }}</strong>
+                                                        <span class="Comment-date">{{ review.created_date.strftime('%B / %d / %Y / %H:%M')}}</span>
+                                                    </div>
+                                                </header>
+                                                <div class="Comment-content">
+                                                    {{ review.reviews }}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <header class="Section-header">
+                                    <h3 class="Section-title">{{ _("Отзывов на товар нет") }}</h3>
+                                </header>
+                            {% endif %}
+                            {% if user.is_authenticated %}
                                 <header class="Section-header Section-header_product">
                                     <h3 class="Section-title">{{ _("Добавить отзыв") }}</h3>
                                 </header>
                                 <div class="Tabs-addComment">
-                                    <form class="form" action="#" method="post">
-                                        {% csrf_token %}
+                                    <form class="form" method="post" id="UserReviewForm">
+                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                                         <div class="form-group">
-                                            <textarea class="form-textarea" name="review" id="review" placeholder="Отзыв"></textarea>
+                                            <textarea class="form-textarea" name="review" id="review" placeholder="{{ _("Отзыв") }}"></textarea>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="row-block">
-                                                <input class="form-input" id="username" name="username" type="text" placeholder="Username">
-                                            </div>
-                                             <div class="row-block">
-                                                <input class="form-input" id="email" name="email" type="text" placeholder="Email">
-                                            </div>
-                                        </div>
+{#                                        <div class="form-group">#}
+{#                                            <div class="row">#}
+{#                                                <div class="row-block">#}
+{#                                                    <input class="form-input" id="username" name="username" type="text" placeholder="{{ _("Имя") }}">#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
                                         <div class="form-group">
                                             <button class="btn btn_muted" type="submit">{{ _("Добавить отзыв") }}</button>
                                         </div>
                                     </form>
                                 </div>
-                            </header>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
