@@ -32,7 +32,7 @@
 
                             <a class="Card-picture" href="{{ url('products:product-detail', kwargs = {'pk': item.pk}) }}">
                                 {# Тут выводим первую фотографию товара #}
-                                {% for photos in  item.productphoto_set.all() %}
+                                {% for photos in  item.product_photo.all() %}
                                     {% if loop.first %}
                                         <img src=" {{ photos.photo.url }}" alt="{{ photos.photo }} "/>
                                     {% endif %}

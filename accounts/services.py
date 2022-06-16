@@ -1,4 +1,7 @@
+import json
+
 from django.contrib.auth.models import User
+from django.core import serializers
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
@@ -107,20 +110,22 @@ def add_product_in_history_session(request: HttpRequest, product_pk: int):
     """
     Функция, добавляет просмотренный товар в сессию пользователя
     """
-    product_history = Product.objects.get(pk=product_pk)
+
     # если еще не было товаров в сессии, создадим список и добавим этот товар
-    if not request.session.get('products'):
+    if not request.session.get('products_session'):
         product_history_list = list()
-        product_history_list.append(product_history)
-        request.session['products'] = product_history_list
+        product_history_list.append(product_pk)
+        request.session['products_session'] = product_history_list
+        print(request.session.get('products_session'), 'first')
     else:
         # если там уже добавлен товар, то сначала извлекаем список товаров
-        product_list = request.session.get('products')
+        product_list = request.session.get('products_session')
         # Добавляем новый товар если такого нет в списке
-        if not (product_history in product_list):
-            product_list.append(product_history)
+        if not (product_pk in product_list):
+            product_list.append(product_pk)
             # обновляем сессию с товарами
-            request.session['products'] = product_list
+            request.session['products_session'] = product_list
+            print(request.session.get('products_session'), 'NEXT')
 
 
 def get_context_data(user) -> list:
@@ -167,7 +172,7 @@ def get_context_data_ajax(user, items_in_page) -> list:
     list_in_page = []
     photo = '#'
     for item in list_item_views:
-        for i in item.productphoto_set.all()[:1]:
+        for i in item.product_photo.all()[:1]:
             photo = i.photo.url
         list_in_page.append({'name': item.name,
                              'price': item.price,

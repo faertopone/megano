@@ -8,6 +8,7 @@ from django.views import View
 from django.views.generic import DetailView, ListView
 from django_filters import ModelMultipleChoiceFilter, CharFilter, RangeFilter
 
+from accounts.services import add_product_in_history, add_product_in_history_session
 from .filters import filterset_factory, CustomFilterSet
 from .models import (Product, PropertyProduct, Category, Tag, UserReviews)
 from .widgets import CustomCheckboxSelectMultiple, CustomTextInput, CustomRangeWidget
@@ -41,6 +42,12 @@ class ProductDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['reviews'] = UserReviews.objects.filter(product=self.object).all()
         context["properties"] = list(zip(self.object.properties.all(), self.object.product_properties.all()))
+        if not self.request.user.is_superuser:
+            if self.request.user.is_authenticated:
+                add_product_in_history(user=self.request.user, product_pk=context.get('product').pk)
+            else:
+                add_product_in_history_session(request=self.request, product_pk=context.get('product').pk)
+
         return context
 
     def post(self, request: HttpRequest, pk: int) -> JsonResponse:
@@ -63,7 +70,7 @@ class ProductDetailView(DetailView):
             {"review": comment_info},
             status=201,
             content_type="application/json",
-            safe = False
+            safe=False
         )
 
 
