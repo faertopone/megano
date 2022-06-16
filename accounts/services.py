@@ -116,7 +116,6 @@ def add_product_in_history_session(request: HttpRequest, product_pk: int):
         product_history_list = list()
         product_history_list.append(product_pk)
         request.session['products_session'] = product_history_list
-        print(request.session.get('products_session'), 'first')
     else:
         # если там уже добавлен товар, то сначала извлекаем список товаров
         product_list = request.session.get('products_session')
@@ -125,7 +124,6 @@ def add_product_in_history_session(request: HttpRequest, product_pk: int):
             product_list.append(product_pk)
             # обновляем сессию с товарами
             request.session['products_session'] = product_list
-            print(request.session.get('products_session'), 'NEXT')
 
 
 def get_context_data(user) -> list:
