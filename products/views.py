@@ -1,16 +1,16 @@
+from datetime import datetime
+
 from django.db import models
-from django.http import HttpRequest, HttpResponseRedirect
-from django.urls import reverse
+from django.http import HttpRequest, JsonResponse
+from django.shortcuts import render, HttpResponse
 from django.utils.translation import gettext as _
 from django.views import View
-from django.shortcuts import render, HttpResponse
 from django.views.generic import DetailView, ListView
 from django_filters import ModelMultipleChoiceFilter, CharFilter, RangeFilter
 
 from .filters import filterset_factory, CustomFilterSet
-from .models import (Product, PropertyProduct, Category, Tag)
+from .models import (Product, PropertyProduct, Category, Tag, UserReviews)
 from .widgets import CustomCheckboxSelectMultiple, CustomTextInput, CustomRangeWidget
-from .forms import ReviewForm
 
 
 class GoodsView(View):
@@ -34,31 +34,37 @@ class DiscountView(View):
 class ProductDetailView(DetailView):
     """ Представление для отображения детальной страницы товара """
     model = Product
-    form_class = ReviewForm
     template_name = "products/product_detail.html"
 
     def get_context_data(self, **kwargs):
         """ Отдаёт содержание страницы при get запросе """
         context = super().get_context_data(**kwargs)
-        context['reviews'] = self.object.reviews.all()
-        context['review_form'] = ReviewForm()
-        context['shops'] = self.object.shops.all()
-        context['tags'] = self.object.tags.all()
+        context['reviews'] = UserReviews.objects.filter(product=self.object).all()
+        context["properties"] = list(zip(self.object.properties.all(), self.object.product_properties.all()))
         return context
 
-    def post(self, request: HttpRequest, pk: int):
+    def post(self, request: HttpRequest, pk: int) -> JsonResponse:
         """ Добавление комментария к товару """
         product = self.get_object()
-        review_form = ReviewForm(request.POST)
-
-        if review_form.is_valid():
-            review = review_form.save(commit=False)
-            review.product = product
-            if request.user.is_authenticated:
-                review.username = request.user.username
-                review.email = request.user.email
-            review.save()
-        return HttpResponseRedirect(reverse('review-detail', args=[pk]))
+        obj = UserReviews.objects.create(
+            user=request.user,
+            product=product,
+            reviews=request.POST["review"],
+        )
+        comment_info = {
+            "user": request.user.username,
+            "review": request.POST["review"],
+            "created_at": datetime.strftime(obj.created_date, '%B / %d / %Y / %H:%M'),
+            "client_photo": request.user.client.photo.url,
+            "photo_name": request.user.client.photo.name,
+            "reviews_count": UserReviews.objects.filter(product=product).count()
+        }
+        return JsonResponse(
+            {"review": comment_info},
+            status=201,
+            content_type="application/json",
+            safe = False
+        )
 
 
 class ProductTagListView(ListView):
@@ -187,9 +193,9 @@ class ProductListView(ListView):
                models.Q(product_property__product__category=self.category.pk) & \
                ~models.Q(product_property__value__isnull=True) & \
                ~models.Q(product_property__value="")
-        filtered_props = self.category.properties.filter(cond)\
-                             .order_by("category_property__filter_position", "name")\
-                             .distinct()
+        filtered_props = self.category.properties.filter(cond) \
+            .order_by("category_property__filter_position", "name") \
+            .distinct()
 
         # формируем поля для filterset
         filterset_fields = {
@@ -197,14 +203,14 @@ class ProductListView(ListView):
             "product_name": CharFilter(label=_("Название товара"), field_name="name",
                                        lookup_expr="icontains",
                                        widget=CustomTextInput(attrs={
-                                          "class": "form-input form-input_full",
-                                          "placeholder": _("Название товара"),
-                                       }),),
+                                           "class": "form-input form-input_full",
+                                           "placeholder": _("Название товара"),
+                                       }), ),
             # Фильтр по цене
             "product_price": RangeFilter(label=_("Цена"), field_name="price",
                                          widget=CustomRangeWidget(attrs={
-                                            "class": "range-widget__input"
-                                         }),),
+                                             "class": "range-widget__input"
+                                         }), ),
         }
         for prop in filtered_props:
             # Подзапросом выбираем все уникальные значения для одного свойства товара.
