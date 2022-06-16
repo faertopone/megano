@@ -75,7 +75,7 @@ class ShopProduct(models.Model):
     определяет количество товара в магазине, цену в конкретном магазине
     """
     shop = models.ForeignKey(Shops, on_delete=models.CASCADE, verbose_name=_('shops'))
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('product'))
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('product'), related_name="shop_product")
     amount = models.IntegerField(verbose_name=_('amount'), default=0)
     price_in_shop = models.DecimalField(verbose_name=_('price'), decimal_places=2, max_digits=10, default=0)
     promotion = models.ForeignKey(Promotions, on_delete=models.CASCADE, verbose_name=_('promotion'))
