@@ -1,9 +1,9 @@
 import re
 
+from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator, MinValueValidator, RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import User
 
 
 class Category(models.Model):
@@ -40,6 +40,7 @@ class Product(models.Model):
     """
     name = models.CharField(max_length=1000, verbose_name=_("название товара"))
     article = models.CharField(max_length=100, verbose_name=_("артикул"))
+    description = models.CharField(max_length=255, verbose_name=_("описание товара"), blank=True)
     price = models.DecimalField(max_digits=12, decimal_places=2, default=1,
                                 validators=[MinValueValidator(1)], verbose_name=_("цена"))
     rating = models.DecimalField(max_digits=12, decimal_places=2, default=0,
@@ -191,7 +192,12 @@ class ProductPhoto(models.Model):
     Модель с фотографиями магазинов
     """
     photo = models.ImageField(upload_to='products_photo', default='default.jpg', verbose_name=_('product_photo'))
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('product'))
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        verbose_name=_('product'),
+        related_name="product_photo"
+    )
 
     class Meta:
         verbose_name = _('products photo')
@@ -202,7 +208,7 @@ class UserReviews(models.Model):
     """
     Модель добавления комментария к товару
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('пользователь'))
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('пользователь'), related_name="user_review")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('товар'))
     reviews = models.TextField(max_length=1024, blank=True, verbose_name=_('отзыв'))
     created_date = models.DateTimeField(auto_now_add=True)
