@@ -1,14 +1,14 @@
 from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponseNotFound, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_str
-from django.views import View
 from django.views.generic import DetailView, ListView, FormView
 from .forms import RegistrationForm, ProfileEditForm
 from .models import Client
@@ -57,13 +57,14 @@ def account_activate(request, uidb64, token):
         return HttpResponseNotFound('Ошибка, обратитесь в службу поддержки')
 
 
-class ProfileView(ListView):
+class ProfileView(LoginRequiredMixin, ListView):
     """
     Класс представления личного кабинета. Данные о пользователе
     """
     model = Client
     context_object_name = 'client'
     template_name = 'accounts/profile.html'
+    redirect_field_name = None
 
     def get_queryset(self):
         return Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
@@ -71,26 +72,20 @@ class ProfileView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
-            context['list_item_views'] = self.get_queryset().item_view.all()[::-1][:3]
-        except BaseException:
+            context['list_item_views'] = self.get_queryset().item_view.all()[:3]
+        except Exception:
             context['list_item_views'] = []
         return context
 
-    def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-        if self.request.user.is_superuser:
-            return HttpResponseRedirect('/admin/')
-        return super().dispatch(request, *args, **kwargs)
 
-
-class ProfileEditView(SuccessMessageMixin, FormView):
+class ProfileEditView(LoginRequiredMixin, SuccessMessageMixin, FormView):
     """
     Класс редактирования личного кабинета пользователя
     """
     template_name = 'accounts/profile_edit.html'
     form_class = ProfileEditForm
     success_message = 'Профиль успешно обновлен!'
+    redirect_field_name = None
 
     def get_initial(self):
         return initial_form_profile_new(self.request)
@@ -110,21 +105,15 @@ class ProfileEditView(SuccessMessageMixin, FormView):
         client = Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
         return reverse('profile_edit', kwargs={'pk': client.pk})
 
-    def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-        if self.request.user.is_superuser:
-            return HttpResponseRedirect('/admin/')
-        return super().dispatch(request, *args, **kwargs)
 
-
-class HistoryUserView(DetailView):
+class HistoryUserView(LoginRequiredMixin, DetailView):
     """
     Класс вывода просмотренных товаров, пользователем
     """
     model = Client
     context_object_name = 'client'
     template_name = 'accounts/history_view.html'
+    redirect_field_name = None
 
     def get_queryset(self):
         return Client.objects.select_related('user').filter(pk=self.kwargs['pk'])
@@ -138,10 +127,6 @@ class HistoryUserView(DetailView):
         return context
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-        if self.request.user.is_superuser:
-            return HttpResponseRedirect('/admin/')
 
         if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == 'POST':
             if request.POST.get('add_item'):

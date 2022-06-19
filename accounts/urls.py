@@ -42,7 +42,7 @@ urlpatterns = [
 
     # urls Профилей пользователей
     path('profile/', ProfileView.as_view(), name='profile'),
-    path('profile/edit/<int:pk>', ProfileEditView.as_view(), name='profile_edit'),
+    path('profile/edit/<int:pk>', ProfileEditView.as_view(), name='profile-edit'),
     path('profile/history/<int:pk>', HistoryUserView.as_view(), name='history_user'),
 
 

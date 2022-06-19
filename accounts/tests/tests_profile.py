@@ -27,7 +27,7 @@ class ProfileTest(TestCase):
                                                        password='password_SUPER_TEST',
                                                        email='SUPER_TEST@mail.ru')
         # Создадим клиента (доп параметры от User)
-        client = Client.objects.create(user=user_new)
+        client = Client.objects.get(user=user_new)
 
         # Добавим просмотренные товары
         for i_view in product_list:
@@ -47,8 +47,8 @@ class ProfileTest(TestCase):
     def test_super_user_profile(self):
         self.client.login(username='SUPER_TEST', password='password_SUPER_TEST')
         response = self.client.get(reverse('profile'))
-        # Не дает зайти супер юзеру в профиль
-        self.assertEqual(response.status_code, 302)
+        # зайти супер юзеру в профиль
+        self.assertEqual(response.status_code, 200)
 
     def test_profile_data_in_page(self):
         self.client.login(username='TEST', password='password_TEST')
@@ -59,23 +59,23 @@ class ProfileTest(TestCase):
         list_view_item = response.context_data.get('list_item_views')
         self.assertEqual(3, len(list_view_item))
 
-    def test_profile_edit_form(self):
-        # За логинимся
-        self.client.login(username='TEST', password='password_TEST')
-        # найдем профиль этого юзера
-        my_client = Client.objects.get(user=User.objects.get(username='TEST'))
-        # Почему ВОТ ТУТ ОШИБКА?
-        response = self.client.get(reverse('profile_edit', kwargs={'pk': my_client.pk}))
-        # Отлично, страница загрузилась!
-        self.assertEqual(response.status_code, 200)
-
     def test_history_view_item(self):
         # За логинимся
-        self.client.login(username='TEST', password='password_TEST')
+        login = self.client.login(username='TEST', password='password_TEST')
         # найдем профиль этого юзера
-        my_client = Client.objects.get(user=User.objects.get(username='TEST'))
+        my_client = Client.objects.get(user=login)
         response = self.client.get(reverse('history_user', kwargs={'pk': my_client.pk}))
         # Отлично, страница загрузилась!
         self.assertEqual(response.status_code, 200)
         # Проверка показа нужного количество товаров
         self.assertEqual(my_client.item_in_page_views, len(response.context_data.get('list_item_views')))
+
+    def test_profile_edit_form(self):
+        # За логинимся
+        login = self.client.login(username='TEST', password='password_TEST')
+        # найдем профиль этого юзера
+        my_client = Client.objects.get(user=login)
+        # "debug_toolbar.panels.templates.TemplatesPanel" - нужно убрать что бы работало -)
+        response = self.client.get(reverse('profile-edit', kwargs={'pk': my_client.pk}))
+        # Отлично, страница загрузилась!
+        self.assertEqual(response.status_code, 200)

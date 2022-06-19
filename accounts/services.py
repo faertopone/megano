@@ -1,7 +1,4 @@
-import json
-
 from django.contrib.auth.models import User
-from django.core import serializers
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
@@ -131,18 +128,17 @@ def get_context_data(user) -> list:
     Функция для вычисления context['list_item_views'] - Вывод товаров для просмотра и
     context['all_items_complete'] - флаг, что все допустимы товары вывели
     """
-    try:
-        client = Client.objects.select_related('user').prefetch_related('item_view').get(user=user)
-        item_in_page_views_check = client.item_in_page_views_check()
-        max_limit = client.limit_items_views
 
+    client = Client.objects.select_related('user').prefetch_related('item_view').get(user=user)
+    item_in_page_views_check = client.item_in_page_views_check()
+    max_limit = client.limit_items_views
+    if len(client.item_view.all()) > 0:
         list_item_views = client.item_view.all()[::-1][:item_in_page_views_check]
         if len(client.item_view.all()[:max_limit]) <= item_in_page_views_check:
             all_items_complete = False
         else:
             all_items_complete = True
-
-    except BaseException:
+    else:
         list_item_views = []
         all_items_complete = True
 
