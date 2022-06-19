@@ -89,5 +89,17 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
     ```
    python manage.py loaddata fixtures\accounts\client.json
     ```
-   
+   6. Загрузить профили магазинов в следующем порядке:
+    ```
+   python manage.py loaddata fixtures\shops\promotions.json
+    ```
+    ```
+   python manage.py loaddata fixtures\shops\shop.json
+    ```
+    ```
+   python manage.py loaddata fixtures\shops\shop_photo.json
+    ```
+    ```
+   python manage.py loaddata fixtures\shops\shop_product.json
+    ```
    :warning: Не забываем добавлять здесь, как загружать новые фикстуры!

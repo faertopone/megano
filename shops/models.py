@@ -35,9 +35,7 @@ class Shops(models.Model):
     phone = models.CharField(max_length=15, verbose_name=_('phone'))
     email = models.EmailField( max_length=256, verbose_name='email')
     rating = models.IntegerField(verbose_name=_('rating'), default=0)
-    promotion = models.ForeignKey(Promotions, on_delete=models.CASCADE, verbose_name=_('promotion'))
-    # shop_photo = models.ManyToManyField("ShopPhoto")
-    # shop_product = models.ManyToManyField("ShopProduct")
+    promotion = models.ForeignKey(Promotions, on_delete=models.CASCADE, verbose_name=_('promotion'), null=True, blank=True)
 
     class Meta:
         verbose_name = _('shop')
@@ -78,7 +76,7 @@ class ShopProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('product'), related_name="shop_product")
     amount = models.IntegerField(verbose_name=_('amount'), default=0)
     price_in_shop = models.DecimalField(verbose_name=_('price'), decimal_places=2, max_digits=10, default=0)
-    promotion = models.ForeignKey(Promotions, on_delete=models.CASCADE, verbose_name=_('promotion'))
+    promotion = models.ForeignKey(Promotions, on_delete=models.CASCADE, verbose_name=_('promotion'), null=True, blank=True)
     special_price = models.DecimalField(verbose_name=_('special price'), decimal_places=2, max_digits=10, default=0)
     photo_url = models.TextField(max_length=500, blank=True, verbose_name=_('photo_url'))
     sale = models.IntegerField(verbose_name=_('sale'), default=0)

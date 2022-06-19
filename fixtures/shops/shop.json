@@ -1,0 +1,47 @@
+[
+{
+  "model": "shops.shops",
+  "pk": 1,
+  "fields": {
+    "name": "TestShop1",
+    "description": "",
+    "city": "Moscow",
+    "street": "Test street",
+    "house_number": 1,
+    "phone": "88007572345",
+    "email": "test_shop@test.ru",
+    "rating": 3,
+    "promotion": 1
+  }
+},
+{
+  "model": "shops.shops",
+  "pk": 2,
+  "fields": {
+    "name": "Test Shop2",
+    "description": "Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt",
+    "city": "Krasnodar",
+    "street": "Test street",
+    "house_number": 7,
+    "phone": "88009000200",
+    "email": "test_shop2@test.ru",
+    "rating": 5,
+    "promotion": 1
+  }
+},
+{
+  "model": "shops.shops",
+  "pk": 3,
+  "fields": {
+    "name": "Тестовый магазин 3",
+    "description": "Какой-то текст в описании магазина",
+    "city": "Ростов-на-Дону",
+    "street": "Карлсона",
+    "house_number": 12,
+    "phone": "33001000300",
+    "email": "textshop3@mail.ru",
+    "rating": 4,
+    "promotion": null
+  }
+}
+]
