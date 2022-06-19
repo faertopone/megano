@@ -71,6 +71,7 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
    1. Загрузить суперпользователя
    ```
    python manage.py loaddata fixtures\superuser.json
+   
    ```
    2. Загрузить категории каталога и товары
    ```

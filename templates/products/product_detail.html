@@ -48,9 +48,11 @@
                                     <div class="ProductCard-priceOld">{{ product.price }}</div>
                                 </div>
                                 <div class="ProductCard-compare">
-                                    <a class="btn btn_default" href="#">
-                                        <img class="btn-icon" src="{{ static("assets/img/icons/card/change.svg") }}" alt="change.svg">
-                                    </a>
+                                    <button id="compare_id" value="{{ product.id }}+{{ request.session.session_key }}">
+                                        <a class="btn btn_default">
+                                            <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg">
+                                        </a>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +138,7 @@
                                     <div class="Categories-row">
                                         <div class="Categories-block Categories-block_info">
                                             <div class="Categories-info">
-                                                <strong>{{ shop.name }}</strong>
+                                                <strong>{{ shop.shop.name }}</strong>
                                             </div>
                                         </div>
                                         <div class="Categories-splitProps"></div>
