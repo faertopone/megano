@@ -1,7 +1,10 @@
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinValueValidator
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+
+from products.models import Product
 
 
 class Client(models.Model):
@@ -41,14 +44,34 @@ class Client(models.Model):
                                   error_messages={'max_length': 'Слишком длинное Отчество!'},
                                   verbose_name=_('Отчество'))
 
-    class Meta:
-        verbose_name = 'клиент'
-        verbose_name_plural = 'клиенты'
+    item_view = models.ManyToManyField('products.Product', verbose_name=_('Товары, которые смотрел пользователь'),
+                                       blank=True)
+    limit_items_views = models.IntegerField(verbose_name=_('Сколько максимум показывать товаров'),
+                                            help_text=_('Тут можно изменить это значение, по умолчанию 20 минимум 4.'),
+                                            default=20, validators=[MinValueValidator(4)],
+                                            blank=True,
+                                            )
+    item_in_page_views = models.IntegerField(verbose_name=_('По сколько товаров выводить на странице'),
+                                             default=8,
+                                             help_text=_('По сколько товаров будет добавляться при нажатии на кнопку '
+                                                         '"показать еще", но не больше чем разрешено'),
+                                             validators=[MinValueValidator(2)],
+                                             error_messages={'min_length': 'Не стоит устанавливать меньше 2!'},
+                                             blank=True,
+                                             )
+
+    # Проверяем, не больше ли чем позволено
+    def item_in_page_views_check(self):
+        if self.item_in_page_views >= self.limit_items_views:
+            self.item_in_page_views = self.limit_items_views
+        return self.item_in_page_views
 
     def __str__(self):
         return self.user.username
 
-    # Переопределил метод save, чтобы методом save объекта Client-сразу сохранять и изменения в поле user через OneToOne
-    def save(self, *args, **kwargs):
-        self.user.save(*args, **kwargs)
-        super(Client, self).save(*args, **kwargs)
+    class Meta:
+        verbose_name = 'клиент'
+        verbose_name_plural = 'клиенты'
+        db_table = 'Client'
+
+

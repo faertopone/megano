@@ -152,16 +152,21 @@ var form = function(){
                     $('.selectList').removeClass('selectList_OPEN');
                 }
             });
-            
+
             // Валидация полей
             $input.on('blur', function(){
-                var $this = $(this),
-                    validate = $this.data('validate'),
+                let $this = $(this),
                     message = '',
-                    error = false;
-                validate = validate.split(' ');
-                validate.forEach(function(v){
-                    switch (v){
+                    error = false,
+                    validate = $("[data-validate]");
+
+                    // Я тут подправил код для работы со своей формой валидации, потому что изменил поля ввода формы
+
+                // validate = $this.data('validate'),
+                // validate = validate.split(' ');
+                // validate.forEach(function(){
+                validate.each(function (){
+                    switch ($(this).attr('data-validate')){
                         case 'require':
                             if (!$this.val()) {
                                 message = 'Это поле обязательно для заполнения. ';
@@ -634,18 +639,18 @@ var Profile = function(){
                     ext = file.name.split('.').pop();
                     if (ext==='png' || ext==='jpg' || ext==='gif') {
                         var reader = new FileReader();
-    
+
                         reader.onload = function(e) {
                             $(input).closest($avatar).find('.Profile-img img').attr('src', e.target.result);
                         }
-    
+
                         reader.readAsDataURL(file);
                         return true;
                     }
                     return false;
                 }
             }
-            
+
             $avatarfile.change(function() {
                 var $thisAvatar = $(this).closest($avatar);
                 if(readURL(this)){
@@ -657,7 +662,7 @@ var Profile = function(){
                         $thisAvatar.find('input[type="file"]').data('errorinput', true);
                         $thisAvatar.after('<div class="form-error">Для загрузки допустимы лишь картинки с расширением png, jpg, gif</div>');
                     }
-                };
+                }
             });
         }
     };
@@ -901,6 +906,20 @@ var Categories = function(){
         }
     };
 };
+// Мои скрипты для подсвечивания синим цветом текущею страницу навигации
+
+        //сравниваем текущую страницу с тем какую надо подсветить
+        $('.NavigateProfile .menu-item .menu-link').each(function (){
+            let page = $(this).attr('href')
+            let url = $(location).attr('pathname')
+            if (page === url){
+                $(this).parent().addClass('menu-item_ACTIVE')
+            }
+        })
+
+
+
+
 Categories().init();
 //ENDion.js
 //END

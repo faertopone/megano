@@ -5173,3 +5173,11 @@ a.Cart-title {
   -webkit-transform: rotate(180deg);
           transform: rotate(180deg);
 }
+
+
+/* Стиль кнопки показать еще в истории прсомотров*/
+.next_product_more{
+  margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}

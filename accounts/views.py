@@ -1,16 +1,19 @@
 from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_str
-from django.views import View
+from django.views.generic import DetailView, ListView, FormView
 from .forms import RegistrationForm, ProfileEditForm
 from .models import Client
-from .services import initial_form_profile, post_context
+from .services import get_context_data, get_context_data_ajax, \
+    initial_form_profile_new, save_dop_parametrs
 from .tasks import send_client_email_task
 
 
@@ -54,41 +57,84 @@ def account_activate(request, uidb64, token):
         return HttpResponseNotFound('Ошибка, обратитесь в службу поддержки')
 
 
-class ProfileView(View):
+class ProfileView(LoginRequiredMixin, ListView):
     """
-    Класс личного кабинета пользователя, который авторизован, и не является суперпользователем.
+    Класс представления личного кабинета. Данные о пользователе
     """
-    def get(self, request):
-        user_info = request.user
-        # Проверим, что пользователь авторизован и не супер пользователь
-        if user_info.is_authenticated and not user_info.is_superuser:
-            client = Client.objects.select_related('user').get(user=user_info)
-        else:
-            return HttpResponseRedirect(reverse('login'))
-        context = {'client': client}
-        return render(request, 'accounts/profile.html', context=context)
+    model = Client
+    context_object_name = 'client'
+    template_name = 'accounts/profile.html'
+    redirect_field_name = None
+
+    def get_queryset(self):
+        return Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            context['list_item_views'] = self.get_queryset().item_view.all()[:3]
+        except Exception:
+            context['list_item_views'] = []
+        return context
 
 
-class ProfileEditView(View):
+class ProfileEditView(LoginRequiredMixin, SuccessMessageMixin, FormView):
     """
     Класс редактирования личного кабинета пользователя
     """
-    def get(self, request, pk):
+    template_name = 'accounts/profile_edit.html'
+    form_class = ProfileEditForm
+    success_message = 'Профиль успешно обновлен!'
+    redirect_field_name = None
 
-        initial_data = initial_form_profile(request=request, pk=pk)
-        init_form = initial_data[0]
-        client = initial_data[1]
-        form = ProfileEditForm(initial=init_form)
-        context = {'form': form,
-                   'client': client}
-        return render(request, 'accounts/profile_edit.html', context=context)
+    def get_initial(self):
+        return initial_form_profile_new(self.request)
 
-    def post(self, request, pk):
-        initial_data = initial_form_profile(request=request, pk=pk)
-        init_form = initial_data[0]
-        form = ProfileEditForm(request.POST, request.FILES, initial=init_form)
+    def get_context_data(self, **kwargs):
+        context = super(ProfileEditView, self).get_context_data(**kwargs)
+        context['client'] = Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
+        return context
 
-        context = post_context(request=request, form=form, pk=pk)
+    def form_valid(self, form):
+        # Дополнительно сохраним изменения
+        form.save(commit=False)
+        save_dop_parametrs(request=self.request, form=form)
+        return super().form_valid(form)
 
-        return render(request, 'accounts/profile_edit.html', context=context)
+    def get_success_url(self):
+        client = Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
+        return reverse('profile_edit', kwargs={'pk': client.pk})
 
+
+class HistoryUserView(LoginRequiredMixin, DetailView):
+    """
+    Класс вывода просмотренных товаров, пользователем
+    """
+    model = Client
+    context_object_name = 'client'
+    template_name = 'accounts/history_view.html'
+    redirect_field_name = None
+
+    def get_queryset(self):
+        return Client.objects.select_related('user').filter(pk=self.kwargs['pk'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Функция сбора данных для первого вывода страницы
+        data = get_context_data(user=self.request.user)
+        context['list_item_views'] = data[0]
+        context['all_items_complete'] = data[1]
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+
+        if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == 'POST':
+            if request.POST.get('add_item'):
+                data = get_context_data_ajax(user=self.request.user, items_in_page=int(request.POST.get('add_item')))
+                list_in_page = data[0]
+                flag_items_complete = data[1]
+                return JsonResponse({'products': list_in_page,
+                                     'flag_items_complete': flag_items_complete,
+                                     }, safe=False)
+
+        return super().dispatch(request, *args, **kwargs)

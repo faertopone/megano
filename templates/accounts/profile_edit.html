@@ -19,28 +19,9 @@
     </div>
     <div class="Section Section_column Section_columnLeft">
       <div class="wrap">
-        <div class="Section-column">
-          <div class="Section-columnSection">
-            <header class="Section-header">
-              <strong class="Section-title">{{ _('Навигация') }}
-              </strong>
-            </header>
-            <div class="Section-columnContent">
-              <div class="NavigateProfile">
-                <ul class="menu menu_vt">
-                  <li class="menu-item"><a class="menu-link" href="{{ url('profile') }}">{{ _('Личный кабинет') }}</a>
-                  </li>
-                  <li class="menu-item"><a class="menu-link" href="{{ url('profile_edit', args=[client.pk]) }}">{{ _('Профиль') }}</a>
-                  </li>
-                  <li class="menu-item"><a class="menu-link" href="#">{{ _('История заказов') }}</a>
-                  </li>
-                  <li class="menu-item"><a class="menu-link" href="#">{{ _('История просмотра') }}</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
+         {# НАВИГАЦИЯ #}
+          {% include 'base_templates/navigation.html' %}
+          {# ============ #}
         <div class="Section-content">
           <div class="Profile">
             <form class="form Profile-form"  method="post" enctype="multipart/form-data">
@@ -64,8 +45,7 @@
                       </div>
                       <label class="Profile-fileLabel" for="photo">{{ _('Выберите аватар') }}
                       </label>
-                      <input class="Profile-file form-input" id="id_photo" name="photo" type="file" data-validate="onlyImgAvatar">
-
+                        {{ form.photo }}
                     </div>
                   </div>
                   <div class="form-group">
@@ -105,10 +85,29 @@
                       {{ form.password2 }}
                       {{ form.password2.errors }}
                   </div>
+                    <div class="form-group">
+                    <label class="form-label" for="limit_items_views">{{ _('Сколько всего товаров показывать в "История просмотра" ') }}
+                    </label>
+                      {{ form.limit_items_views }}
+                      {{ form.limit_items_views.errors }}
+                  </div>
+                       <div class="form-group">
+                    <label class="form-label" for="item_in_page_views">{{ _('По сколько товаров отображать на странице "История просмотра"') }}
+                    </label>
+                      {{ form.item_in_page_views }}
+                      {{ form.item_in_page_views.errors }}
+                  </div>
                   <div class="form-group">
                     <div class="Profile-btn">
                       <button type="submit" class="btn btn_success">{{ _('Сохранить') }}
                       </button>
+                    </div>
+                      {% if messages %}
+                      <div class="Profile-success">
+                              {% for mes in messages %}
+                                  {{ mes }}
+                              {% endfor %}
+                      {%  endif %}
                     </div>
                   </div>
                 </div>
