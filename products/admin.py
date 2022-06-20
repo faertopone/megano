@@ -3,6 +3,7 @@ from typing import Optional
 import autocomplete_all
 from django.contrib import admin
 from django.contrib.admin import TabularInline
+from django.core.cache import cache
 from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.template.defaultfilters import truncatewords
@@ -10,6 +11,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
+from .filters import CustomFilterSet
 from .models import Category, Product, Property, PropertyProduct, PropertyCategory, UserReviews, ProductPhoto
 
 
@@ -151,6 +153,13 @@ class ProductAdmin(admin.ModelAdmin):
     @admin.display(description=_("количество свойств"))
     def property_count_view(obj: Product):
         return obj.properties.count()
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+
+        # удалить фильтр категории из кэша
+        key = f"{CustomFilterSet.cache_key_prefix}:category_filter:{obj.category.pk}"
+        CustomFilterSet.delete_cache(key)
 
 
 @admin.register(Property)
