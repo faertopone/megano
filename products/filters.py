@@ -1,4 +1,5 @@
 import django_filters
+from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 
 
@@ -6,6 +7,9 @@ class CustomFilterSet(django_filters.FilterSet):
     """
     Кастомынй набор фильтров.
     """
+
+    cache_key_prefix = "filter_set"
+
     def filter_queryset(self, queryset):
         """
         Возвращает пустой queryset, если форма фильтра невалидна,
@@ -14,6 +18,27 @@ class CustomFilterSet(django_filters.FilterSet):
         if not len(self.form.cleaned_data.items()):
             return queryset.none()
         return super().filter_queryset(queryset)
+
+    def cache(self, key, timeout):
+        """
+        Кэширует фильтр.
+        """
+        key = f"{self.cache_key_prefix}:{key}"
+
+        if key in cache:
+            filter_set = cache.get(key)
+        else:
+            filter_set = self.form.as_p()
+            cache.set(key, filter_set, timeout=timeout)
+
+        return filter_set
+
+    @staticmethod
+    def delete_cache(key):
+        """
+        Удаляет фильтр из кэша.
+        """
+        cache.delete(key)
 
 
 def filterset_factory(model, filterset=django_filters.FilterSet, model_fields="__all__", fields=None, exclude=None,
