@@ -3,7 +3,6 @@ from typing import Optional
 import autocomplete_all
 from django.contrib import admin
 from django.contrib.admin import TabularInline
-from django.core.cache import cache
 from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.template.defaultfilters import truncatewords

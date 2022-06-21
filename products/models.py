@@ -208,7 +208,8 @@ class UserReviews(models.Model):
     """
     Модель добавления комментария к товару
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('пользователь'), related_name="user_review")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('пользователь'),
+                             related_name="user_review")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('товар'))
     reviews = models.TextField(max_length=1024, blank=True, verbose_name=_('отзыв'))
     created_date = models.DateTimeField(auto_now_add=True)
