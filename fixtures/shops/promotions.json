@@ -1,0 +1,29 @@
+[
+{
+  "model": "shops.promotions",
+  "pk": 1,
+  "fields": {
+    "name": "Минус 10%",
+    "description": "",
+    "discount": 10.0
+  }
+},
+{
+  "model": "shops.promotions",
+  "pk": 2,
+  "fields": {
+    "name": "Минус 20%",
+    "description": "",
+    "discount": 20.0
+  }
+},
+{
+  "model": "shops.promotions",
+  "pk": 3,
+  "fields": {
+    "name": "Минус 30%",
+    "description": "",
+    "discount": 30.0
+  }
+}
+]

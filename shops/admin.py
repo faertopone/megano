@@ -6,16 +6,19 @@ from django.utils.translation import gettext_lazy as _
 class ShopPhotoInline(admin.TabularInline):
     fk_name = 'shop'
     model = ShopPhoto
+    extra = 0
 
 
 class ShopProductInline(admin.TabularInline):
     fk_name = 'shop'
     model = ShopProduct
+    extra = 0
 
 
 class ShopUserInline(admin.TabularInline):
     fk_name = 'shop'
     model = ShopUser
+    extra = 0
 
 
 class ShopsAdmin(admin.ModelAdmin):
