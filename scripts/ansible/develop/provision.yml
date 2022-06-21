@@ -5,13 +5,14 @@
 
   # Tasks
   tasks:
-    - name: Install python libs
+    - name: Install packages libs
       apt:
         name:
           - python3-pip
           - python3-venv
           - python3-dev
           - python3-virtualenv
+          - redis-server
         state: latest
         update_cache: true
 

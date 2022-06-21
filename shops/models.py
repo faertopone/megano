@@ -35,7 +35,10 @@ class Shops(models.Model):
     phone = models.CharField(max_length=15, verbose_name=_('телефон'))
     email = models.EmailField(max_length=256, verbose_name='email')
     rating = models.IntegerField(verbose_name=_('рэйтинг'), default=0)
-    promotion = models.ForeignKey(Promotions, on_delete=models.CASCADE, verbose_name=_('скидка'))
+    promotion = models.ForeignKey(Promotions, on_delete=models.SET_DEFAULT,
+                                  null=True, blank=True, default=None,
+                                  related_name="shops", related_query_name="shop",
+                                  verbose_name=_('скидка'))
     # shop_photo = models.ManyToManyField("ShopPhoto")
     # shop_product = models.ManyToManyField("ShopProduct")
 
@@ -52,7 +55,9 @@ class ShopPhoto(models.Model):
     Модель с фотографиями магазинов
     """
     photo = models.ImageField(upload_to='shops_photo', default='default.jpg', verbose_name=_('фото'))
-    shop = models.ForeignKey(Shops, on_delete=models.CASCADE, verbose_name=_('магазин'))
+    shop = models.ForeignKey(Shops, on_delete=models.CASCADE,
+                             related_name="shop_photos", related_query_name="shop_photo",
+                             verbose_name=_('магазин'))
 
     class Meta:
         verbose_name = _('фото магазина')
@@ -65,7 +70,9 @@ class ShopUser(models.Model):
     У пользователя открыты права для редактирования профиля магазина,
     редактирования товаров в магазине.
     """
-    shop = models.ForeignKey(Shops, on_delete=models.CASCADE, verbose_name=_('магазин'))
+    shop = models.ForeignKey(Shops, on_delete=models.CASCADE,
+                             related_name="shop_users", related_query_name="shop_user",
+                             verbose_name=_('магазин'))
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('продавец'))
 
 
@@ -74,12 +81,17 @@ class ShopProduct(models.Model):
     Модель, связывающая товар с магазином,
     определяет количество товара в магазине, цену в конкретном магазине
     """
-    shop = models.ForeignKey(Shops, on_delete=models.CASCADE, verbose_name=_('магазин'))
+    shop = models.ForeignKey(Shops, on_delete=models.CASCADE,
+                             related_name="shop_product", related_query_name="shop_product",
+                             verbose_name=_('магазин'))
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('товар'),
                                 related_name="shop_product", related_query_name="shop_product")
     amount = models.IntegerField(verbose_name=_('количество'), default=0)
     price_in_shop = models.DecimalField(verbose_name=_('цена'), decimal_places=2, max_digits=10, default=0)
-    promotion = models.ForeignKey(Promotions, on_delete=models.CASCADE, verbose_name=_('скидка'))
+    promotion = models.ForeignKey(Promotions, on_delete=models.SET_DEFAULT,
+                                  null=True, blank=True, default=None,
+                                  related_name="shop_product", related_query_name="shop_product",
+                                  verbose_name=_('скидка'))
     special_price = models.DecimalField(verbose_name=_('спец-цена'), decimal_places=2, max_digits=10, default=0)
     photo_url = models.TextField(max_length=500, blank=True, default="", verbose_name=_('ссылка на фото'))
     sale = models.IntegerField(verbose_name=_('sale'), default=0)

@@ -156,8 +156,7 @@ class ProductAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
 
-        # удалить фильтр категории из кэша
-        key = f"{CustomFilterSet.cache_key_prefix}:category_filter:{obj.category.pk}"
+        key = f"{CustomFilterSet.cache_key_prefix}:category_filter:{obj.category.pk}*"
         CustomFilterSet.delete_cache(key)
 
 

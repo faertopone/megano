@@ -184,3 +184,13 @@ DEBUG_TOOLBAR_PANELS = [
     "debug_toolbar.panels.redirects.RedirectsPanel",
     "debug_toolbar.panels.profiling.ProfilingPanel",
 ]
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    },
+    "redis": {
+      "BACKEND": "django_redis.cache.RedisCache",
+      "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/0",
+    },
+}
