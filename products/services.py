@@ -19,6 +19,7 @@ import json
 from django.core.cache import cache
 from .models import PropertyProduct, ProductPhoto, Product
 from django.http import HttpResponseRedirect, JsonResponse
+from pprint import pprint
 
 
 def product_detail(pk: int):
@@ -88,6 +89,7 @@ def get_full_data_product_compare(session_key):
         key_product = str(session_key) + '_compare' + str(i)
         obj = cache.get(key_product)
         if obj is not None:
+            obj['product'].pop('_state')
             obj['cache_key'] = key_product
             context['products'].append(obj)
             for j in obj['properties']:
@@ -113,27 +115,18 @@ def get_full_data_product_compare(session_key):
     return context
 
 
-def get_product_compare(request, *args, **kwargs):
-    """
-    Выводит товары на страницу сравнения
-    context['similar_properties'] общие свойства товаров со своими значениями
-    context['similar_properties_unique'] общие свойства, в которых нет одинаковых значений
-    """
-    session_key = request.session.session_key
-    context = get_full_data_product_compare(session_key)
-    context['count_compare'] = cache.get(str(session_key) + '_compare_count')
-    return render(request, 'products/compare.html', context=context)
-
-
-def compare_delete(request, **kwargs):
+def compare_delete(request):
     """
     Удаляет товар из списка к сравнению
     """
-    session_key = kwargs['cache_key'].split('_')[0]
-    try:
-        cache.delete(kwargs['cache_key'])
-        count = cache.get(session_key + '_compare_count') - 1
-        cache.set(session_key + '_compare_count', count)
-    except:
-        pass
-    return get_product_compare(request, **kwargs)
+    if request.GET:
+        session_key = request.GET['cache_key'].split('_')[0]
+        try:
+            cache.delete(request.GET['cache_key'])
+            count = cache.get(session_key + '_compare_count') - 1
+            cache.set(session_key + '_compare_count', count)
+            context = get_full_data_product_compare(session_key)
+            context['count_compare'] = cache.get(str(session_key) + '_compare_count')
+        except:
+            context = dict()
+        return JsonResponse(context)

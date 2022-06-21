@@ -7,10 +7,12 @@ from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import DetailView, ListView
 from django_filters import ModelMultipleChoiceFilter, CharFilter, RangeFilter
+from django.core.cache import cache
 
 from .filters import filterset_factory, CustomFilterSet
 from .models import (Product, PropertyProduct, Category, Tag, UserReviews)
 from .widgets import CustomCheckboxSelectMultiple, CustomTextInput, CustomRangeWidget
+from .services import get_full_data_product_compare
 
 
 class GoodsView(View):
@@ -76,6 +78,30 @@ class ProductTagListView(ListView):
         context = super().get_context_data(**kwargs)
         context['products'] = Tag.objects.get(id=self.kwargs['pk']).products.all()
         return context
+
+
+class ProductCompareView(View):
+
+    def get(self, request):
+        """ Показывает список товаров по get запросу """
+        session_key = request.session.session_key
+        context = get_full_data_product_compare(session_key)
+        context['count_compare'] = cache.get(str(session_key) + '_compare_count')
+        context['session_key'] = session_key
+
+        return render(request, 'products/compare.html', context=context)
+
+    def post(self, request, **kwargs):
+        if request.POST['cache_key']:
+            session_key = request.POST['cache_key'].split('_')[0]
+            try:
+                cache.delete(request.POST['cache_key'])
+                count = cache.get(session_key + '_compare_count') - 1
+                cache.set(session_key + '_compare_count', count)
+            except:
+                pass
+
+        return self.get(request)
 
 
 class HistoryView(View):
