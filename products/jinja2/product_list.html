@@ -22,7 +22,7 @@
             </header>
             <div class="Section-columnContent">
               <form method="get">
-                {{ filter.cache('category_filter:' + category.pk.__str__(), 24 * 60 * 60) }}
+                {{ filter.cache('category_filter:' + category.pk.__str__() + ':' + request.get_full_path(), 24 * 60 * 60) }}
                 <div class="buttons">
                   <input class="btn btn_square btn_dark btn_narrow" type="submit" value="{{ _('Фильтр') }}">
                 </div>
@@ -44,19 +44,19 @@
             {% for product in products %}
               <div class="Card">
                 <a class="Card-picture" href="#">
-                  <img src="{{ static('assets/img/content/home/card.jpg') }}" alt="{{ product.name }}"/>
+                  <img src="{{ static('assets/img/content/home/card.jpg') }}" alt="{{ product.product.name }}"/>
                 </a>
                 <div class="Card-content">
                   <strong class="Card-title">
-                    <a href="#" title="{{ product.name }}">{{ product.name|truncate(100) }}</a>
+                    <a href="#" title="{{ product.name }}">{{ product.product.name|truncate(100) }}</a>
                   </strong>
                   <div class="Card-description">
                     <div class="Card-cost">
                       <!-- TODO: когда будут сделаны скидки -->
                       <!-- span class="Card-priceOld">$115.00</span -->
-                      <span class="Card-price">{{ product.price }} &#8381;</span>
+                      <span class="Card-price">{{ product.price_in_shop }} &#8381;</span>
                     </div>
-                    <div class="Card-category">{{ category.category_name }}</div>
+                    <div class="Card-category">{{ product.shop.name }} / {{ category.category_name }}</div>
                     <div class="Card-hover">
                       <a class="Card-btn" href="#">
                         <img src="{{ static('assets/img/icons/card/bookmark.svg') }}" alt="bookmark.svg"/>

@@ -71,7 +71,6 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
    1. Загрузить суперпользователя
    ```
    python manage.py loaddata fixtures\superuser.json
-   
    ```
    2. Загрузить категории каталога и товары
    ```
@@ -84,22 +83,14 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
    4. Загрузить баннеры
    ```
    python manage.py loaddata fixtures\banners\banners.json
-    ```
+   ```
    5. Загрузить 1 профиль (покупатель)  
-    ```
+   ```
    python manage.py loaddata fixtures\accounts\client.json
-    ```
-   6. Загрузить профили магазинов в следующем порядке:
-    ```
-   python manage.py loaddata fixtures\shops\promotions.json
-    ```
-    ```
-   python manage.py loaddata fixtures\shops\shop.json
-    ```
-    ```
-   python manage.py loaddata fixtures\shops\shop_photo.json
-    ```
-    ```
-   python manage.py loaddata fixtures\shops\shop_product.json
-    ```
+   ```
+   6. Загрузить магазины и скидки
+   ```
+   python manage.py loaddata fixtures\shops\promotions.json fixtures\shops\shop.json fixtures\shops\shop_product.json
+   ```
+   
    :warning: Не забываем добавлять здесь, как загружать новые фикстуры!

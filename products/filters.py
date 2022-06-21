@@ -1,5 +1,5 @@
 import django_filters
-from django.core.cache import cache
+from django.core.cache import caches
 from django.core.exceptions import ImproperlyConfigured
 
 
@@ -25,11 +25,11 @@ class CustomFilterSet(django_filters.FilterSet):
         """
         key = f"{self.cache_key_prefix}:{key}"
 
-        if key in cache:
-            filter_set = cache.get(key)
+        if key in caches["redis"]:
+            filter_set = caches["redis"].get(key)
         else:
             filter_set = self.form.as_p()
-            cache.set(key, filter_set, timeout=timeout)
+            caches["redis"].set(key, filter_set, timeout=timeout)
 
         return filter_set
 
@@ -38,7 +38,8 @@ class CustomFilterSet(django_filters.FilterSet):
         """
         Удаляет фильтр из кэша.
         """
-        cache.delete(key)
+        for key in caches["redis"].iter_keys(key):
+            caches["redis"].delete(key)
 
 
 def filterset_factory(model, filterset=django_filters.FilterSet, model_fields="__all__", fields=None, exclude=None,

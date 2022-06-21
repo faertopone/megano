@@ -5,10 +5,13 @@
   "fields": {
     "name": "Наручные часы",
     "article": "587706108",
+    "description": "",
     "price": "3200.00",
     "rating": "0.00",
     "flag_limit": false,
-    "category": 4
+    "category": 4,
+    "tag": "",
+    "tags": []
   }
 },
 {
@@ -17,10 +20,13 @@
   "fields": {
     "name": "Ремень БГ",
     "article": "238693895",
+    "description": "",
     "price": "1500.00",
     "rating": "0.00",
     "flag_limit": false,
-    "category": 4
+    "category": 4,
+    "tag": "",
+    "tags": []
   }
 },
 {
@@ -29,10 +35,13 @@
   "fields": {
     "name": "Ремень БГ",
     "article": "241038423",
+    "description": "",
     "price": "1500.00",
     "rating": "0.00",
     "flag_limit": false,
-    "category": 4
+    "category": 4,
+    "tag": "",
+    "tags": []
   }
 },
 {
@@ -41,10 +50,13 @@
   "fields": {
     "name": "Заколка-краб YourDiadem",
     "article": "243548731",
+    "description": "",
     "price": "610.00",
     "rating": "0.00",
     "flag_limit": false,
-    "category": 4
+    "category": 4,
+    "tag": "",
+    "tags": []
   }
 },
 {
@@ -53,10 +65,13 @@
   "fields": {
     "name": "Пижама Hola",
     "article": "431513092",
+    "description": "",
     "price": "1399.00",
     "rating": "0.00",
     "flag_limit": false,
-    "category": 3
+    "category": 3,
+    "tag": "",
+    "tags": []
   }
 },
 {
@@ -65,10 +80,13 @@
   "fields": {
     "name": "Домашний комплект",
     "article": "357657060",
+    "description": "",
     "price": "1299.00",
     "rating": "0.00",
     "flag_limit": false,
-    "category": 3
+    "category": 3,
+    "tag": "",
+    "tags": []
   }
 },
 {
@@ -77,10 +95,13 @@
   "fields": {
     "name": "Смартфон Apple iPhone 12 128GB, черный",
     "article": "299368232",
+    "description": "",
     "price": "67880.00",
     "rating": "0.00",
     "flag_limit": false,
-    "category": 1
+    "category": 1,
+    "tag": "",
+    "tags": []
   }
 },
 {
@@ -89,10 +110,13 @@
   "fields": {
     "name": "Смартфон Tecno Pova 2 4/64GB, черный",
     "article": "297737670",
+    "description": "",
     "price": "16980.00",
     "rating": "0.00",
     "flag_limit": false,
-    "category": 1
+    "category": 1,
+    "tag": "",
+    "tags": []
   }
 },
 {
@@ -101,10 +125,13 @@
   "fields": {
     "name": "Детский цифровой фотоаппарат розовый Кошечка/Котик с селфи-камерой + подарок / Подарок девочке / Подарок на праздник / Подарок на День рождения",
     "article": "194830587",
+    "description": "",
     "price": "3300.00",
     "rating": "0.00",
     "flag_limit": false,
-    "category": 2
+    "category": 2,
+    "tag": "",
+    "tags": []
   }
 }
 ]

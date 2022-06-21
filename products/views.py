@@ -10,6 +10,7 @@ from django_filters import ModelMultipleChoiceFilter, CharFilter, RangeFilter
 from django.core.cache import cache
 
 from accounts.services import add_product_in_history, add_product_in_history_session
+from shops.models import ShopProduct
 from .filters import filterset_factory, CustomFilterSet
 from .models import (Product, PropertyProduct, Category, Tag, UserReviews)
 from .widgets import CustomCheckboxSelectMultiple, CustomTextInput, CustomRangeWidget
@@ -131,7 +132,7 @@ class HistoryView(View):
 
 class ProductListView(ListView):
     template_name = "product_list.html"
-    model = Product
+    model = ShopProduct
     context_object_name = "products"
     paginate_by = 30
 
@@ -147,7 +148,9 @@ class ProductListView(ListView):
         self.sort_params = self._get_sort_params()
 
     def get_queryset(self):
-        products = Product.objects.select_related("category").filter(category=self.category.pk)
+        products = self.model.objects.select_related(
+            "shop", "product", "promotion", "product__category"
+        ).filter(product__category=self.category.pk)
 
         if (order := self.sort_params["order_by"]) is not None:
             products = products.order_by(order)
@@ -196,14 +199,14 @@ class ProductListView(ListView):
         # формируем поля для filterset
         filterset_fields = {
             # Фильтр по имени товара
-            "product_name": CharFilter(label=_("Название товара"), field_name="name",
+            "product_name": CharFilter(label=_("Название товара"), field_name="product__name",
                                        lookup_expr="icontains",
                                        widget=CustomTextInput(attrs={
                                            "class": "form-input form-input_full",
                                            "placeholder": _("Название товара"),
                                        }), ),
             # Фильтр по цене
-            "product_price": RangeFilter(label=_("Цена"), field_name="price",
+            "product_price": RangeFilter(label=_("Цена"), field_name="price_in_shop",
                                          widget=CustomRangeWidget(attrs={
                                              "class": "range-widget__input"
                                          }), ),
@@ -219,7 +222,7 @@ class ProductListView(ListView):
             # Добавляем фильтр для свойства товара
             filterset_fields[prop.alias] = ModelMultipleChoiceFilter(
                 label=prop.name,
-                field_name="product_property__value",
+                field_name="product__product_property__value",
                 to_field_name="value",
                 widget=CustomCheckboxSelectMultiple,
                 queryset=PropertyProduct.objects.filter(id__in=subquery).only("value").order_by("value")
@@ -262,24 +265,24 @@ class ProductListView(ListView):
                     "sort": price_desc,
                     "class": sort_desc_class,
                 })
-                sort_params["order_by"] = "price"
+                sort_params["order_by"] = "price_in_shop"
             elif sort_kind == price_desc:
                 sort_params["price"].update({
                     "sort": price_asc,
                     "class": sort_asc_class,
                 })
-                sort_params["order_by"] = "-price"
+                sort_params["order_by"] = "-price_in_shop"
             elif sort_kind == rating_asc:
                 sort_params["rating"].update({
                     "sort": rating_desc,
                     "class": sort_desc_class,
                 })
-                sort_params["order_by"] = "rating"
+                sort_params["order_by"] = "product__rating"
             elif sort_kind == rating_desc:
                 sort_params["rating"].update({
                     "sort": rating_asc,
                     "class": sort_asc_class,
                 })
-                sort_params["order_by"] = "-rating"
+                sort_params["order_by"] = "-product__rating"
 
         return sort_params
