@@ -19,7 +19,6 @@ import json
 from django.core.cache import cache
 from .models import PropertyProduct, ProductPhoto, Product
 from django.http import HttpResponseRedirect, JsonResponse
-from pprint import pprint
 
 
 def product_detail(pk: int):
@@ -98,10 +97,10 @@ def get_full_data_product_compare(session_key):
                 else:
                     properties_dict[j] = 1
 
-    for property in [key for key in properties_dict if properties_dict[key] == len(context['products'])]:
-        context['similar_properties'][property] = []
+    for properties in [key for key in properties_dict if properties_dict[key] == len(context['products'])]:
+        context['similar_properties'][properties] = []
         for product in context['products']:
-            context['similar_properties'][property].append(product['properties'][property])
+            context['similar_properties'][properties].append(product['properties'][properties])
     context['count'] = len(context['similar_properties'])
     if context['count'] == 0:
         context['text'] = 'У данных товаров нет общих свойств'
@@ -113,20 +112,3 @@ def get_full_data_product_compare(session_key):
                 else:
                     context['similar_properties_add'][key] = value
     return context
-
-
-def compare_delete(request):
-    """
-    Удаляет товар из списка к сравнению
-    """
-    if request.GET:
-        session_key = request.GET['cache_key'].split('_')[0]
-        try:
-            cache.delete(request.GET['cache_key'])
-            count = cache.get(session_key + '_compare_count') - 1
-            cache.set(session_key + '_compare_count', count)
-            context = get_full_data_product_compare(session_key)
-            context['count_compare'] = cache.get(str(session_key) + '_compare_count')
-        except:
-            context = dict()
-        return JsonResponse(context)

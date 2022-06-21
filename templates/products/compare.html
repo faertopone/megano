@@ -3,15 +3,6 @@
 {% block content %}
   <div class="Middle Middle_top">
     <div class="Middle-top">
-
-                <!--<div class="not">
-                  <button id="compare_delete" value="{{ session_key }}" >
-                    <a>
-                      <img src="{{ static('assets/img/icons/card/delete.svg') }}" alt="delete.svg"/>
-                    </a>
-                  </button>
-                </div>-->
-
       <div class="wrap">
         <div class="Middle-header">
           <h1 class="Middle-title">{{ _('Сравнение товаров') }}
@@ -25,7 +16,7 @@
         </div>
       </div>
     </div>
-    <div class="Section">
+    <div class="Section" id="section_id">
       <div class="wrap">
         <article class="Article">
           <p>{{ text }}
@@ -60,27 +51,13 @@
                 <div class="Compare-nameProduct">{{ product.product.name }}
                 </div>
                 <div class="Compare-feature"><a class="Compare-btn" href="{{ product.href }}"><img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/></a>
-                            <form method="post" action="/products/comparison/" enctype="multipart/form-data">
-                              {{ csrf_input }}
-                              <input name="cache_key" type="hidden"
-                                  value="{{ product.cache_key }}">
-                              <button type="submit"><a class="Compare-btn"><img src="{{ static('assets/img/icons/card/delete.svg') }}" alt="delete.svg"/></a></button>
-                            </form>
-
-                  <div class="not" data-cache_key="{{ product.cache_key }}">
-                    <button>
-                      <a>
-                        <img src="{{ static('assets/img/icons/card/delete.svg') }}" alt="delete.svg"/>
-                      </a>
-                    </button>
-                  </div>
-
-
-
+                  <form method="post" action="/products/comparison/" enctype="multipart/form-data">
+                    {{ csrf_input }}
+                    <input name="cache_key" type="hidden"
+                        value="{{ product.cache_key }}">
+                    <button><a><img src="{{ static('assets/img/icons/card/delete.svg') }}" alt="delete.svg"/></a></button>
+                  </form>
                 </div>
-
-
-
               </div>
               {% endfor %}
             </div>

@@ -18,28 +18,6 @@ $(document).ready(function () {
         return false;
     });
 
-    $(".not").click(function () {
-        $.ajax ({
-            url: "/products/compare_basket/" ,
-            type: "GET",
-            data: {'cache_key': $(this).data('cache_key')
-            },
-            cache: false,
-            context: $( ".Section" ),
-            success: function (data) {
-                console.log('ok');
-                console.log(data);
-                $( this ).html(data);
-//                document.getElementById('h-subtotal').innerHTML = json.subtotal;
-//                $('.Section')(data);
-                },
-            error: function() {
-                console.log('error')
-                }
-        });
-        return false;
-    });
-
     $(".Compare-checkDifferent input").click(function () {
         $('#full').toggle();
         return {

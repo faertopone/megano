@@ -15,5 +15,4 @@ urlpatterns = [
     path('product_detail/<int:pk>/', views.ProductDetailView.as_view(), name='product-detail'),
     path("products/<int:pk>/", views.ProductTagListView.as_view(), name="product-tag"),
     path("count_compare_add/", services.count_compare_add, name="count-compare-add"),
-    path("compare_basket/", services.compare_delete, name="compare-basket")
 ]
