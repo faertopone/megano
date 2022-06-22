@@ -14,8 +14,6 @@
 #       Сервис и его методы реализуются в рамках
 #       "Задача 34.2. Интеграция сервиса скидок с реальными данными по скидкам"
 
-from django.shortcuts import render, HttpResponse
-import json
 from django.core.cache import cache
 from .models import PropertyProduct, ProductPhoto, Product
 from django.http import HttpResponseRedirect, JsonResponse
@@ -26,18 +24,23 @@ def product_detail(pk: int):
     Возвращает детальную информацию о товаре с его характеристиками
     для передачи в КЭШ.
     """
-    context = dict()
-    context['properties'] = dict()
-    info_data = PropertyProduct.objects.filter(product_id=pk)
-    context['product'] = Product.objects.get(id=pk).__dict__
-    context['product']['rating'] = int(context['product']['rating'])
+    product = Product.objects.get(id=pk)
+    context = {
+        'product': {
+            'id': product.id,
+            'name': product.name,
+            'price': product.price,
+            'rating': int(product.rating),
+        },
+        'properties': {}
+    }
 
     try:
         context['product']['photo'] = ProductPhoto.objects.filter(product_id=pk)[0].photo.url
     except:
         context['product']['photo'] = '/media/defolt.png'
 
-    for j in info_data:
+    for j in PropertyProduct.objects.filter(product_id=pk):
         context['properties'][j.property.name] = j.value
 
     return context
@@ -87,11 +90,9 @@ def get_full_data_product_compare(session_key):
     context['text'] = f"Сравниваем по имеющимся общим свойствам"
     context['products'] = []
 
-    # for i in range(1, 5):
     key_product = str(session_key) + '_compare'
     product_info_list = cache.get(key_product)
     for obj in product_info_list:
-        obj['product'].pop('_state')
         obj['cache_key'] = key_product
         context['products'].append(obj)
         for j in obj['properties']:
