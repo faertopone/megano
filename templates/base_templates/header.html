@@ -82,7 +82,12 @@
           </div>
         </nav>
         <div class="row-block">
-          <div class="CartBlock"><a class="CartBlock-block" href="#"><img class="CartBlock-img" src="{{ static('assets/img/icons/exchange.svg') }}" alt="exchange.svg"/><span class="CartBlock-amount">4</span></a><a class="CartBlock-block" href="#"><img class="CartBlock-img" src="{{ static('assets/img/icons/cart.svg') }}" alt="cart.svg"/><span class="CartBlock-amount">0</span></a>
+          <div class="CartBlock">
+              <a class="CartBlock-block" href="/products/comparison/"><img class="CartBlock-img" src="{{ static('assets/img/icons/exchange.svg') }}" alt="exchange.svg"/>
+                  <span class="CartBlock-amount" id="compare_count_id">
+                    {{ count_product_compare }}
+                  </span></a>
+              <a class="CartBlock-block" href="#"><img class="CartBlock-img" src="{{ static('assets/img/icons/cart.svg') }}" alt="cart.svg"/><span class="CartBlock-amount">0</span></a>
             <div class="CartBlock-block"><span class="CartBlock-price">0.00$</span>
             </div>
           </div>

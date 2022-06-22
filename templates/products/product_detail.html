@@ -48,9 +48,11 @@
                                     <div class="ProductCard-priceOld">{{ product.price }}</div>
                                 </div>
                                 <div class="ProductCard-compare">
-                                    <a class="btn btn_default" href="#">
-                                        <img class="btn-icon" src="{{ static("assets/img/icons/card/change.svg") }}" alt="change.svg">
-                                    </a>
+                                    <button id="compare_id" value="{{ product.id }}+{{ request.session.session_key }}">
+                                        <a class="btn btn_default">
+                                            <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg">
+                                        </a>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +138,7 @@
                                     <div class="Categories-row">
                                         <div class="Categories-block Categories-block_info">
                                             <div class="Categories-info">
-                                                <strong>{{ shop.name }}</strong>
+                                                <strong>{{ shop.shop.name }}</strong>
                                             </div>
                                         </div>
                                         <div class="Categories-splitProps"></div>
@@ -202,12 +204,12 @@
                                     <form class="form" method="post" id="UserReviewForm">
                                         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                                         <div class="form-group">
-                                            <textarea class="form-textarea" name="review" id="review" placeholder="{{ _("Отзыв") }}"></textarea>
+                                            <textarea class="form-textarea" name="review" id="review" placeholder="{{ _('Отзыв') }}"></textarea>
                                         </div>
 {#                                        <div class="form-group">#}
 {#                                            <div class="row">#}
 {#                                                <div class="row-block">#}
-{#                                                    <input class="form-input" id="username" name="username" type="text" placeholder="{{ _("Имя") }}">#}
+{#                                                    <input class="form-input" id="username" name="username" type="text" placeholder="{{ _('Имя') }}">#}
 {#                                                </div>#}
 {#                                            </div>#}
 {#                                        </div>#}

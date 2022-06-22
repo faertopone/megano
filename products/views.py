@@ -7,11 +7,13 @@ from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import DetailView, ListView
 from django_filters import ModelMultipleChoiceFilter, CharFilter, RangeFilter
+from django.core.cache import cache
 
 from accounts.services import add_product_in_history, add_product_in_history_session
 from .filters import filterset_factory, CustomFilterSet
 from .models import (Product, PropertyProduct, Category, Tag, UserReviews)
 from .widgets import CustomCheckboxSelectMultiple, CustomTextInput, CustomRangeWidget
+from .services import get_full_data_product_compare
 
 
 class GoodsView(View):
@@ -85,6 +87,32 @@ class ProductTagListView(ListView):
         return context
 
 
+class ProductCompareView(View):
+
+    def get(self, request):
+        """ Показывает список товаров по get запросу """
+        session_key = request.session.session_key
+        context = get_full_data_product_compare(session_key)
+        context['count_compare'] = cache.get(str(session_key) + '_compare_count')
+        context['session_key'] = session_key
+
+        return render(request, 'products/compare.html', context=context)
+
+    def post(self, request, **kwargs):
+        if request.POST['product_delete']:
+            session_key = str(request.session.session_key) + '_compare'
+            product_list = cache.get(session_key)
+            for i in product_list:
+                if int(i['product']['id']) == int(request.POST['product_delete']):
+                    product_list.remove(i)
+
+            cache.set(session_key, product_list, 3600)
+            count = cache.get(session_key + '_count') - 1
+            cache.set(session_key + '_count', count)
+
+        return self.get(request)
+
+
 class HistoryView(View):
     def get(self, request):
         context = dict()
@@ -96,45 +124,6 @@ class HistoryView(View):
                 'new_price': '1999',
                 'old_price': '5000',
                 'sale': '-70%'
-            }
-        ]
-        return render(request, 'products/historyview.html', context=context)
-
-
-class ProductComment(View):
-    def get(self, request, *args, **kwargs):
-        context = dict()
-        context['product'] = {'pk': kwargs['pk'], 'info': 'Будет база - будет инфо'}
-        return render(request, 'products/product_comment.html', context=context)
-
-    def post(self, request, *args, **kwargs):
-        context = dict()
-        context['users_review'] = {'name': request.POST.get('name'),
-                                   'review': request.POST.get('review'),
-                                   'email': request.POST.get('email')}
-        return HttpResponse(content=context.values())
-
-
-class ProductComparison(View):
-    def get(self, request, *args, **kwargs):
-        context = dict()
-        context['text'] = f"Сравниваем по ID {kwargs['pk']}"
-        context['products'] = [
-            {
-                'name': 'test_name',
-                'href': '#',
-                'photo': {'url': 'http://127.0.0.1:8000/static/assets/img/content/home/test.jpg'},
-                'new_price': '1999',
-                'old_price': '5000',
-                'sale': '-70%'
-            },
-            {
-                'name': 'test_name_1',
-                'href': '#',
-                'photo': {'url': 'http://127.0.0.1:8000/static/assets/img/content/home/card.jpg'},
-                'new_price': '2999',
-                'old_price': '3000',
-                'sale': '-1%'
             }
         ]
         return render(request, 'products/historyview.html', context=context)

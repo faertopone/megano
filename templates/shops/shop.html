@@ -163,7 +163,7 @@
           </header>
           <div class="Cards">
             {% for product in products %}
-              <div class="Card"><a class="Card-picture" href="#"><img src="{{ product.photo_url }}" alt="card.jpg"/></a>
+              <div class="Card"><a class="Card-picture" href="/products/product_detail/{{ product.product.id }}"><img src="{{ product.photo_url }}" alt="card.jpg"/></a>
                 <div class="Card-content">
                   <strong class="Card-title"><a href="#">{{ product.product.name }}</a>
                   </strong>

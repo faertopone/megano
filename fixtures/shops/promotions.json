@@ -1,0 +1,38 @@
+[
+{
+  "model": "shops.promotions",
+  "pk": 1,
+  "fields": {
+    "name": "TestPromo",
+    "description": "Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt",
+    "discount": 4.0
+  }
+},
+{
+  "model": "shops.promotions",
+  "pk": 2,
+  "fields": {
+    "name": "TestPromo",
+    "description": "Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt",
+    "discount": 15.0
+  }
+},
+{
+  "model": "shops.promotions",
+  "pk": 3,
+  "fields": {
+    "name": "TestPromo",
+    "description": "Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt",
+    "discount": 25.0
+  }
+},
+{
+  "model": "shops.promotions",
+  "pk": 4,
+  "fields": {
+    "name": "TestPromo",
+    "description": "Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt",
+    "discount": 10.0
+  }
+}
+]

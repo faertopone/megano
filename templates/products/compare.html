@@ -1,0 +1,171 @@
+{%  extends 'base_templates/base.html'  %}
+
+{% block content %}
+  <div class="Middle Middle_top">
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h1 class="Middle-title">{{ _('Сравнение товаров') }}
+          </h1>
+          <ul class="breadcrumbs Middle-breadcrumbs">
+            <li class="breadcrumbs-item"><a href="/">{{ _('домой') }}</a>
+            </li>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>{{ _('Сравнение товаров') }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="Section" id="section_id">
+      <div class="wrap">
+        <article class="Article">
+          <p>{{ text }}
+          </p>
+        </article>
+        <div class="Compare">
+          <div  class="Compare-header">
+            <label class="toggle Compare-checkDifferent">
+              <input type="checkbox" name="differentFeature" value="true"/><span class="toggle-box"></span><span class="toggle-text">{{ _('Только различающиеся характеристики') }}</span>
+            </label>
+          </div>
+          <div class="Compare-row">
+            <div class="Compare-title Compare-title_blank">
+            </div>
+            <div class="Compare-products">
+              {% for product in products %}
+              <div class="Compare-product">
+                <div class="Compare-nameProduct Compare-nameProduct_main"><a href="/products/product_detail/{{ product.product.id }}">{{ product.product.name }}</a>
+                </div>
+                <div class="Compare-feature"><img class="Compare-pict" src="{{ product.product.photo }}" alt="{{ product.product.photo }}"/>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="Compare-row">
+            <div class="Compare-title Compare-title_blank">
+            </div>
+            <div class="Compare-products">
+              {% for product in products %}
+              <div class="Compare-product" >
+                <div class="Compare-nameProduct">{{ product.product.name }}
+                </div>
+                <div class="Compare-feature"><a class="Compare-btn" href="{{ product.href }}"><img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/></a>
+                  <form method="post" action="/products/comparison/" enctype="multipart/form-data">
+                    {{ csrf_input }}
+                    <input name="product_delete" type="hidden"
+                        value="{{ product.product.id }}">
+                    <button><a><img src="{{ static('assets/img/icons/card/delete.svg') }}" alt="delete.svg"/></a></button>
+                  </form>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="Compare-row">
+            <div class="Compare-title">{{ _('Рейтинг') }}
+            </div>
+            <div class="Compare-products">
+              {% for product in products %}
+              <div class="Compare-product">
+                <div class="Compare-nameProduct">{{ product.product.name }}
+                </div>
+                <div class="Compare-feature">
+                  <div class="Rating">
+                    <div class="Rating-stars"><span class="Rating-star Rating-star_view">
+                      {% if product.product.rating != 0 %}
+                        {% for i in range(product.product.rating - 1) %}
+                          <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                            <g>
+                              <g>
+                                <path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                              </g>
+                            </g>
+                          </svg></span><span class="Rating-star Rating-star_view">
+                        {% endfor %}
+                      {% endif %}
+                      {% for i in range(5 - product.product.rating) %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                          <g>
+                            <g>
+                              <path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                            </g>
+                          </g>
+                        </svg></span><span class="Rating-star">
+                      {% endfor %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                          <g>
+                            <g>
+                              <path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                            </g>
+                          </g>
+                        </svg></span>
+                    </div>
+                    <div class="Rating-title">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div id="full">
+            {% for key, value in similar_properties_add.items() %}
+              <div class="Compare-row">
+                <div class="Compare-title">{{ key }}
+                </div>
+                <div class="Compare-products">
+                  {% for property in value %}
+                    <div class="Compare-product">
+                      <div class="Compare-nameProduct">
+                      </div>
+                      <div class="Compare-feature">{{ property }}
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          <div id="unique">
+          {% for key, value in similar_properties_unique.items() %}
+            <div class="Compare-row" >
+              <div class="Compare-title">{{ key }}
+              </div>
+              <div class="Compare-products">
+                {% for property in value %}
+                  <div class="Compare-product">
+                    <div class="Compare-nameProduct">
+                    </div>
+                    <div class="Compare-feature">{{ property }}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+          </div>
+          <div class="Compare-row">
+            <div class="Compare-title">{{ _('Цена') }}
+            </div>
+            <div class="Compare-products">
+              {% for product in products %}
+              <div class="Compare-product">
+                <div class="Compare-nameProduct">{{ product.product.name }}
+                </div>
+                <div class="Compare-feature">
+                  <strong class="Compare-priceOld">${{ product.product.price }}
+                  </strong>
+                  <strong class="Compare-price">${{ product.product.price }}
+                  </strong>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
