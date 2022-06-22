@@ -53,8 +53,8 @@
                 <div class="Compare-feature"><a class="Compare-btn" href="{{ product.href }}"><img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/></a>
                   <form method="post" action="/products/comparison/" enctype="multipart/form-data">
                     {{ csrf_input }}
-                    <input name="cache_key" type="hidden"
-                        value="{{ product.cache_key }}">
+                    <input name="product_delete" type="hidden"
+                        value="{{ product.product.id }}">
                     <button><a><img src="{{ static('assets/img/icons/card/delete.svg') }}" alt="delete.svg"/></a></button>
                   </form>
                 </div>

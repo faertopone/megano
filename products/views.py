@@ -92,14 +92,16 @@ class ProductCompareView(View):
         return render(request, 'products/compare.html', context=context)
 
     def post(self, request, **kwargs):
-        if request.POST['cache_key']:
-            session_key = request.POST['cache_key'].split('_')[0]
-            try:
-                cache.delete(request.POST['cache_key'])
-                count = cache.get(session_key + '_compare_count') - 1
-                cache.set(session_key + '_compare_count', count)
-            except:
-                pass
+        if request.POST['product_delete']:
+            session_key = str(request.session.session_key) + '_compare'
+            product_list = cache.get(session_key)
+            for i in product_list:
+                if int(i['product']['id']) == int(request.POST['product_delete']):
+                    product_list.remove(i)
+
+            cache.set(session_key, product_list, 3600)
+            count = cache.get(session_key + '_count') - 1
+            cache.set(session_key + '_count', count)
 
         return self.get(request)
 

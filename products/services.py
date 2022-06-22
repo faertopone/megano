@@ -46,24 +46,27 @@ def product_detail(pk: int):
 def count_compare_add(request):
     """
     Добавляет в КЭШ товары, выбранные пользователем к сравнению и хранит в счетчике их количество
-    cache.get(str(request.session) + '_compare1') вернёт товар, добавленный сессией к сравнению
+    cache.get(str(request.session) + '_compare') вернёт список товаров, добавленных сессией к сравнению
     cache.get(str(request.session) + '_compare_count') вернёт количество товаров, добавленных к сравнению
     """
 
     if request.GET:
         info_list = [i for i in request.GET['product_info'].split('+')]
         product_pk = int(info_list[0])
+        product_info_list = []
+        product_info = product_detail(pk=product_pk)
         user = info_list[1] + '_compare'
         key_count = user + '_count'
-        for j in range(1, 5):
-            key_product = user + str(j)
 
-            if cache.get(key_product) is None:
-                product_info = product_detail(pk=product_pk)
-                cache.set(key_product, product_info, 3600)
-                cache.set(key_count, j, 3600)
-                break
-
+        if cache.get(user) is None:
+            product_info_list.append(product_info)
+        else:
+            product_info_list = cache.get(user)
+            product_id_list = [i['product']['id'] for i in product_info_list]
+            if not product_info['product']['id'] in product_id_list:
+                product_info_list.append(product_info)
+        cache.set(user, product_info_list, 3600)
+        cache.set(key_count, len(product_info_list), 3600)
         context = {'com_count': cache.get(key_count)}
         return JsonResponse(context)
     else:
@@ -84,18 +87,18 @@ def get_full_data_product_compare(session_key):
     context['text'] = f"Сравниваем по имеющимся общим свойствам"
     context['products'] = []
 
-    for i in range(1, 5):
-        key_product = str(session_key) + '_compare' + str(i)
-        obj = cache.get(key_product)
-        if obj is not None:
-            obj['product'].pop('_state')
-            obj['cache_key'] = key_product
-            context['products'].append(obj)
-            for j in obj['properties']:
-                if j in properties_dict:
-                    properties_dict[j] += 1
-                else:
-                    properties_dict[j] = 1
+    # for i in range(1, 5):
+    key_product = str(session_key) + '_compare'
+    product_info_list = cache.get(key_product)
+    for obj in product_info_list:
+        obj['product'].pop('_state')
+        obj['cache_key'] = key_product
+        context['products'].append(obj)
+        for j in obj['properties']:
+            if j in properties_dict:
+                properties_dict[j] += 1
+            else:
+                properties_dict[j] = 1
 
     for properties in [key for key in properties_dict if properties_dict[key] == len(context['products'])]:
         context['similar_properties'][properties] = []
