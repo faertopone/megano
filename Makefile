@@ -31,6 +31,7 @@ load-clients:
 load-shops:
 	cd /vagrant && \
 		python3 manage.py loaddata fixtures/shops/promotions.json \
+			fixtures/shops/promotion_group.json \
 			fixtures/shops/shops.json \
 			fixtures/shops/shop_product.json
 
@@ -60,6 +61,7 @@ dump-clients:
 dump-shops:
 	cd /vagrant && \
 		python3 -Xutf8 manage.py dumpdata shops.Promotions --indent 2 -o fixtures/shops/promotions.json && \
+		python3 -Xutf8 manage.py dumpdata shops.PromotionGroup --indent 2 -o fixtures/shops/promotion_group.json && \
 		python3 -Xutf8 manage.py dumpdata shops.Shops --indent 2 -o fixtures/shops/shops.json && \
 		python3 -Xutf8 manage.py dumpdata shops.ShopProduct --indent 2 -o fixtures/shops/shop_product.json
 
@@ -68,7 +70,7 @@ dump-fixtures: dump-categories dump-products dump-banners dump-clients dump-shop
 
 # Run django test server
 runserver:
-	ip=$$(hostname -I | xargs) && \
+	ip=$$(hostname -I | xargs | awk -F' ' '{print $$1}') && \
 	cd /vagrant && python3 manage.py runserver $$ip:8000
 
 
