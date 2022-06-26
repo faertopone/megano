@@ -66,7 +66,7 @@ class PromotionService:
             return promotions
 
     def get_priority_promotions(self, products: Union[ShopProduct, QuerySet],
-                                pk=None) -> Union[Dict[int, Promotions], Optional[Promotions]]:
+                                pk=None) -> Union[Dict[int, List[Promotions]], Optional[Promotions]]:
         """
         Получить приоритетную скидку на указанный список товаров или на один товар.
 
@@ -119,9 +119,9 @@ class PromotionService:
         products = ShopProduct.objects.filter(product__pk__in=list(promotions.keys()))
         products = {p.pk: p.price_in_shop for p in products}
 
-        discount = 0
+        discount: float = 0
         for pk, promos in promotions.items():
             for promo in promos:
                 discount += products[pk] * promo.discount * 0.01
 
-        return discount
+        return round(discount, 2)
