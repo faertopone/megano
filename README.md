@@ -90,7 +90,7 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
    ```
    6. Загрузить магазины и скидки
    ```
-   python manage.py loaddata fixtures\shops\promotions.json fixtures\shops\shop.json fixtures\shops\shop_product.json
+   python manage.py loaddata fixtures\shops\promotions.json fixtures\shops\promoution_group.json fixtures\shops\shop.json fixtures\shops\shop_product.json
    ```
    
    :warning: Не забываем добавлять здесь, как загружать новые фикстуры!
