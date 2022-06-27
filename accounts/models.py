@@ -73,5 +73,6 @@ class Client(models.Model):
         verbose_name = 'клиент'
         verbose_name_plural = 'клиенты'
         db_table = 'Client'
+        ordering = ['-item_view__id']
 
 
