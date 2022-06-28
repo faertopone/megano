@@ -1,10 +1,18 @@
-- name: Provision development VM
-  # Common operation settings
-  hosts: all
-  become: true
+---
+- hosts: all
+  vars:
+    postgres_user: team9
+    postgres_password: team9
+    postgres_db: webshop
 
-  # Tasks
+
   tasks:
+    - name: add GPG key
+      ansible.builtin.apt_key:
+        url: https://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x1655A0AB68576280
+        id: 68576280
+        state: present
+
     - name: Install python libs
       apt:
         name:
@@ -12,37 +20,63 @@
           - python3-venv
           - python3-dev
           - python3-virtualenv
+          - libaio-dev
+          - libpq-dev
+          - redis-server
         state: latest
         update_cache: true
 
-    - name: Install dev requirements
+    - name: Install specified python requirements in indicated (virtualenv)
       pip:
         requirements: /vagrant/requirements/dev.txt
+        virtualenv: /home/vagrant/venv
+        virtualenv_python: python3
 
-    - include_tasks: remove-makefile.yml
+    - name: Install PostgreSQL
+      ansible.builtin.apt:
+        pkg:
+          - postgresql
+          - postgresql-contrib
+          - postgresql-server-dev-all
+          - python3-psycopg2
+          - acl
+        state: latest
 
-    - name: Copy Makefile to ansible working dir
-      copy:
-        dest: Makefile
-        src: ../../../Makefile
-      notify: Remove Makefile
+    - name: Start and enable postgres
+      ansible.builtin.service:
+        name: postgresql
+        enabled: yes
+        state: started
 
-    - name: Copy Makefile to vagrant user dir
-      copy:
-        dest: /home/vagrant/Makefile
-        src: Makefile
+    - name: Create postgres user
+      community.postgresql.postgresql_user:
+        name: "{{ postgres_user }}"
+        password: "{{ postgres_password }}"
+      become: yes
+      become_user: postgres
 
-    - name: Apply migrations
-      command: make apply-migrations
-      register: result
-    - debug: var=result.stdout_lines
+    - name: Create db
+      include_tasks: postgres.yml
 
-    - name: Load fixtures
-      command: make load-fixtures
-      register: result
-    - debug: var=result.stdout_lines
+    - name: Exporting db url to env
+      lineinfile:
+        dest: "/etc/environment"
+        state: present
+        regexp: "^DATABASE_URL="
+        line: "DATABASE_URL=postgres://{{ postgres_user }}:{{ postgres_password }}@127.0.0.1:5432/{{ postgres_db }}"
 
-  # Handlers
+    - name: Exporting redis url to env
+      lineinfile:
+        dest: "/etc/environment"
+        state: present
+        regexp: "^REDIS_URL="
+        line: "REDIS_URL=redis://127.0.0.1:6379/0"
+
+
   handlers:
-    - name: Remove Makefile
-      include_tasks: remove-makefile.yml
+    - name: postgresql restart
+      ansible.builtin.service:
+        name: postgresql
+        enabled: yes
+        state: restart
+        become: yes
