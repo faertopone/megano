@@ -85,7 +85,7 @@ class ProfileTest(TestCase):
         # Отлично, страница загрузилась!
         self.assertEqual(response.status_code, 200)
         # Пошлем post с информацией
-        from_data = {'first_name': 'ettst',
+        from_data = {
                      'id_user': my_client.user_id,
                      'limit_items_views': 2,
                      'item_in_page_views': 1,
@@ -104,6 +104,8 @@ class ProfileTest(TestCase):
                          ['Ну уж меньше 4, это не серьезно!'])
         self.assertEqual(resp.context_data.get('form').errors['phone'],
                          ['Такой телефон уже занят'])
+
+        print(resp.context_data.get('form').errors)
 
 
 

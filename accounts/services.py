@@ -132,6 +132,7 @@ def get_context_data(user) -> list:
     client = Client.objects.select_related('user').prefetch_related('item_view').get(user=user)
     item_in_page_views_check = client.item_in_page_views_check()
     max_limit = client.limit_items_views
+    temp = client.item_view.all().order_by('client__client_product__id')
     if len(client.item_view.all()) > 0:
         list_item_views = client.item_view.all()[::-1][:item_in_page_views_check]
         if len(client.item_view.all()[:max_limit]) <= item_in_page_views_check:

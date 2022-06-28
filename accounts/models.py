@@ -45,7 +45,8 @@ class Client(models.Model):
                                   verbose_name=_('Отчество'))
 
     item_view = models.ManyToManyField('products.Product', verbose_name=_('Товары, которые смотрел пользователь'),
-                                       blank=True)
+                                       blank=True,)
+    #through="ClientProduct",
     limit_items_views = models.IntegerField(verbose_name=_('Сколько максимум показывать товаров'),
                                             help_text=_('Тут можно изменить это значение, по умолчанию 20 минимум 4.'),
                                             default=20, validators=[MinValueValidator(4)],
@@ -73,6 +74,12 @@ class Client(models.Model):
         verbose_name = 'клиент'
         verbose_name_plural = 'клиенты'
         db_table = 'Client'
-        ordering = ['-item_view__id']
 
 
+# class ClientProduct(models.Model):
+#     client = models.ForeignKey('Client', on_delete=models.CASCADE,
+#                                related_name='client_products',
+#                                related_query_name='client_product')
+#     product = models.ForeignKey('products.Product', on_delete=models.CASCADE,
+#                                 related_name='client_products',
+#                                 related_query_name='client_product')

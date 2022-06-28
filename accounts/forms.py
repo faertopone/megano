@@ -151,6 +151,8 @@ class ProfileEditForm(forms.ModelForm):
         phone = cleaned_data.get('phone')
         email = cleaned_data.get('email')
         errors = {}
+        print('ERRORS ', self.errors, )
+        print('ERRORS cleandata', self.cleaned_data)
         if User.objects.filter(email=email).exists():
             email_in_bd = User.objects.filter(email=email).first()
             if user.email != email and email == email_in_bd.email:
