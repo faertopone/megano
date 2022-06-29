@@ -1,4 +1,8 @@
+import os
+
 from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.template.defaultfilters import filesizeformat
 from django.test import TestCase
 from django.urls import reverse
 
@@ -84,17 +88,23 @@ class ProfileTest(TestCase):
         response = self.client.get(reverse('profile-edit', kwargs={'pk': my_client.pk}))
         # Отлично, страница загрузилась!
         self.assertEqual(response.status_code, 200)
+        # загрузим картинку
+        test_img = SimpleUploadedFile("big_img.gif",
+                                      open(os.path.join(os.path.dirname(__file__), "big_img.gif"), mode="rb").read(),
+                                      content_type="image/*")
         # Пошлем post с информацией
         from_data = {
-                     'id_user': my_client.user_id,
-                     'limit_items_views': 2,
-                     'item_in_page_views': 1,
-                     'email': 'test2@mail.ru',
-                     'phone': +79999999,
-                     }
+            'id_user': my_client.user_id,
+            'limit_items_views': 2,
+            'item_in_page_views': 1,
+            'email': 'test2@mail.ru',
+            'phone': +79999999,
+            'photo': test_img
+        }
         resp = self.client.post(reverse('profile-edit', kwargs={'pk': my_client.pk}), data=from_data, follow=True)
         self.assertEqual(resp.context_data['form'].is_valid(), False)
-        self.assertEqual(resp.context_data.get('form').errors['item_in_page_views'], ['Не стоит устанавливать меньше 2!'])
+        self.assertEqual(resp.context_data.get('form').errors['item_in_page_views'],
+                         ['Не стоит устанавливать меньше 2!'])
         # Проверка, что такая почта уже занята
         self.assertEqual(resp.context_data.get('form').errors['email'],
                          ['Такой email уже занят'])
@@ -104,8 +114,35 @@ class ProfileTest(TestCase):
                          ['Ну уж меньше 4, это не серьезно!'])
         self.assertEqual(resp.context_data.get('form').errors['phone'],
                          ['Такой телефон уже занят'])
+        MAX_FILE_ZISE = 2097152
+        self.assertEqual(resp.context_data.get('form').errors['photo'],
+                         [f'Размер файла не должен превышать {filesizeformat(MAX_FILE_ZISE)}'])
 
-        print(resp.context_data.get('form').errors)
 
-
-
+    def test_profile_edit_form_valid(self):
+        # За логинимся
+        login = self.client.login(username='TEST', password='password_TEST')
+        # найдем профиль этого юзера
+        my_client = Client.objects.get(user=login)
+        # "debug_toolbar.panels.templates.TemplatesPanel" - нужно убрать что бы работало -)
+        response = self.client.get(reverse('profile-edit', kwargs={'pk': my_client.pk}))
+        # Отлично, страница загрузилась!
+        self.assertEqual(response.status_code, 200)
+        # загрузим картинку
+        test_img = SimpleUploadedFile("good_img.jpg",
+                                      open(os.path.join(os.path.dirname(__file__), "good_img.jpg"), mode="rb").read(),
+                                      content_type="image/*")
+        # Пошлем post с информацией
+        from_data = {
+            'id_user': my_client.user_id,
+            'limit_items_views': 20,
+            'item_in_page_views': 10,
+            'email': 'test3@mail.ru',
+            'phone': +79499999,
+            'photo': test_img,
+            'first_name': 'tetwtew',
+            'last_name': 'dsgsdgs',
+            'patronymic': 'sdgsgsg'
+        }
+        resp = self.client.post(reverse('profile-edit', kwargs={'pk': my_client.pk}), data=from_data)
+        self.assertEqual(resp.context_data['form'].is_valid(), True)
