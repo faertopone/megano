@@ -75,6 +75,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'products.context_processors.main_menu_categories',
                 'products.context_processors.getting_compare_info',
+                'basket.context_processors.basket'
             ],
         },
     },

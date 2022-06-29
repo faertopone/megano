@@ -65,15 +65,14 @@
                             <div class="ProductCard-cartElement ProductCard-cartElement_amount">
                                 <div class="Amount Amount_product">
                                     <button class="Amount-remove" type="button"></button>
-                                    <input class="Amount-input form-input" name="amount" type="text" value="1">
+                                    <input class="Amount-input form-input" name="amount" type="text" id="select" value="1">
                                     <button class="Amount-add" type="button"></button>
                                 </div>
                             </div>
-                            <div class="ProductCard-cartElement">
-                                <a class="btn btn_primary" href="#">
-                                    <img class="btn-icon" src="" alt="">
-                                    <span class="btn-content">{{ _('Добавить в корзину') }}</span>
-                                </a>
+                            <div class="ProductCard-cartElement"><button id="add-button" class="btn btn_primary" type="button" value={{product.id}}>
+                                <img class="btn-icon" src="{{ static ('assets/img/icons/card/cart_white.svg') }}" alt="cart_white.svg"/>
+                                <span class="btn-content">{{ _('Добавить в корзину') }}</span>
+                            </button>
                             </div>
                         </div>
                         <div class="ProductCard-footer">
@@ -225,4 +224,27 @@
             </div>
         </div>
     </div>
+<script>
+    $(document).on('click', '#add-button', function (e) {
+        e.preventDefault();
+        console.log($);
+        $.ajax({
+            type: 'POST',
+            url: "{{ url('basket_add') }}",
+            data: {
+                product_id: $('#add-button').val(),
+                product_qty: $('#select').val(),
+                csrfmiddlewaretoken: '{{csrf_token}}',
+                action: 'add'
+            },
+            success: function (json) {
+                document.getElementById('basket-qty').innerHTML = json.qty;
+                document.getElementById('h-subtotal').innerHTML = json.subtotal;
+                document.getElementById('subtotal').innerHTML = json.subtotal;
+            },
+            error: function (xhr, errmsg, err) {
+            }
+        });
+    })
+</script>
 {% endblock %}
