@@ -17,6 +17,7 @@
 from django.core.cache import cache
 from .models import PropertyProduct, ProductPhoto, Product
 from django.http import HttpResponseRedirect, JsonResponse
+from django.utils.translation import gettext as _
 
 
 def product_detail(pk: int):
@@ -87,7 +88,7 @@ def get_full_data_product_compare(session_key):
     context['similar_properties'] = dict()
     context['similar_properties_unique'] = dict()
     context['similar_properties_add'] = dict()
-    context['text'] = f"Сравниваем по имеющимся общим свойствам"
+    context['text'] = _("Сравниваем по имеющимся общим свойствам")
     context['products'] = []
 
     key_product = str(session_key) + '_compare'
@@ -107,7 +108,7 @@ def get_full_data_product_compare(session_key):
             context['similar_properties'][properties].append(product['properties'][properties])
     context['count'] = len(context['similar_properties'])
     if context['count'] == 0:
-        context['text'] = 'У данных товаров нет общих свойств'
+        context['text'] = _('У данных товаров нет общих свойств')
     else:
         for key, value in context['similar_properties'].items():
             for elem in value:
