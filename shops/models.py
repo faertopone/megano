@@ -3,41 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from products.models import Product, ProductPhoto
-
-
-class Promotions(models.Model):
-    """
-    Модель акций, которые определяют скидки на группы товаров, на общие покупки в магазинах.
-    discount определяет процентную скидку 80% = 0.80
-    """
-    name = models.CharField(max_length=39, verbose_name=_('название'))
-    description = models.TextField(max_length=500, blank=True, default="", verbose_name=_('описание'))
-    discount = models.FloatField(verbose_name=_('скидка, %'), default=0)
-
-    class Meta:
-        verbose_name = _('скидка')
-        verbose_name_plural = _('скидки')
-
-    def __str__(self):
-        return self.name
-
-
-class PromotionGroup(models.Model):
-    """
-    Модель группы товаров, на каждый из которых действует
-    указанная скидка.
-    """
-    name = models.CharField(max_length=200, verbose_name=_("название группы"))
-    promotion = models.ForeignKey(Promotions, on_delete=models.CASCADE,
-                                  related_name="promotion_groups", related_query_name="promotion_group",
-                                  verbose_name=_("скидка"))
-
-    class Meta:
-        verbose_name = _("группа товаров со скидкой")
-        verbose_name_plural = _("группы товаров со скидкой")
-
-    def __str__(self):
-        return self.name
+from promotions.models import Promotions
 
 
 class Shops(models.Model):
@@ -57,6 +23,9 @@ class Shops(models.Model):
                                   null=True, blank=True, default=None,
                                   related_name="shops", related_query_name="shop",
                                   verbose_name=_('скидка'))
+    products = models.ManyToManyField(Product, through="ShopProduct",
+                                      related_name="shops", related_query_name="shop",
+                                      verbose_name=_("Товары"))
     # shop_photo = models.ManyToManyField("ShopPhoto")
     # shop_product = models.ManyToManyField("ShopProduct")
 
@@ -113,13 +82,6 @@ class ShopProduct(models.Model):
     special_price = models.DecimalField(verbose_name=_('спец-цена'), decimal_places=2, max_digits=10, default=0)
     photo_url = models.TextField(max_length=500, blank=True, default="", verbose_name=_('ссылка на фото'))
     sale = models.IntegerField(verbose_name=_('sale'), default=0)
-    promotion_group = models.ForeignKey(PromotionGroup, on_delete=models.SET_DEFAULT, default=None,
-                                        null=True, blank=True,
-                                        related_name="shop_products", related_query_name="shop_product",
-                                        verbose_name=_("скидочная группа товаров"),
-                                        help_text=_("Товар может входить в группу товаров со скидкой."
-                                                    " В этом случае на каждый товар в группе действует"
-                                                    " определенная скидка"))
 
     def save(self, *args, **kwargs):
         try:

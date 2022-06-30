@@ -3,7 +3,8 @@ from typing import Union, Dict, Optional, List
 from django.db import models
 from django.db.models import QuerySet
 
-from .models import ShopProduct, Promotions
+from shops.models import ShopProduct
+from .models import Promotions
 
 
 class PromotionService:
@@ -14,8 +15,8 @@ class PromotionService:
     @staticmethod
     def _get_queryset(products: Union[ShopProduct, QuerySet]):
         if isinstance(products, QuerySet):
-            return products
-        return products.objects.all()
+            return products.order_by("pk")
+        return products.objects.all().order_by("pk")
 
     @staticmethod
     def _update_promotions(promotions: Dict[int, List[Promotions]], pk: int, promotion: Promotions):
@@ -36,16 +37,16 @@ class PromotionService:
 
         if pk is None:
             # получаем все товары со скидкой
-            products_with_promo = queryset.filter(~models.Q("promotion__isnull"))
+            products_with_promo = queryset.filter(~models.Q(promotion__isnull=True))
             # получаем все товары, входящие в скидочную группу
-            products_in_promo_group = queryset.filter(~models.Q("promotion_group__isnull"))
+            products_in_promo_group = queryset.filter(~models.Q(product__promotion_group__isnull=True))
 
             # объединяем скидки по полученным товарам в один список
             promotions = dict()
             for p in products_with_promo.all():
                 self._update_promotions(promotions, p.pk, p.promotion)
             for p in products_in_promo_group.all():
-                self._update_promotions(promotions, p.pk, p.promotion_group.promotion)
+                self._update_promotions(promotions, p.pk, p.product.promotion_group.promotion)
 
             return promotions
         else:
@@ -60,9 +61,9 @@ class PromotionService:
             if product.promotion:
                 # если на товар назначена скидка
                 self._update_promotions(promotions, product.pk, product.promotion)
-            if product.promoution_group.promoution:
+            if product.product.promotion_group:
                 # если товар входит в скидочную группу
-                self._update_promotions(promotions, product.pk, product.promotion_group.promotion)
+                self._update_promotions(promotions, product.pk, product.product.promotion_group.promotion)
             return promotions
 
     def get_priority_promotions(self, products: Union[ShopProduct, QuerySet],
@@ -78,11 +79,11 @@ class PromotionService:
 
         if pk is None:
             # получаем все товары со скидкой
-            products_with_promo = queryset.filter(~models.Q("promotion__isnull"))
+            products_with_promo = queryset.filter(~models.Q(promotion__isnull=True))
             # получаем все товары, входящие в скидочную группу,
             # но у которых не назначена скидка
             products_in_promo_group = queryset.filter(
-                models.Q("promotion__isnull") & ~models.Q("promotion_group__isnull")
+                models.Q(promotion__isnull=True) & ~models.Q(product__promotion_group__isnull=True)
             )
 
             # объединяем скидки по полученным товарам в один список
@@ -90,7 +91,7 @@ class PromotionService:
             for p in products_with_promo.all():
                 self._update_promotions(promotions, p.pk, p.promotion)
             for p in products_in_promo_group.all():
-                self._update_promotions(promotions, p.pk, p.promotion_group.promotion)
+                self._update_promotions(promotions, p.pk, p.product.promotion_group.promotion)
 
             return promotions
         else:
@@ -102,9 +103,9 @@ class PromotionService:
             if product.promotion:
                 # если на товар назначена скидка
                 return product.promotion
-            elif product.promoution_group.promoution:
+            elif product.product.promotion_group:
                 # если товар входит в скидочную группу
-                return product.promotion_group.promotion
+                return product.product.promotion_group.promotion
             else:
                 return None
 
@@ -113,11 +114,12 @@ class PromotionService:
         Получить скидку на корзину.
 
         :param products: Товары в корзине.
-        :return: Общая скидка по всем товарам.
+        :return: Общая скидка по всем товарам, которую нужно вычесть из общей суммы
+            корзины, чтобы получить итоговую стоимость.
         """
         promotions = self.get_priority_promotions(products)
         products = ShopProduct.objects.filter(product__pk__in=list(promotions.keys()))
-        products = {p.pk: p.price_in_shop for p in products}
+        products = {p.pk: float(p.price_in_shop) for p in products}
 
         discount: float = 0
         for pk, promos in promotions.items():

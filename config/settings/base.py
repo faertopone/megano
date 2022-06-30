@@ -43,10 +43,9 @@ INSTALLED_APPS = [
     'accounts',
     'app_webshop',
     'banners.apps.BannersConfig',
-    'basket',
     "products.apps.ProductsConfig",
     'shops.apps.ShopsConfig',
-    'orders',
+    'promotions.apps.PromotionsConfig'
 ]
 
 MIDDLEWARE = [
@@ -74,8 +73,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'products.context_processors.main_menu_categories',
-                'products.context_processors.getting_compare_info',
-                'basket.context_processors.basket'
             ],
         },
     },
@@ -179,7 +176,7 @@ DEBUG_TOOLBAR_PANELS = [
     "debug_toolbar.panels.settings.SettingsPanel",
     "debug_toolbar.panels.headers.HeadersPanel",
     "debug_toolbar.panels.request.RequestPanel",
-    "debug_toolbar.panels.sql.SQLPanel",
+    # "debug_toolbar.panels.sql.SQLPanel",
     "debug_toolbar.panels.staticfiles.StaticFilesPanel",
     # "debug_toolbar.panels.templates.TemplatesPanel",
     "debug_toolbar.panels.cache.CachePanel",
