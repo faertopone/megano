@@ -7,11 +7,10 @@
     "product": 2,
     "amount": 10,
     "price_in_shop": "3300.00",
-    "promotion": 1,
+    "promotion": null,
     "special_price": "3300.00",
     "photo_url": "",
-    "sale": 0,
-    "promotion_group": null
+    "sale": 0
   }
 },
 {
@@ -22,11 +21,10 @@
     "product": 2,
     "amount": 20,
     "price_in_shop": "3500.00",
-    "promotion": null,
+    "promotion": 3,
     "special_price": "3500.00",
     "photo_url": "",
-    "sale": 0,
-    "promotion_group": null
+    "sale": 0
   }
 },
 {
@@ -40,8 +38,7 @@
     "promotion": null,
     "special_price": "1500.00",
     "photo_url": "",
-    "sale": 0,
-    "promotion_group": 1
+    "sale": 0
   }
 },
 {
@@ -55,8 +52,7 @@
     "promotion": null,
     "special_price": "1500.00",
     "photo_url": "",
-    "sale": 0,
-    "promotion_group": 1
+    "sale": 0
   }
 },
 {
@@ -70,8 +66,7 @@
     "promotion": null,
     "special_price": "610.00",
     "photo_url": "",
-    "sale": 0,
-    "promotion_group": null
+    "sale": 0
   }
 },
 {
@@ -82,11 +77,10 @@
     "product": 6,
     "amount": 10,
     "price_in_shop": "1399.00",
-    "promotion": 3,
+    "promotion": 2,
     "special_price": "1399.00",
     "photo_url": "",
-    "sale": 0,
-    "promotion_group": null
+    "sale": 0
   }
 },
 {
@@ -100,8 +94,7 @@
     "promotion": 1,
     "special_price": "1500.00",
     "photo_url": "",
-    "sale": 0,
-    "promotion_group": null
+    "sale": 0
   }
 },
 {
@@ -115,8 +108,7 @@
     "promotion": null,
     "special_price": "1299.00",
     "photo_url": "",
-    "sale": 0,
-    "promotion_group": null
+    "sale": 0
   }
 },
 {
@@ -127,11 +119,10 @@
     "product": 8,
     "amount": 10,
     "price_in_shop": "67880.00",
-    "promotion": 2,
+    "promotion": null,
     "special_price": "67880.00",
     "photo_url": "",
-    "sale": 0,
-    "promotion_group": null
+    "sale": 0
   }
 },
 {
@@ -142,11 +133,10 @@
     "product": 9,
     "amount": 10,
     "price_in_shop": "16980.00",
-    "promotion": null,
+    "promotion": 1,
     "special_price": "16980.00",
     "photo_url": "",
-    "sale": 0,
-    "promotion_group": 2
+    "sale": 0
   }
 },
 {
@@ -160,8 +150,7 @@
     "promotion": null,
     "special_price": "3300.00",
     "photo_url": "",
-    "sale": 0,
-    "promotion_group": null
+    "sale": 0
   }
 },
 {
@@ -172,11 +161,10 @@
     "product": 10,
     "amount": 15,
     "price_in_shop": "4000.00",
-    "promotion": 3,
+    "promotion": null,
     "special_price": "4000.00",
     "photo_url": "",
-    "sale": 0,
-    "promotion_group": null
+    "sale": 0
   }
 }
 ]

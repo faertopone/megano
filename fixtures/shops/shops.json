@@ -11,7 +11,7 @@
     "phone": "+79201234567",
     "email": "food@on.rails",
     "rating": 0,
-    "promotion": 1
+    "promotion": null
   }
 },
 {
@@ -26,7 +26,7 @@
     "phone": "+79091234567",
     "email": "shop@of.horrors",
     "rating": 0,
-    "promotion": 1
+    "promotion": null
   }
 }
 ]

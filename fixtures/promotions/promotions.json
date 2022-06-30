@@ -1,6 +1,6 @@
 [
 {
-  "model": "shops.promotions",
+  "model": "promotions.promotions",
   "pk": 1,
   "fields": {
     "name": "Минус 10%",
@@ -9,7 +9,7 @@
   }
 },
 {
-  "model": "shops.promotions",
+  "model": "promotions.promotions",
   "pk": 2,
   "fields": {
     "name": "Минус 20%",
@@ -18,7 +18,7 @@
   }
 },
 {
-  "model": "shops.promotions",
+  "model": "promotions.promotions",
   "pk": 3,
   "fields": {
     "name": "Минус 30%",

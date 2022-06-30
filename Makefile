@@ -12,6 +12,10 @@ apply-migrations: makemigrations migrate
 load-superuser:
 	cd /vagrant && python3 manage.py loaddata fixtures/superuser.json
 
+load-promotions:
+	cd /vagrant && \
+		python3 manage.py loaddata fixtures/promotions/promotions.json fixtures/promotions/promotion_group.json
+
 load-products:
 	cd /vagrant && \
 		python3 manage.py loaddata fixtures/products/category.json fixtures/products/product.json
@@ -30,12 +34,9 @@ load-clients:
 
 load-shops:
 	cd /vagrant && \
-		python3 manage.py loaddata fixtures/shops/promotions.json \
-			fixtures/shops/promotion_group.json \
-			fixtures/shops/shops.json \
-			fixtures/shops/shop_product.json
+		python3 manage.py loaddata fixtures/shops/shops.json fixtures/shops/shop_product.json
 
-load-fixtures: load-superuser load-products load-props load-banners load-clients load-shops
+load-fixtures: load-superuser load-promotions load-products load-props load-banners load-clients load-shops
 
 
 # Dump fixtures
@@ -43,6 +44,11 @@ dump-categories:
 	cd /vagrant && \
 		python3 -Xtf8 manage.py dumpdata products.Category --indent 2 -o fixtures/products/category.json && \
 		python3 -Xtf8 manage.py dumpdata products.PropertyCategory --indent 2 -o fixtures/products/property_category.json
+
+dump-promotions:
+	cd /vagrant && \
+		python3 -Xutf8 manage.py dumpdata promotions.Promotions --indent 2 -o fixtures/promotions/promotions.json && \
+		python3 -Xutf8 manage.py dumpdata promotions.PromotionGroup --indent 2 -o fixtures/promotions/promotion_group.json
 
 dump-products:
 	cd /vagrant && \
@@ -60,12 +66,10 @@ dump-clients:
 
 dump-shops:
 	cd /vagrant && \
-		python3 -Xutf8 manage.py dumpdata shops.Promotions --indent 2 -o fixtures/shops/promotions.json && \
-		python3 -Xutf8 manage.py dumpdata shops.PromotionGroup --indent 2 -o fixtures/shops/promotion_group.json && \
 		python3 -Xutf8 manage.py dumpdata shops.Shops --indent 2 -o fixtures/shops/shops.json && \
 		python3 -Xutf8 manage.py dumpdata shops.ShopProduct --indent 2 -o fixtures/shops/shop_product.json
 
-dump-fixtures: dump-categories dump-products dump-banners dump-clients dump-shops
+dump-fixtures: dump-categories dump-promotions dump-products dump-banners dump-clients dump-shops
 
 
 # Run django test server

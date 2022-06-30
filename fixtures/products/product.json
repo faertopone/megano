@@ -11,6 +11,7 @@
     "flag_limit": false,
     "category": 4,
     "tag": "",
+    "promotion_group": null,
     "tags": []
   }
 },
@@ -26,6 +27,7 @@
     "flag_limit": false,
     "category": 4,
     "tag": "",
+    "promotion_group": null,
     "tags": []
   }
 },
@@ -41,6 +43,7 @@
     "flag_limit": false,
     "category": 4,
     "tag": "",
+    "promotion_group": null,
     "tags": []
   }
 },
@@ -56,6 +59,7 @@
     "flag_limit": false,
     "category": 4,
     "tag": "",
+    "promotion_group": null,
     "tags": []
   }
 },
@@ -71,6 +75,7 @@
     "flag_limit": false,
     "category": 3,
     "tag": "",
+    "promotion_group": null,
     "tags": []
   }
 },
@@ -86,6 +91,7 @@
     "flag_limit": false,
     "category": 3,
     "tag": "",
+    "promotion_group": null,
     "tags": []
   }
 },
@@ -101,6 +107,7 @@
     "flag_limit": false,
     "category": 1,
     "tag": "",
+    "promotion_group": null,
     "tags": []
   }
 },
@@ -116,6 +123,7 @@
     "flag_limit": false,
     "category": 1,
     "tag": "",
+    "promotion_group": 2,
     "tags": []
   }
 },
@@ -131,6 +139,7 @@
     "flag_limit": false,
     "category": 2,
     "tag": "",
+    "promotion_group": null,
     "tags": []
   }
 }
