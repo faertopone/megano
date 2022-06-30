@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-29 06:36+0000\n"
+"POT-Creation-Date: 2022-06-30 18:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,7 +55,7 @@ msgstr "contact number"
 msgid "город"
 msgstr "city"
 
-#: accounts/models.py:29 templates/shops/shop.html:147 shops/models.py:33
+#: accounts/models.py:29 shops/models.py:33 templates/shops/shop.html:147
 msgid "улица"
 msgstr "the outside"
 
@@ -99,7 +99,8 @@ msgstr "How many products to display per page"
 msgid ""
 "По сколько товаров будет добавляться при нажатии на кнопку \"показать еще\", "
 "но не больше чем разрешено"
-msgstr "How many products will be added when you click on the button \"show more\", "
+msgstr ""
+"How many products will be added when you click on the button \"show more\", "
 "but no more than allowed"
 
 #: banners/admin.py:25
@@ -139,8 +140,8 @@ msgid "Заголовок баннера"
 msgstr "banner header"
 
 #: banners/models.py:17 products/models.py:59 products/models.py:123
-#: products/models.py:212
-#: products/models.py:198 shops/models.py:76
+#: products/models.py:198 products/models.py:212
+#: shops/models.py:76
 msgid "товар"
 msgstr "product"
 
@@ -158,7 +159,8 @@ msgid ""
 msgstr ""
 "Upload a photo no more than 3Mb, acceptable format: jpeg, jpg, png, svg"
 
-#: banners/models.py:25 products/admin.py:61 products/models.py:22 shops/models.py:14 shops/models.py:31
+#: banners/models.py:25 products/admin.py:61 products/models.py:22
+#: shops/models.py:14 shops/models.py:31
 msgid "описание"
 msgstr "description"
 
@@ -200,9 +202,10 @@ msgstr "directory category"
 
 #: products/admin.py:132
 msgid "рэйтинг"
-msgstr ""
+msgstr "rating"
 
-#: products/admin.py:147 products/models.py:47 templates/shops/shop.html:153 shops/models.py:37
+#: products/admin.py:147 products/models.py:47 shops/models.py:37
+#: templates/shops/shop.html:153
 msgid "рейтинг"
 msgstr "rating"
 
@@ -210,7 +213,7 @@ msgstr "rating"
 msgid "товары"
 msgstr "products"
 
-#: products/jinja2/product_list.html:10 templates/base_templates/header.html:85
+#: products/jinja2/product_list.html:10 templates/base_templates/header.html:79
 #: templates/products/product_detail.html:11
 msgid "Главная"
 msgstr "home"
@@ -241,7 +244,9 @@ msgstr "activity"
 
 #: products/models.py:16
 msgid "Если категория активна, то она должна отображаться в главном меню сайта"
-msgstr "If the category is active, then it should be displayed in the main menu of the site"
+msgstr ""
+"If the category is active, then it should be displayed in the main menu of "
+"the site"
 
 #: products/models.py:21
 msgid "название категории"
@@ -363,8 +368,7 @@ msgstr "category property setting"
 msgid "параметры свойства категории"
 msgstr "category property parameters"
 
-#: products/models.py:194
-#: products/models.py:203
+#: products/models.py:194 products/models.py:203
 msgid "фото товара"
 msgstr "product photo"
 
@@ -384,6 +388,14 @@ msgstr "product comment"
 msgid "комментарии к товарам"
 msgstr "product comments"
 
+#: products/services.py:91
+msgid "Сравниваем по имеющимся общим свойствам"
+msgstr "Compare according to existing common properties"
+
+#: products/services.py:111
+msgid "У данных товаров нет общих свойств"
+msgstr "These products do not have common properties"
+
 #: products/views.py:199 products/views.py:203
 msgid "Название товара"
 msgstr "Product Name"
@@ -396,17 +408,17 @@ msgstr "Price"
 msgid "профиль магазина"
 msgstr "shop profile"
 
-#: shops/admin.py:37 templates/shops/shop.html:155
+#: shops/admin.py:37 shops/models.py:19 templates/shops/shop.html:155
 msgid "акции"
 msgstr "promotions"
-
-#: shops/models.py:13 shops/models.py:30
-msgid "название"
-msgstr "name"
 
 #: shops/admin.py:45
 msgid "Товар в магазине"
 msgstr "Product in the store"
+
+#: shops/models.py:13 shops/models.py:30
+msgid "название"
+msgstr "name"
 
 #: shops/models.py:15 shops/models.py:82
 msgid "скидка"
@@ -415,10 +427,6 @@ msgstr "discount"
 #: shops/models.py:18 shops/models.py:38 shops/models.py:79
 msgid "акция"
 msgstr "promotion"
-
-#: shops/models.py:19
-msgid "promotions"
-msgstr "акции"
 
 #: shops/models.py:35 templates/shops/shop.html:149
 msgid "телефон"
@@ -500,7 +508,7 @@ msgstr "There are no viewed products yet!"
 msgid "Вход на сайт"
 msgstr "Sign in"
 
-#: templates/accounts/login.html:7 templates/base_templates/header.html:39
+#: templates/accounts/login.html:7 templates/base_templates/header.html:49
 msgid "Вход"
 msgstr "login"
 
@@ -550,7 +558,7 @@ msgid "Восстановление пароля"
 msgstr "Password recovery"
 
 #: templates/accounts/profile.html:2 templates/accounts/profile.html:8
-#: templates/accounts/profile.html:13 templates/base_templates/header.html:35
+#: templates/accounts/profile.html:13 templates/base_templates/header.html:45
 #: templates/base_templates/navigation.html:10
 msgid "Личный кабинет"
 msgstr "Personal Area"
@@ -657,11 +665,11 @@ msgid ""
 "заданий представляет собой интересный эксперимент проверки направлений "
 "прогрессивного развития."
 msgstr ""
-"We should not, however, forget that the strengthening and development of the structure allows"
-"perform important assignments to develop substantial financial and "
-"administrative conditions. Likewise, the implementation of the planned planned "
-"Assignments is an interesting experiment of checking directions"
-"progressive development."
+"We should not, however, forget that the strengthening and development of the "
+"structure allowsperform important assignments to develop substantial "
+"financial and administrative conditions. Likewise, the implementation of the "
+"planned planned Assignments is an interesting experiment of checking "
+"directionsprogressive development."
 
 #: templates/base_templates/footer.html:23
 msgid "Полезные ссылки"
@@ -720,7 +728,7 @@ msgid "Мода"
 msgstr "Fashion"
 
 #: templates/base_templates/footer.html:61
-#: templates/base_templates/header.html:93
+#: templates/base_templates/header.html:87
 msgid "Контакты"
 msgstr "Contacts"
 
@@ -736,51 +744,51 @@ msgstr "All rights reserved"
 msgid "Прием платежей"
 msgstr "Acceptance of payments"
 
-#: templates/base_templates/header.html:8
+#: templates/base_templates/header.html:18
 msgid "Бесплатная доставка"
 msgstr "Free shipping"
 
-#: templates/base_templates/header.html:10
+#: templates/base_templates/header.html:20
 msgid "Подписаться"
 msgstr "Subscribe"
 
-#: templates/base_templates/header.html:31
+#: templates/base_templates/header.html:41
 msgid "Выйти"
 msgstr "Exit"
 
-#: templates/base_templates/header.html:43
+#: templates/base_templates/header.html:53
 msgid "регистрация"
 msgstr "registration"
 
-#: templates/base_templates/header.html:87
+#: templates/base_templates/header.html:81
 msgid "Магазин"
 msgstr "Shop"
 
-#: templates/base_templates/header.html:89
+#: templates/base_templates/header.html:83
 msgid "Блог"
 msgstr "Blog"
 
-#: templates/base_templates/header.html:91
+#: templates/base_templates/header.html:85
 msgid "Галерея"
 msgstr "Gallery"
 
-#: templates/base_templates/header.html:95
+#: templates/base_templates/header.html:89
 msgid "Покупки"
 msgstr "Purchases"
 
-#: templates/base_templates/header.html:112
+#: templates/base_templates/header.html:106
 msgid "Показать навигацию"
 msgstr "Show navigation"
 
-#: templates/base_templates/header.html:124
+#: templates/base_templates/header.html:118
 msgid "Все категории"
 msgstr "All categories"
 
-#: templates/base_templates/header.html:147
+#: templates/base_templates/header.html:141
 msgid "Что вы хотите найти"
 msgstr "What do you want to find"
 
-#: templates/base_templates/header.html:148
+#: templates/base_templates/header.html:142
 msgid "Поиск"
 msgstr "Search"
 
@@ -921,4 +929,3 @@ msgstr "email"
 #: templates/shops/shop.html:161
 msgid "Популярные товары"
 msgstr "Popular goods"
-
