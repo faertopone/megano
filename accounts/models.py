@@ -88,3 +88,4 @@ class ClientProductView(models.Model):
 
     class Meta:
         ordering = ("-pk",)
+

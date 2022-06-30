@@ -132,7 +132,9 @@ def get_context_data(user) -> list:
     client = Client.objects.select_related('user').prefetch_related('item_view').get(user=user)
     item_in_page_views_check = client.item_in_page_views_check()
     max_limit = client.limit_items_views
-    temp = client.item_view.all().order_by('client__client_product__id')
+    temp = client.item_view.all()
+    for i in temp:
+        print('name ', i.name, 'id-', i.id)
     if len(client.item_view.all()) > 0:
         list_item_views = client.item_view.all()[::-1][:item_in_page_views_check]
         if len(client.item_view.all()[:max_limit]) <= item_in_page_views_check:
@@ -167,7 +169,7 @@ def get_context_data_ajax(user, items_in_page) -> list:
     list_in_page = []
     photo = '#'
     for item in list_item_views:
-        for i in item.product_photo.all()[:1]:
+        for i in item.product_photo.all():
             photo = i.photo.url
         list_in_page.append({'name': item.name,
                              'price': item.price,
