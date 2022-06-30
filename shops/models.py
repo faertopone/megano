@@ -10,13 +10,13 @@ class Promotions(models.Model):
     Модель акций, которые определяют скидки на группы товаров, на общие покупки в магазинах.
     discount определяет процентную скидку 80% = 0.80
     """
-    name = models.CharField(max_length=39, verbose_name=_('name'))
-    description = models.TextField(max_length=500, blank=True, verbose_name=_('description'))
-    discount = models.FloatField(verbose_name=_('discount'), default=0)
+    name = models.CharField(max_length=39, verbose_name=_('название'))
+    description = models.TextField(max_length=500, blank=True, verbose_name=_('описание'))
+    discount = models.FloatField(verbose_name=_('скидка'), default=0)
 
     class Meta:
-        verbose_name = _('promotion')
-        verbose_name_plural = _('promotions')
+        verbose_name = _('акция')
+        verbose_name_plural = _('акции')
 
     def __str__(self):
         return self.name
@@ -27,19 +27,19 @@ class Shops(models.Model):
     Модель профиля магазина. Содержит подробную информацию о продавце
     (название, описание, адрес, рейтинг, участие в акциях).
     """
-    name = models.CharField(max_length=39, verbose_name=_('name'))
-    description = models.TextField(max_length=500, blank=True, verbose_name=_('description'))
-    city = models.CharField(max_length=39, verbose_name=_('city'))
-    street = models.CharField(max_length=50, verbose_name=_('street'))
-    house_number = models.IntegerField(verbose_name=_('house number'), default=0)
-    phone = models.CharField(max_length=15, verbose_name=_('phone'))
+    name = models.CharField(max_length=39, verbose_name=_('название'))
+    description = models.TextField(max_length=500, blank=True, verbose_name=_('описание'))
+    city = models.CharField(max_length=39, verbose_name=_('город'))
+    street = models.CharField(max_length=50, verbose_name=_('улица'))
+    house_number = models.IntegerField(verbose_name=_('номер дома'), default=0)
+    phone = models.CharField(max_length=15, verbose_name=_('телефон'))
     email = models.EmailField( max_length=256, verbose_name='email')
-    rating = models.IntegerField(verbose_name=_('rating'), default=0)
-    promotion = models.ForeignKey(Promotions, on_delete=models.CASCADE, verbose_name=_('promotion'), null=True, blank=True)
+    rating = models.IntegerField(verbose_name=_('рейтинг'), default=0)
+    promotion = models.ForeignKey(Promotions, on_delete=models.CASCADE, verbose_name=_('акция'), null=True, blank=True)
 
     class Meta:
-        verbose_name = _('shop')
-        verbose_name_plural = _('shops')
+        verbose_name = _('магазин')
+        verbose_name_plural = _('магазины')
 
     def __str__(self):
         return self.name
@@ -49,12 +49,12 @@ class ShopPhoto(models.Model):
     """
     Модель с фотографиями магазинов
     """
-    photo = models.ImageField(upload_to='shops_photo', default='default.jpg', verbose_name=_('shops_photo'))
-    shop = models.ForeignKey(Shops, on_delete=models.CASCADE, verbose_name=_('shop'))
+    photo = models.ImageField(upload_to='shops_photo', default='default.jpg', verbose_name=_('фото магазина'))
+    shop = models.ForeignKey(Shops, on_delete=models.CASCADE, verbose_name=_('магазин'))
 
     class Meta:
-        verbose_name = _('shops photo')
-        verbose_name_plural = _('shops photos')
+        verbose_name = _('фото магазина')
+        verbose_name_plural = _('фото магазинов')
 
 
 class ShopUser(models.Model):
@@ -63,8 +63,8 @@ class ShopUser(models.Model):
     У пользователя открыты права для редактирования профиля магазина,
     редактирования товаров в магазине.
     """
-    shop = models.ForeignKey(Shops, on_delete=models.CASCADE, verbose_name=_('shop'))
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('user'))
+    shop = models.ForeignKey(Shops, on_delete=models.CASCADE, verbose_name=_('магазин'))
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('пользователь'))
 
 
 class ShopProduct(models.Model):
@@ -72,14 +72,14 @@ class ShopProduct(models.Model):
     Модель, связывающая товар с магазином,
     определяет количество товара в магазине, цену в конкретном магазине
     """
-    shop = models.ForeignKey(Shops, on_delete=models.CASCADE, verbose_name=_('shops'))
+    shop = models.ForeignKey(Shops, on_delete=models.CASCADE, verbose_name=_('магазины'))
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('product'), related_name="shop_product")
-    amount = models.IntegerField(verbose_name=_('amount'), default=0)
-    price_in_shop = models.DecimalField(verbose_name=_('price'), decimal_places=2, max_digits=10, default=0)
-    promotion = models.ForeignKey(Promotions, on_delete=models.CASCADE, verbose_name=_('promotion'), null=True, blank=True)
-    special_price = models.DecimalField(verbose_name=_('special price'), decimal_places=2, max_digits=10, default=0)
-    photo_url = models.TextField(max_length=500, blank=True, verbose_name=_('photo_url'))
-    sale = models.IntegerField(verbose_name=_('sale'), default=0)
+    amount = models.IntegerField(verbose_name=_('счетчик'), default=0)
+    price_in_shop = models.DecimalField(verbose_name=_('цена'), decimal_places=2, max_digits=10, default=0)
+    promotion = models.ForeignKey(Promotions, on_delete=models.CASCADE, verbose_name=_('акция'), null=True, blank=True)
+    special_price = models.DecimalField(verbose_name=_('специальная цена'), decimal_places=2, max_digits=10, default=0)
+    photo_url = models.TextField(max_length=500, blank=True, verbose_name=_('фото url'))
+    sale = models.IntegerField(verbose_name=_('скидка'), default=0)
 
     def save(self, *args, **kwargs):
         try:
@@ -90,8 +90,8 @@ class ShopProduct(models.Model):
         super(ShopProduct, self).save(*args, **kwargs)
 
     class Meta:
-        verbose_name = _('product in shop')
-        verbose_name_plural = _('products in shop')
+        verbose_name = _('товар в магазине')
+        verbose_name_plural = _('товары в магазинах')
 
     def __str__(self):
         return self.product.name

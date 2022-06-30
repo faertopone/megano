@@ -191,17 +191,17 @@ class ProductPhoto(models.Model):
     """
     Модель с фотографиями магазинов
     """
-    photo = models.ImageField(upload_to='products_photo', default='default.jpg', verbose_name=_('product_photo'))
+    photo = models.ImageField(upload_to='products_photo', default='default.jpg', verbose_name=_('фото товара'))
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
-        verbose_name=_('product'),
+        verbose_name=_('товар'),
         related_name="product_photo"
     )
 
     class Meta:
-        verbose_name = _('products photo')
-        verbose_name_plural = _('products photos')
+        verbose_name = _('фото товара')
+        verbose_name_plural = _('фото товаров')
 
 
 class UserReviews(models.Model):
