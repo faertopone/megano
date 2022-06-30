@@ -46,7 +46,7 @@ class Client(models.Model):
 
     item_view = models.ManyToManyField('products.Product', verbose_name=_('Товары, которые смотрел пользователь'),
                                        blank=True,
-                                       # through="ClientProductView",
+                                       through="ClientProductView",
                                        )
 
     limit_items_views = models.IntegerField(verbose_name=_('Сколько максимум показывать товаров'),
@@ -78,13 +78,13 @@ class Client(models.Model):
         db_table = 'Client'
 
 
-# class ClientProductView(models.Model):
-#     client = models.ForeignKey('Client', on_delete=models.CASCADE,
-#                                related_name='client_products_view',
-#                                related_query_name='client_products_views')
-#     product = models.ForeignKey('products.Product', on_delete=models.CASCADE,
-#                                 related_name='client_products_view',
-#                                 related_query_name='client_products_views')
-#
-#     class Meta:
-#         ordering = ("-pk",)
+class ClientProductView(models.Model):
+    client = models.ForeignKey('Client', on_delete=models.CASCADE,
+                               related_name='client_products_view',
+                               related_query_name='client_products_views')
+    product = models.ForeignKey('products.Product', on_delete=models.CASCADE,
+                                related_name='client_products_view',
+                                related_query_name='client_products_views')
+
+    class Meta:
+        ordering = ("-pk",)
