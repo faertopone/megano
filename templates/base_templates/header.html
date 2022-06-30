@@ -5,6 +5,16 @@
         <div class="row ControlPanel-row">
           <div class="row-block">
             <div class="row ControlPanel-rowSplit">
+              <div class="row-block">
+                  <form action="/i18n/setlang/" method="post">
+                    {{ csrf_input }}
+                    {% if LANGUAGE_CODE == "ru" %}
+                        <input name="language" style="border: none; color: #808080" type="submit" value="en"/>
+                    {% else %}
+                        <input name="language" style="border: none; color: #808080" type="submit" value="ru"/>
+                    {% endif %}
+                  </form>
+              </div>
               <div class="row-block"><a class="ControlPanel-title" href="#">{{ _('Бесплатная доставка') }}</a>
               </div>
               <div class="row-block hide_700"><span class="ControlPanel-title">{{ _('Подписаться') }}</span>
