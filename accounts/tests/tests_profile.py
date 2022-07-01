@@ -13,6 +13,7 @@ from products.models import Product, Category
 
 class ProfileTest(TestCase):
 
+
     @classmethod
     def setUpTestData(cls):
         name_file = 'Баннер_1_photo_video.png'
@@ -94,15 +95,19 @@ class ProfileTest(TestCase):
                                       content_type="image/*")
         # Пошлем post с информацией
         from_data = {
-            'id_user': my_client.user_id,
+            'id_user': my_client.user.id,
             'limit_items_views': 2,
             'item_in_page_views': 1,
             'email': 'test2@mail.ru',
             'phone': +79999999,
-            'photo': test_img
+            'photo': test_img,
+            'password1': 'password_TEST1',
+            'password2': 'password_TEST_NEW'
         }
         resp = self.client.post(reverse('profile-edit', kwargs={'pk': my_client.pk}), data=from_data, follow=True)
         self.assertEqual(resp.context_data['form'].is_valid(), False)
+        self.assertEqual(resp.context_data.get('form').errors['password2'],
+                         ['Ошибка, повторите пароль внимательнее!'])
         self.assertEqual(resp.context_data.get('form').errors['item_in_page_views'],
                          ['Не стоит устанавливать меньше 2!'])
         # Проверка, что такая почта уже занята
@@ -117,7 +122,6 @@ class ProfileTest(TestCase):
         MAX_FILE_ZISE = 2097152
         self.assertEqual(resp.context_data.get('form').errors['photo'],
                          [f'Размер файла не должен превышать {filesizeformat(MAX_FILE_ZISE)}'])
-
 
     def test_profile_edit_form_valid(self):
         # За логинимся
@@ -134,15 +138,28 @@ class ProfileTest(TestCase):
                                       content_type="image/*")
         # Пошлем post с информацией
         from_data = {
-            'id_user': my_client.user_id,
+            'id_user': my_client.user.id,
             'limit_items_views': 20,
             'item_in_page_views': 10,
             'email': 'test3@mail.ru',
-            'phone': +79499999,
+            'phone': +79999999999,
             'photo': test_img,
-            'first_name': 'tetwtew',
-            'last_name': 'dsgsdgs',
-            'patronymic': 'sdgsgsg'
+            'first_name': 'TEST_FIRST_NAME',
+            'last_name': 'TEST_LAST_NAME',
+            'patronymic': 'TEST_otchestvo',
+            'password1': 'password_TEST_NEW',
+            'password2': 'password_TEST_NEW'
         }
         resp = self.client.post(reverse('profile-edit', kwargs={'pk': my_client.pk}), data=from_data)
-        self.assertEqual(resp.context_data['form'].is_valid(), True)
+        self.assertEqual(resp.status_code, 302)
+
+    def test_profile_edit_new_data(self):
+        # За логинимся
+        login = self.client.login(username='TEST', password='password_TEST_NEW')
+        # найдем профиль этого юзера
+        my_client = Client.objects.get(user=login)
+        self.assertEqual(my_client.user.first_name, 'TEST_FIRST_NAME')
+
+
+
+

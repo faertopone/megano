@@ -166,7 +166,7 @@ var form = function(){
                 // validate = validate.split(' ');
                 // validate.forEach(function(){
                 validate.each(function (){
-                    switch ($(this).attr('data-validate')){
+                    switch ($this.attr('data-validate')){
                         case 'require':
                             if (!$this.val()) {
                                 message = 'Это поле обязательно для заполнения. ';
@@ -183,6 +183,7 @@ var form = function(){
                             break;
                             
                     }
+                    console.log(error)
                     if (error) {
                         if ($this.hasClass('form-input')){
                             $this.addClass('form-input_error');

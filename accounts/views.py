@@ -103,7 +103,7 @@ class ProfileEditView(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     def get_success_url(self):
         client = Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
-        return reverse('profile_edit', kwargs={'pk': client.pk})
+        return reverse('profile-edit', kwargs={'pk': client.pk})
 
 
 class HistoryUserView(LoginRequiredMixin, DetailView):
