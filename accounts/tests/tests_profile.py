@@ -59,6 +59,9 @@ class ProfileTest(TestCase):
             client.save()
 
     def test_profile_html(self):
+        """
+        Проверка захода на страницу профиля без авторизации и с авторизацией
+        """
         response = self.client.get(reverse('profile'))
         # Если хотим попасть в профиль не авторизованным, то попадаем на страницу 'login'
         self.assertRedirects(response, reverse('login'), 302)
@@ -69,12 +72,18 @@ class ProfileTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_super_user_profile(self):
+        """
+        Проверка, что супер-юзер может зайти в профиль
+        """
         self.client.login(username='SUPER_TEST', password='password_SUPER_TEST')
         response = self.client.get(reverse('profile'))
         # зайти супер юзеру в профиль
         self.assertEqual(response.status_code, 200)
 
     def test_profile_data_in_page(self):
+        """
+        Проверка что выводит 3 последних просмотренных товара
+        """
         self.client.login(username='TEST', password='password_TEST')
         # И зайдем в профиль
         response = self.client.get(reverse('profile'))
@@ -84,6 +93,9 @@ class ProfileTest(TestCase):
         self.assertEqual(3, len(list_view_item))
 
     def test_history_view_item(self):
+        """
+        Проверка вывода истории просмотров на странице "история просмотров"
+        """
         # За логинимся
         login = self.client.login(username='TEST', password='password_TEST')
         # найдем профиль этого юзера
@@ -95,6 +107,10 @@ class ProfileTest(TestCase):
         self.assertEqual(my_client.item_in_page_views, len(response.context_data.get('list_item_views')))
 
     def test_profile_edit_form_no_valid(self):
+        """
+        Проверка полей формы на не валидность, во время редактирования.
+        Выявление записей при не корректной формы
+        """
         # За логинимся
         login = self.client.login(username='TEST', password='password_TEST')
         # найдем профиль этого юзера
@@ -138,6 +154,10 @@ class ProfileTest(TestCase):
                          [f'Размер файла не должен превышать {filesizeformat(MAX_FILE_ZISE)}'])
 
     def test_profile_edit_form_valid(self):
+        """
+        Проверка полей формы на валидность, во время редактирования
+        Проверка новых данных после изменения
+        """
         # За логинимся
         login = self.client.login(username='TEST', password='password_TEST')
         # найдем профиль этого юзера
