@@ -79,7 +79,7 @@ class ProfileView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
-            context['list_item_views'] = self.get_queryset().item_view.all()[::-1][:3]
+            context['list_item_views'] = self.get_queryset().item_view.all().order_by('-client_products_views__id')[:3]
         except Exception:
             context['list_item_views'] = []
         return context
