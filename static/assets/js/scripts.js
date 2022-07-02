@@ -183,7 +183,6 @@ var form = function(){
                             break;
                             
                     }
-                    console.log(error)
                     if (error) {
                         if ($this.hasClass('form-input')){
                             $this.addClass('form-input_error');

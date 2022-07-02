@@ -1,21 +1,35 @@
 import os
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template.defaultfilters import filesizeformat
-from django.test import TestCase
 from django.urls import reverse
-
-from accounts.forms import ProfileEditForm
 from accounts.models import Client
+
 from products.models import Product, Category
+import tempfile
+import shutil
+from django.test import TestCase, override_settings
 
 
+# Создаем временную папку для хранения файлов во время тестов
+@override_settings(MEDIA_ROOT=tempfile.mkdtemp())
 class ProfileTest(TestCase):
 
+    @classmethod
+    def tearDownClass(cls):
+        """
+        Удаляем временную папку после тестов
+        """
+        shutil.rmtree(settings.MEDIA_ROOT)
+        super().tearDownClass()
 
     @classmethod
     def setUpTestData(cls):
+        """
+        Начальная настройка для тестов
+        """
         name_file = 'Баннер_1_photo_video.png'
         # Создали тестовую категорию товара
         category_test = Category.objects.create(category_name='category_name_TEST', icon_photo=name_file)
@@ -152,14 +166,15 @@ class ProfileTest(TestCase):
         }
         resp = self.client.post(reverse('profile-edit', kwargs={'pk': my_client.pk}), data=from_data)
         self.assertEqual(resp.status_code, 302)
+        # Обновим тестовую БД новыми данными
+        my_client.refresh_from_db()
 
-    def test_profile_edit_new_data(self):
-        # За логинимся
-        login = self.client.login(username='TEST', password='password_TEST_NEW')
-        # найдем профиль этого юзера
-        my_client = Client.objects.get(user=login)
+        # Проверим что данные поменялись
         self.assertEqual(my_client.user.first_name, 'TEST_FIRST_NAME')
-
-
-
-
+        self.assertEqual(my_client.limit_items_views, 20)
+        self.assertEqual(my_client.item_in_page_views, 10)
+        self.assertEqual(my_client.user.email, 'test3@mail.ru')
+        self.assertEqual(my_client.phone, '79999999999')
+        self.assertEqual(my_client.photo, 'accounts/good_img.jpg')
+        self.assertEqual(my_client.patronymic, 'TEST_otchestvo')
+        self.assertEqual(my_client.user.check_password('password_TEST_NEW'), True)
