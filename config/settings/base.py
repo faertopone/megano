@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'app_webshop',
     'banners.apps.BannersConfig',
+    'basket',
     "products.apps.ProductsConfig",
     'shops.apps.ShopsConfig',
 ]
@@ -75,6 +76,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'products.context_processors.main_menu_categories',
                 'products.context_processors.getting_compare_info',
+                'basket.context_processors.basket'
             ],
         },
     },
