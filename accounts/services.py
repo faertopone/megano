@@ -166,7 +166,7 @@ def get_context_data_ajax(user, items_in_page) -> list:
     list_in_page = []
     photo = '#'
     for item in list_item_views:
-        for i in item.product_photo.all()[:1]:
+        for i in item.product_photo.all():
             photo = i.photo.url
         list_in_page.append({'name': item.name,
                              'price': item.price,
