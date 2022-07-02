@@ -132,8 +132,11 @@ def get_context_data(user) -> list:
     client = Client.objects.select_related('user').prefetch_related('item_view').get(user=user)
     item_in_page_views_check = client.item_in_page_views_check()
     max_limit = client.limit_items_views
+    temp = client.item_view.all().order_by('-client_products_views__id')
+    for i in temp:
+        print(i.name, i.id)
     if len(client.item_view.all()) > 0:
-        list_item_views = client.item_view.all()[::-1][:item_in_page_views_check]
+        list_item_views = client.item_view.all().order_by('-client_products_views__id')[:item_in_page_views_check]
         if len(client.item_view.all()[:max_limit]) <= item_in_page_views_check:
             all_items_complete = False
         else:
@@ -152,7 +155,7 @@ def get_context_data_ajax(user, items_in_page) -> list:
     client = Client.objects.select_related('user').prefetch_related('item_view').get(user=user)
     limit_items_views = client.limit_items_views
     item_in_page_views_check = client.item_in_page_views_check()
-    list_item_views = client.item_view.all()[::-1][:limit_items_views]
+    list_item_views = client.item_view.all().order_by('-client_products_views__id')[:limit_items_views]
 
     # Добавим на вывод на страницу N товаров
     # Флаг, который говорит что все элементы передали и больше новых нет

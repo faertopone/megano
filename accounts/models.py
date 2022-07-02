@@ -87,5 +87,5 @@ class ClientProductView(models.Model):
                                 related_query_name='client_products_views')
 
     class Meta:
-        ordering = ("-pk",)
+        ordering = ("id",)
 

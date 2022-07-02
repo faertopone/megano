@@ -17,7 +17,7 @@ def clone_history_items_after_login(request, user, **kwargs):
     if session_user_products_id:
         limit = client.limit_items_views
         # тут N последних просмотренных товаров
-        all_items_history = client.item_view.all()[::-1][:limit]
+        all_items_history = client.item_view.all().order_by('-client_products_views__id')[:limit]
         # Процесс добавления из сессии в модель
         for i in session_user_products_id:
             i_product = Product.objects.get(pk=i)
