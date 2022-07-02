@@ -51,7 +51,7 @@ class ProfileTest(TestCase):
         # Создадим клиента (доп параметры от User)
         client = Client.objects.get(user=user_1)
         client2 = Client.objects.get(user=user_2)
-        client2.phone = +79999999
+        client2.phone = 79999999
         client2.save()
         # Добавим просмотренные товары
         for i_view in product_list:
@@ -129,7 +129,7 @@ class ProfileTest(TestCase):
             'limit_items_views': 2,
             'item_in_page_views': 1,
             'email': 'test2@mail.ru',
-            'phone': +79999999,
+            'phone': 79999999,
             'photo': test_img,
             'password1': 'password_TEST1',
             'password2': 'password_TEST_NEW'
@@ -176,7 +176,7 @@ class ProfileTest(TestCase):
             'limit_items_views': 20,
             'item_in_page_views': 10,
             'email': 'test3@mail.ru',
-            'phone': +79999999999,
+            'phone': 79999999999,
             'photo': test_img,
             'first_name': 'TEST_FIRST_NAME',
             'last_name': 'TEST_LAST_NAME',

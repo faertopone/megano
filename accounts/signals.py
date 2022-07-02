@@ -1,4 +1,6 @@
 from django.contrib.auth import user_logged_in
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from accounts.models import Client
 from products.models import Product
@@ -25,3 +27,12 @@ def clone_history_items_after_login(request, user, **kwargs):
 
         # удаление истории из кеша
         request.session['products_session'].clear()
+
+
+@receiver(post_save, sender=User)
+def created_client(sender, instance, created, **kwargs):
+    """
+    После сохранения модели User или SuperUser, создаем ему сразу в БД модель Client.
+    """
+    if created:
+        Client.objects.get_or_create(user=instance)
