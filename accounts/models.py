@@ -63,6 +63,8 @@ class Client(models.Model):
                                              blank=True,
                                              )
 
+    orders = models.ManyToManyField('orders.Order', verbose_name=_('Заказы'))
+
     # Проверяем, не больше ли чем позволено
     def item_in_page_views_check(self):
         if self.item_in_page_views >= self.limit_items_views:
@@ -86,6 +88,8 @@ class ClientProductView(models.Model):
                                 related_name='client_products_view',
                                 related_query_name='client_products_views')
 
+    created_dt = models.DateField(auto_now_add=True, null=True)
+
     class Meta:
-        ordering = ("id",)
+        ordering = ("-created_dt",)
 
