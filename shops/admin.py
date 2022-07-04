@@ -26,7 +26,7 @@ class ShopsAdmin(admin.ModelAdmin):
     inlines = [ShopPhotoInline, ShopProductInline, ShopUserInline]
 
     def __str__(self):
-        return _('shop profile')
+        return _('профиль магазина')
 
 
 class PromotionsAdmin(admin.ModelAdmin):
@@ -34,7 +34,7 @@ class PromotionsAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
     def __str__(self):
-        return _('name')
+        return _('акции')
 
 
 class ProductShopAdmin(admin.ModelAdmin):
@@ -42,7 +42,7 @@ class ProductShopAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
     def __str__(self):
-        return _('product__name')
+        return _('Товар в магазине')
 
 
 admin.site.register(Shops, ShopsAdmin)
