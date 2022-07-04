@@ -1,0 +1,295 @@
+{%  extends 'base_templates/base.html'  %}
+{% block title %}{{ _('Оформление заказа') }}{% endblock title %}
+{% block content %}
+    <div class="Middle Middle_top">
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h1 class="Middle-title">{{ _('Оформление заказа') }}
+          </h1>
+          <ul class="breadcrumbs Middle-breadcrumbs">
+            <li class="breadcrumbs-item"><a href="{{ url('index') }}"> {{ _('Домой') }}</a>
+            </li>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span> {{ _('Оформление заказа') }} </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="Section Section_column Section_columnRight Section_columnWide Order">
+      <div class="wrap">
+        <div class="Section-column">
+          <div class="Section-columnSection">
+            <header class="Section-header">
+              <strong class="Section-title">{{ _('Прогресс заполнения') }}
+              </strong>
+            </header>
+            <div class="Section-columnContent">
+              <ul class="menu menu_vt Order-navigate">
+                <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="#step1">Шаг 1. Параметры пользователя</a>
+                </li>
+                <li class="menu-item"><a class="menu-link" href="#step2">Шаг 2. Способ доставки</a>
+                </li>
+                <li class="menu-item"><a class="menu-link" href="#step3">Шаг 3. Способ оплаты</a>
+                </li>
+                <li class="menu-item"><a class="menu-link" href="#step4">Шаг 4. Подтверждение заказа</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="Section-content">
+          <form class="form" method="post" id="order_form">
+              {# Jinja2 токен csrf_token #}
+             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            <div class="Order-block Order-block_OPEN" id="step1">
+              <header class="Section-header Section-header_sm">
+                <h2 class="Section-title">{{ _('Шаг 1. Параметры пользователя') }}
+                </h2>
+              </header>
+              <div class="row">
+                <div class="row-block">
+                  <div class="form-group">
+                  <div class="form-group">
+                    <label class="form-label" for="name">{{ _('Фамилия')}}
+                    </label>
+                      {{ form.last_name }}
+                     <label class="form-label" for="name">{{ _('Имя')}}
+                    </label>
+                    {{ form.first_name }}
+                       <label class="form-label" for="name">{{ _('Отчество')}}
+                    </label>
+                      {{ form.patronymic }}
+                      {{ form.patronymic.errors }}
+                  </div>
+                  </div>
+                   <div class="form-group">
+                    <label class="form-label" for="phone">{{ _('Телефон') }}
+                    </label>
+                      {{ form.phone }}
+                      {{ form.phone.errors }}
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="email"> {{ _('E-mail') }}
+                    </label>
+                      {{ form.email }}
+                      {{ form.email.errors }}
+                  </div>
+
+                </div>
+              </div>
+              <div class="Order-footer"><a class="btn btn_success Order-next" href="#step2">{{ _('Дальше') }}</a>
+              </div>
+            </div>
+            <div class="Order-block" id="step2">
+              <header class="Section-header Section-header_sm">
+                <h2 class="Section-title">{{ _('Шаг 2. Способ доставки') }}
+                </h2>
+              </header>
+              <div class="form-group">
+                <div>
+                    <label for="id_delivery_0" class="toggle">
+                        <input type="radio" name="delivery" value="Обычная доставка" class="toggle-box" required="" id="id_delivery_0" checked="">
+                         <span class="toggle-box"></span>
+                        <span class="toggle-text">{{ _('Обычная доставка') }}</span>
+                    </label>
+                </div>
+                <div>
+                    <label for="id_delivery_1" class="toggle">
+                        <input type="radio" name="delivery" value="Экспресс доставка" class="toggle-box" required="" id="id_delivery_1">
+                        <span class="toggle-box"></span>
+                        <span class="toggle-text"> {{ _('Экспресс доставка') }}</span>
+                    </label>
+                </div>
+
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="city">{{ _('Город') }}
+                </label>
+                {{ form.city }}
+                  {{ form.city.errors }}
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="address">{{ _('Адрес') }}
+                </label>
+                {{ form.address }}
+                   {{ form.address.errors }}
+              </div>
+              <div class="Order-footer"><a class="btn btn_success Order-next" href="#step3">Дальше</a>
+              </div>
+            </div>
+            <div class="Order-block" id="step3">
+              <header class="Section-header Section-header_sm">
+                <h2 class="Section-title">{{ _('Шаг 3. Способ оплаты') }}
+                </h2>
+              </header>
+              <div class="form-group">
+                <div>
+                    <label for="id_payment_0" class="toggle">
+                        <input type="radio" name="payment" value="Онлайн картой" class="toggle-box" required="" id="id_payment_0" checked="">
+                         <span class="toggle-box"></span>
+                        <span class="toggle-text">{{ _('Онлайн картой') }}</span>
+                    </label>
+                </div>
+                <div>
+                    <label for="id_payment_1" class="toggle">
+                        <input type="radio" name="payment" value="Онлайн со случайного чужого счета" class="toggle-box" required="" id="id_payment_1">
+                        <span class="toggle-box"></span>
+                        <span class="toggle-text"> {{ _('Онлайн со случайного чужого счета') }}</span>
+                    </label>
+                </div>
+              <div class="Order-footer"><a class="btn btn_success Order-next" href="#step4">{{ _('Дальше') }}</a>
+              </div>
+            </div>
+            </div>
+            <div class="Order-block" id="step4">
+              <header class="Section-header Section-header_sm">
+                <h2 class="Section-title">Шаг 4. Подтверждение заказа
+                </h2>
+              </header>
+              <!--+div.Order.-confirmation-->
+              <div class="Order-infoBlock">
+                <div class="Order-personal">
+                  <div class="row">
+                    <div class="row-block">
+                      <div class="Order-info">
+                        <div class="Order-infoType">ФИО:
+                        </div>
+                        <div class="Order-infoContent" id="FIO">
+                        </div>
+                      </div>
+                      <div class="Order-info">
+                        <div class="Order-infoType">Телефон:
+                        </div>
+                        <div class="Order-infoContent" id="phone">
+                        </div>
+                      </div>
+                      <div class="Order-info">
+                        <div class="Order-infoType">E-mail:
+                        </div>
+                        <div class="Order-infoContent" id="email">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row-block">
+                      <div class="Order-info Order-info_delivery">
+                        <div class="Order-infoType">Тип доставки:
+                        </div>
+                        <div class="Order-infoContent" id="delevery">
+                        </div>
+                      </div>
+                      <div class="Order-info">
+                        <div class="Order-infoType">Город:
+                        </div>
+                        <div class="Order-infoContent" id="city">Москва
+                        </div>
+                      </div>
+                      <div class="Order-info">
+                        <div class="Order-infoType">Адрес:
+                        </div>
+                        <div class="Order-infoContent" id="address">
+                        </div>
+                      </div>
+                      <div class="Order-info Order-info_pay">
+                        <div class="Order-infoType">Оплата:
+                        </div>
+                        <div class="Order-infoContent" id="pay">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="Cart Cart_order">
+                  <div class="Cart-product">
+                    <div class="Cart-block Cart-block_row">
+                      <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="assets/img/content/home/card.jpg" alt="card.jpg"/></a>
+                      </div>
+                      <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">Ноутбук</a>
+                        <div class="Cart-desc">Это супер ноутбук, 3 гб. 4 ядра
+                        </div>
+                      </div>
+                      <div class="Cart-block Cart-block_price">
+                        <div class="Cart-price">80.00$
+                        </div>
+                      </div>
+                    </div>
+                    <div class="Cart-block Cart-block_row">
+                      <div class="Cart-block Cart-block_seller">
+                        <div>Продавец:
+                        </div>
+                        <div>shop good
+                        </div>
+                      </div>
+                      <div class="Cart-block Cart-block_amount">1 шт.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="Cart-product">
+                    <div class="Cart-block Cart-block_row">
+                      <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="assets/img/content/sale/product.png" alt="product.png"/></a>
+                      </div>
+                      <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">Планшет</a>
+                        <div class="Cart-desc">Это планшет с современным железом. Процессор последнего поколения
+                        </div>
+                      </div>
+                      <div class="Cart-block Cart-block_price">
+                        <div class="Cart-price_old">60.99$
+                        </div>
+                        <div class="Cart-price">40.99$
+                        </div>
+                      </div>
+                    </div>
+                    <div class="Cart-block Cart-block_row">
+                      <div class="Cart-block Cart-block_seller">
+                        <div>Продавец:
+                        </div>
+                        <div>shop kke ываыва ыа ываыв а
+                        </div>
+                      </div>
+                      <div class="Cart-block Cart-block_amount">1 шт.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="Cart-product">
+                    <div class="Cart-block Cart-block_row">
+                      <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="assets/img/content/home/card.jpg" alt="card.jpg"/></a>
+                      </div>
+                      <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">Ноутбук</a>
+                        <div class="Cart-desc">Это супер ноутбук, 3 гб. 4 ядра
+                        </div>
+                      </div>
+                      <div class="Cart-block Cart-block_price">
+                        <div class="Cart-price">80.00$
+                        </div>
+                      </div>
+                    </div>
+                    <div class="Cart-block Cart-block_row">
+                      <div class="Cart-block Cart-block_seller">
+                        <div>Продавец:
+                        </div>
+                        <div>shop good
+                        </div>
+                      </div>
+                      <div class="Cart-block Cart-block_amount">1 шт.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="Cart-total">
+                    <div class="Cart-block Cart-block_total">
+                      <strong class="Cart-title">Итого:
+                      </strong><span class="Cart-price">200.99$</span><span class="Cart-price_old">250.99$</span>
+                    </div>
+                    <div class="Cart-block">
+                      <button class="btn btn_primary btn_lg" type="submit">Оплатить
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
