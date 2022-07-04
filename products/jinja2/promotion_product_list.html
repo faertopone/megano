@@ -1,0 +1,22 @@
+{% extends 'base_templates/base.html' %}
+
+{% block content %}
+<div class="Middle Middle_top">
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h1 class="Middle-title">{{ _('Товары со скидкой') }} '{{ promotion.name }}'</h1>
+          <ul class="breadcrumbs Middle-breadcrumbs">
+            <li class="breadcrumbs-item"><a href="/">{{ _('Главная') }}</a></li>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>{{ _('Каталог') }}</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="Section">
+      <div class="wrap">
+        {% include 'product_section.html' %}
+      </div>
+    </div>
+</div>
+{% endblock content %}

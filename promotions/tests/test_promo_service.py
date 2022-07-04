@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.test import TestCase
 
 from products.models import Product, Category
@@ -14,6 +15,8 @@ class TestPromoService(TestCase):
 
     @classmethod
     def setUpTestData(cls):
+        settings.DEBUG_TOOLBAR_PANELS.remove("debug_toolbar.panels.sql.SQLPanel")
+
         cls.promo_service = PromotionService()
 
         # магазин
@@ -73,6 +76,9 @@ class TestPromoService(TestCase):
             shop_product.save()
 
     def test_get_all_promotions_for_many(self):
+        """
+        Проверка получения всех скидок на указанный список товаров.
+        """
         promos = self.promo_service.get_all_promotions(ShopProduct)
 
         self.assertIs(promos.__class__, dict)
@@ -86,73 +92,97 @@ class TestPromoService(TestCase):
         })
 
     def test_get_all_promotions_for_one_with_promo(self):
+        """
+        Проверка получения всех скидок на указанный товар, у которого назначена
+        персональная скидка.
+        """
         shop_product = ShopProduct.objects.get(product__name="Товар 2")
-        promos = self.promo_service.get_all_promotions(ShopProduct, pk=shop_product.pk)
+        promos = self.promo_service.get_all_product_promotions(shop_product)
 
-        self.assertIs(promos.__class__, dict)
-        self.assertEqual(len(promos[shop_product.pk]), 1)
+        self.assertIs(promos.__class__, list)
+        self.assertEqual(len(promos), 1)
 
-        self.assertEqual(promos, {
-            shop_product.pk: [self.promo10],
-        })
+        self.assertEqual(promos, [self.promo10])
 
     def test_get_all_promotions_for_one_with_promo_group(self):
+        """
+        Проверка получения всех скидок на указанный товар, который входит
+        в группу товаров со скидкой.
+        """
         shop_product = ShopProduct.objects.get(product__name="Товар 1")
-        promos = self.promo_service.get_all_promotions(ShopProduct, pk=shop_product.pk)
+        promos = self.promo_service.get_all_product_promotions(shop_product)
 
-        self.assertIs(promos.__class__, dict)
-        self.assertEqual(len(promos[shop_product.pk]), 1)
+        self.assertIs(promos.__class__, list)
+        self.assertEqual(len(promos), 1)
 
-        self.assertEqual(promos, {
-            shop_product.pk: [self.promo_group.promotion],
-        })
+        self.assertEqual(promos, [self.promo_group.promotion])
 
     def test_get_all_promotions_for_one_with_promo_and_promo_group(self):
+        """
+        Проверка получения всех скидок на указанный товар, у которого назначена
+        персональная скидка и который входит в группу товаров со скидкой.
+        """
         shop_product = ShopProduct.objects.get(product__name="Товар 4")
-        promos = self.promo_service.get_all_promotions(ShopProduct, pk=shop_product.pk)
+        promos = self.promo_service.get_all_product_promotions(shop_product)
 
-        self.assertIs(promos.__class__, dict)
-        self.assertEqual(len(promos[shop_product.pk]), 2)
+        self.assertIs(promos.__class__, list)
+        self.assertEqual(len(promos), 2)
 
-        self.assertEqual(promos, {
-            shop_product.pk: [self.promo30, self.promo_group.promotion],
-        })
+        self.assertEqual(promos, [self.promo30, self.promo_group.promotion])
 
     def test_get_priority_promotions_for_many(self):
+        """
+        Проверка получения приоритетной скидки на указанный список товаров.
+        """
         promos = self.promo_service.get_priority_promotions(ShopProduct)
 
         self.assertIs(promos.__class__, dict)
-        self.assertEqual(len([promo for promos_ in promos.values() for promo in promos_]), 4)
+        self.assertEqual(len(promos.values()), 4)
 
         self.assertEqual(promos, {
-            ShopProduct.objects.get(product__name="Товар 1").pk: [self.promo_group.promotion],
-            ShopProduct.objects.get(product__name="Товар 2").pk: [self.promo10],
-            ShopProduct.objects.get(product__name="Товар 3").pk: [self.promo20],
-            ShopProduct.objects.get(product__name="Товар 4").pk: [self.promo30],
+            ShopProduct.objects.get(product__name="Товар 1").pk: self.promo_group.promotion,
+            ShopProduct.objects.get(product__name="Товар 2").pk: self.promo10,
+            ShopProduct.objects.get(product__name="Товар 3").pk: self.promo20,
+            ShopProduct.objects.get(product__name="Товар 4").pk: self.promo30,
         })
 
     def test_get_priority_promotions_for_one_with_promo(self):
+        """
+        Проверка получения приоритетной скидки на указанный товар, у которого назначена
+        персональная скидка.
+        """
         shop_product = ShopProduct.objects.get(product__name="Товар 2")
-        promo = self.promo_service.get_priority_promotions(ShopProduct, pk=shop_product.pk)
+        promo = self.promo_service.get_priority_product_promotion(shop_product)
 
         self.assertIs(promo.__class__, Promotions)
         self.assertEqual(promo, self.promo10)
 
     def test_get_priority_promotions_for_one_with_promo_group(self):
+        """
+        Проверка получения приоритетной скидки на указанный товар, который входит
+        в группу товаров со скидкой.
+        """
         shop_product = ShopProduct.objects.get(product__name="Товар 1")
-        promo = self.promo_service.get_priority_promotions(ShopProduct, pk=shop_product.pk)
+        promo = self.promo_service.get_priority_product_promotion(shop_product)
 
         self.assertIs(promo.__class__, Promotions)
         self.assertEqual(promo, self.promo_group.promotion)
 
     def test_get_priority_promotions_for_one_with_promo_and_promo_group(self):
+        """
+        Проверка получения приоритетной скидки на указанный товар, у которого назначена
+        персональная скидка и который входит в группу товаров со скидкой.
+        """
         shop_product = ShopProduct.objects.get(product__name="Товар 4")
-        promo = self.promo_service.get_priority_promotions(ShopProduct, pk=shop_product.pk)
+        promo = self.promo_service.get_priority_product_promotion(shop_product)
 
         self.assertIs(promo.__class__, Promotions)
         self.assertEqual(promo, self.promo30)
 
     def test_get_basket_promotion(self):
+        """
+        Проверка получения общей суммы скидки на список товаров.
+        """
         basket = ShopProduct.objects.filter(product__name__in=["Товар 1", "Товар 2", "Товар 4", "Товар 5"])
         total_basket_price = float(sum(p.price_in_shop for p in basket))
 

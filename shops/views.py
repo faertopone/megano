@@ -24,9 +24,9 @@ class ShopDetailVew(generic.DetailView):
             obj = Shops.objects.select_related(
                 "promotion"
             ).prefetch_related(
-                "shopphoto_set", "shopproduct_set"
+                "shop_photos", "shop_product"
             ).get(id=kwargs['pk'])
             self.extra_context = dict()
-            self.extra_context['photos'] = [i.photo.url for i in obj.shopphoto_set.all()]
-            self.extra_context['products'] = obj.shopproduct_set.all()
+            self.extra_context['photos'] = [i.photo.url for i in obj.shop_photos.all()]
+            self.extra_context['products'] = obj.shop_product.all()
             return super().get(*args, **kwargs)

@@ -1,4 +1,8 @@
 from __future__ import absolute_import, unicode_literals
+
+from collections import namedtuple
+from typing import Optional, Tuple
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
@@ -97,3 +101,52 @@ class ShopProduct(models.Model):
 
     def __str__(self):
         return self.product.name
+
+    def get_priority_promotion(self, promo_service) -> Optional[Promotions]:
+        """
+        Возвращает приоритетную скидку.
+
+        :param promo_service: Сервис скидок
+        :return: Приоритетная скидка
+        """
+        return promo_service.get_priority_product_promotion(self)
+
+    def get_promotion_discount(self, promo_service, promotion: Optional[Promotions] = None) -> Optional[float]:
+        """
+        Возвращает величину скидки (в процентах).
+
+        :param promo_service: Сервис скидок
+        :param promotion: Скидка. Если не указана, то будет использована приоритетная
+            скидка на товар, если таковая есть
+        :return: Величина скидки в процентах
+        """
+        # если скидка не передана, то взять приоритетную скидку
+        if not promotion:
+            promotion = self.get_priority_promotion(promo_service)
+            # если скидки нет
+            if not promotion:
+                return None
+
+        return round(promotion.discount, 2)
+
+    def get_prices_with_promotion(self, promo_service, promotion: Optional[Promotions] = None
+                                  ) -> Tuple[float, Optional[float]]:
+        """
+        Возвращает старую и новую цену на товар с учетом скидки.
+
+        :param promo_service: Сервис скидок
+        :param promotion: Скидка. Если не указана, то будет использована приоритетная
+            скидка на товар, если таковая есть
+        :return: Старую цену на товар и цену с учетом скидки (или None, если скидки нет)
+        """
+        Prices = namedtuple("Prices", "old_price new_price")
+        old_price = round(float(self.price_in_shop), 2)
+
+        # если скидка не передана, то взять приоритетную скидку
+        if not promotion:
+            promotion = self.get_priority_promotion(promo_service)
+            # если скидки нет
+            if not promotion:
+                return Prices(old_price, None)
+
+        return Prices(old_price, round(old_price - old_price * promotion.discount * 0.01, 2))
