@@ -1,20 +1,27 @@
 from django.contrib.auth import login
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponseNotFound, JsonResponse
+from django.http import HttpResponseNotFound, JsonResponse, \
+    HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_str
 from django.views.generic import DetailView, ListView, FormView
+
+from basket.basket import Basket
+from basket.models import BasketItem
 from .forms import RegistrationForm, ProfileEditForm
 from .models import Client
 from .services import get_context_data, get_context_data_ajax, \
     initial_form_profile_new, save_dop_parametrs
 from .tasks import send_client_email_task
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import login
 
 
 def registration_view(request):
@@ -72,7 +79,7 @@ class ProfileView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
-            context['list_item_views'] = self.get_queryset().item_view.all()[:3]
+            context['list_item_views'] = self.get_queryset().item_view.all().order_by('-client_products_views__id')[:3]
         except Exception:
             context['list_item_views'] = []
         return context
@@ -103,7 +110,7 @@ class ProfileEditView(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     def get_success_url(self):
         client = Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
-        return reverse('profile_edit', kwargs={'pk': client.pk})
+        return reverse('profile-edit', kwargs={'pk': client.pk})
 
 
 class HistoryUserView(LoginRequiredMixin, DetailView):
@@ -138,3 +145,27 @@ class HistoryUserView(LoginRequiredMixin, DetailView):
                                      }, safe=False)
 
         return super().dispatch(request, *args, **kwargs)
+
+
+class LogView(LoginView):
+    template_name = 'accounts/login.html'
+    form_class = AuthenticationForm
+
+    def form_valid(self, form):
+        """Security check complete. Log the user in."""
+        user = form.get_user()
+        login(self.request, user)
+        basket = self.request.session.get('skey')
+        if not user.client.basket_items.all() and basket:
+            items = []
+            for prod_id in basket:
+                item = BasketItem(
+                    client=user.client,
+                    product_id=prod_id,
+                    qty=basket[prod_id]['qty'],
+                    price=basket[prod_id]['price']
+                )
+                items.append(item)
+            BasketItem.objects.bulk_create(items)
+
+        return HttpResponseRedirect(self.get_success_url())

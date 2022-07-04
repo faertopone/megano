@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'app_webshop',
     'banners.apps.BannersConfig',
+    'basket',
     "products.apps.ProductsConfig",
     'shops.apps.ShopsConfig',
 ]
@@ -52,7 +53,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -76,8 +76,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'products.context_processors.main_menu_categories',
                 'products.context_processors.getting_compare_info',
-                'django.template.context_processors.i18n',
-                'basket.context_processors.basket',
+                'basket.context_processors.basket'
             ],
         },
     },
@@ -135,16 +134,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
-
 USE_TZ = True
-
-LANGUAGES = [
-    ('ru', 'Русский'),
-    ('en', 'English')
-]
-
-LOCALE_PATHS = [BASE_DIR / "locale"]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/

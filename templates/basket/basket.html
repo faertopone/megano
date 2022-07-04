@@ -1,0 +1,143 @@
+{%  extends 'base_templates/base.html'  %}
+{% block content %}
+<div class="Middle Middle_top">
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h1 class="Middle-title">Корзина
+          </h1>
+          <ul class="breadcrumbs Middle-breadcrumbs">
+            <li class="breadcrumbs-item"><a href="index.html">home</a>
+            </li>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>Корзина</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="Section">
+      <div class="wrap">
+        <form class="form Cart" action="#" method="post">
+
+        {% for item in basket %}
+        {% with product=item.product %}
+
+
+
+
+          <div class="Cart-product product-item" data-index="{{ product.id }}" >
+            <div class="Cart-block Cart-block_row">
+              <div class="Cart-block Cart-block_pict">
+                  {% if product.product_photo.first() %}
+                  <a href="#">
+                      <img  src="{{ product.product_photo.first().photo.url  }}"  alt="{{ product.product_photo.first().photo.url }}" width="240" height="160"/>
+                  </a>
+                  {% else %}
+                  <a class="Cart-pict" href="#"><img class="Cart-img" src="assets/img/content/home/card.jpg" alt="card.jpg"/></a>
+                  {% endif %}
+              </div>
+
+              <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">{{ product.name }}</a>
+                <div class="Cart-desc">Это супер ноутбук, 3 гб. 4 ядра
+                </div>
+              </div>
+              <div class="Cart-block Cart-block_price">
+                <div id="productsubotal{{ product.id }}" class="Cart-price">{{ item.total_price }}
+                </div><span  class="Cart-price">₽
+                </span>
+              </div>
+            </div>
+            <div class="Cart-block Cart-block_row">
+              <div class="Cart-block Cart-block_seller">
+                <!-- - var options = setOptions(items, ['value', 'selected', 'disabled']);-->
+                <select class="form-select">
+                  <option value="good" selected="selected">shop good
+                  </option>
+                  <option value="kke">shop kke
+                  </option>
+                  <option value="sssssl">market sssssl
+                  </option>
+                </select>
+              </div>
+              <div class="Cart-block Cart-block_amount">
+                <div class="Cart-amount">
+                  <div class="Amount">
+                    <button class="Amount-remove add-button" type="button" value={{product.id}} data-index="{{ product.id }}">
+                    </button>
+                    <input class="Amount-input form-input select{{ product.id }}" name="amount" type="text" value="{{ item.qty }}" readonly/>
+                    <button class="Amount-add add-button" type="button" value={{product.id}} data-index="{{ product.id }}">
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="Cart-block Cart-block_delete"><a type="button" id="delete-button" class="Cart-delete" data-index="{{ product.id }}"><img src="assets/img/icons/card/delete.svg" alt="delete.svg"/></a>
+              </div>
+            </div>
+          </div>
+          {% endwith %}
+          {% endfor %}
+
+
+          <div class="Cart-total">
+            <div class="Cart-block Cart-block_total">
+              <strong class="Cart-title">Итого:
+              </strong><span id="subtotal" class="Cart-price">{{ basket.get_total_price() }} ₽</span><span class="Cart-price_old">250.99$</span>
+            </div>
+            <div class="Cart-block"><a class="btn btn_success btn_lg" href="order.html">Оформить заказ</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<script>
+    $(document).on('click', '#delete-button', function (e) {
+        e.preventDefault();
+        var prodid = $(this).data('index');
+        $.ajax({
+            type: 'POST',
+            url: '{{ url('basket_delete') }}',
+            data: {
+                productid: $(this).data('index'),
+                csrfmiddlewaretoken: '{{csrf_token}}',
+                action: 'post'
+            },
+            success: function (json) {
+                $('.product-item[data-index=' + prodid + ']').remove();
+                document.getElementById('h-subtotal').innerHTML = json.subtotal;
+                document.getElementById('subtotal').innerHTML = json.subtotal;
+                document.getElementById('basket-qty').innerHTML = json.qty
+            },
+            error: function (xhr, errmsg, err){}
+        });
+    })
+
+    $(document).on('click', '.add-button', function (e) {
+        e.preventDefault();
+        var prodid = $(this).data('index');
+        console.log($(prodid));
+        console.log($(document.getElementById('basket-qty').val));
+        $.ajax({
+            type: 'POST',
+            url: "{{ url('basket_add') }}",
+            data: {
+                product_id: $(this).val(),
+                product_qty: $('.select' + $(this).val()).val(),
+                csrfmiddlewaretoken: '{{csrf_token}}',
+                action: 'add'
+            },
+            success: function (json) {
+                document.getElementById('basket-qty').innerHTML = json.qty;
+                document.getElementById('h-subtotal').innerHTML = json.subtotal;
+                document.getElementById('subtotal').innerHTML = json.subtotal;
+                document.getElementById('productsubotal'+prodid).innerHTML = json.product_subtotal;
+            },
+            error: function (xhr, errmsg, err) {
+            }
+        });
+    })
+
+</script>
+
+{% endblock %}
