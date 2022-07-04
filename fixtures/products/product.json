@@ -27,7 +27,7 @@
     "flag_limit": false,
     "category": 4,
     "tag": "",
-    "promotion_group": null,
+    "promotion_group": 1,
     "tags": []
   }
 },
@@ -43,7 +43,7 @@
     "flag_limit": false,
     "category": 4,
     "tag": "",
-    "promotion_group": null,
+    "promotion_group": 1,
     "tags": []
   }
 },
@@ -107,7 +107,7 @@
     "flag_limit": false,
     "category": 1,
     "tag": "",
-    "promotion_group": null,
+    "promotion_group": 2,
     "tags": []
   }
 },

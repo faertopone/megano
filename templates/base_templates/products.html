@@ -1,0 +1,69 @@
+{% macro view_product_list(products, view_product_macro, promotion_service, header="", h_level=2) %}
+          {% if header and h_level in (1, 2, 3, 4, 5, 6) and products.count() %}
+          <h{{ h_level }}>{{ header }}</h{{ h_level }}>
+          {% endif %}
+
+          <div class="Cards">
+            {% for product in products %}
+              {{ view_product_macro(product, promotion_service) }}
+            {% endfor %}
+          </div>
+{% endmacro %}
+
+{% macro view_product(product, promotion_service) %}
+              <div class="Card">
+                <a class="Card-picture" href="#">
+                  <img src="{{ static('assets/img/content/home/card.jpg') }}" alt="{{ product.product.name }}"/>
+                </a>
+                <div class="Card-content">
+                  <strong class="Card-title">
+                    <a href="{{ url('products:product-detail', kwargs={'pk': product.product.pk}) }}" title="{{ product.name }}">
+                      {{ product.product.name|truncate(100) }}
+                    </a>
+                  </strong>
+                  <div class="Card-description">
+                    <div class="Card-cost">
+                      {% set prices = product.get_prices_with_promotion(promotion_service) %}
+                      {% if prices.new_price %}
+                      <span class="Card-priceOld">
+                        {{ prices.old_price }} &#8381;
+                      </span>
+                      <span class="Card-price">
+                        {{ prices.new_price }} &#8381;
+                      </span>
+                      {% else %}
+                      <span class="Card-price">
+                        {{ prices.old_price }} &#8381;
+                      </span>
+                      {% endif %}
+                    </div>
+                    <div class="Card-category">
+                      <a href="{{ url('shop detail', kwargs={'pk': product.shop.pk}) }}" style="color: #999;">
+                        {{ product.shop.name }}
+                      </a>
+                      / {{ product.product.category.category_name }}
+                    </div>
+                    <div class="Card-hover">
+                      <a class="Card-btn" href="#">
+                        <img src="{{ static('assets/img/icons/card/bookmark.svg') }}" alt="bookmark.svg"/>
+                      </a>
+                      <a class="Card-btn" href="#">
+                        <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
+                      </a>
+                      <a class="Card-btn" href="#">
+                        <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {% set discount = product.get_promotion_discount(promotion_service) %}
+                {% if discount %}
+                  {{ view_discount(discount) }}
+                {% endif %}
+              </div>
+{% endmacro %}
+
+{% macro view_discount(discount) %}
+  <div class="Card-sale">{{ (-1) * int(discount // 1) if discount % 1 == 0 else discount }}%</div>
+{% endmacro %}
