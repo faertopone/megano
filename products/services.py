@@ -90,9 +90,11 @@ def get_full_data_product_compare(session_key):
     context['similar_properties_add'] = dict()
     context['text'] = _("Сравниваем по имеющимся общим свойствам")
     context['products'] = []
+    product_info_list = []
 
     key_product = str(session_key) + '_compare'
-    product_info_list = cache.get(key_product)
+    if cache.get(key_product):
+        product_info_list = cache.get(key_product)
     for obj in product_info_list:
         obj['cache_key'] = key_product
         context['products'].append(obj)

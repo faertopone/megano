@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'app_webshop',
     'banners.apps.BannersConfig',
+    'basket',
     "products.apps.ProductsConfig",
     'shops.apps.ShopsConfig',
 ]
@@ -77,7 +78,7 @@ TEMPLATES = [
                 'products.context_processors.main_menu_categories',
                 'products.context_processors.getting_compare_info',
                 'django.template.context_processors.i18n',
-                'basket.context_processors.basket',
+                'basket.context_processors.basket'
             ],
         },
     },
@@ -145,6 +146,7 @@ LANGUAGES = [
 ]
 
 LOCALE_PATHS = [BASE_DIR / "locale"]
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
