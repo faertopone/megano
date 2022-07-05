@@ -1,8 +1,9 @@
 from datetime import datetime
 
+from django.core.cache import cache
 from django.db import models
 from django.http import HttpRequest, JsonResponse
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import DetailView, ListView
@@ -10,12 +11,9 @@ from django_filters import ModelMultipleChoiceFilter, CharFilter, RangeFilter
 from django.core.cache import cache
 
 from accounts.services import add_product_in_history, add_product_in_history_session
-from promotions.models import Promotions, PromotionGroup
-from promotions.utils.promo_filter import shop_product_filter, strategy_factory
-from shops.models import ShopProduct
-from utils.paginator import DisplayedPaginatedPagesMixin
 from .filters import filterset_factory, CustomFilterSet
 from .models import (Product, PropertyProduct, Category, Tag, UserReviews)
+from .services import get_full_data_product_compare, get_user_reviews, get_lazy_load_reviews, get_count_reviews
 from .widgets import CustomCheckboxSelectMultiple, CustomTextInput, CustomRangeWidget
 from .services import get_full_data_product_compare
 
@@ -133,21 +131,25 @@ class HistoryView(View):
         return render(request, 'products/historyview.html', context=context)
 
 
-class BaseProductListView(DisplayedPaginatedPagesMixin, ListView):
-    model = ShopProduct
+class ProductListView(ListView):
+    template_name = "product_list.html"
+    model = Product
     context_object_name = "products"
     paginate_by = 30
 
+    category: Category
     displayed_pages = 15  # Количество страниц отображаемых в пагинаторе
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
+
+        category_id = self.request.resolver_match.kwargs["pk"]
+        self.__class__.category = Category.objects.get(pk=category_id)
+
         self.sort_params = self._get_sort_params()
 
     def get_queryset(self):
-        products = self.model.objects.select_related(
-            "shop", "product", "promotion", "product__category"
-        )
+        products = Product.objects.select_related("category").filter(category=self.category.pk)
 
         if (order := self.sort_params["order_by"]) is not None:
             products = products.order_by(order)
@@ -155,13 +157,82 @@ class BaseProductListView(DisplayedPaginatedPagesMixin, ListView):
         return products
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        ctx = super().get_context_data(object_list=object_list, **kwargs)
+        # фильтр
+        category_filter = self._get_filter()
+
+        ctx = super().get_context_data(object_list=category_filter.qs, **kwargs)
+        # категория каталога товаров
+        ctx["category"] = self.category
+        # фильтр товаров
+        ctx["filter"] = category_filter
         # параметры сортировки
         ctx["sort_params"] = self.sort_params
         # пагинатор
-        ctx.update(self.get_paginated_range(ctx["page_obj"], ctx["paginator"]))
+        if (page_num := ctx["page_obj"].number) <= self.displayed_pages:
+            ctx["first_page_num"] = 1
+
+            # если число отображаемых страниц меньше общего кол-ва страниц, ...
+            if self.displayed_pages <= (num_pages := ctx["paginator"].num_pages):
+                # ... то выводим число отображаемых страниц
+                ctx["last_page_num"] = self.displayed_pages
+            else:
+                # ... в противном случае выводим общее кол-во страниц
+                ctx["last_page_num"] = num_pages
+        else:
+            ctx["first_page_num"] = page_num - self.displayed_pages + 1
+            ctx["last_page_num"] = ctx["page_obj"].number
 
         return ctx
+
+    def _get_filter_class(self):
+        # выбираем все свойства, участвующие в фильтре в данной категории.
+        # При этом значения свойств должны быть не пустыми
+        cond = models.Q(category_property__filtered=True) & \
+               models.Q(product_property__product__category=self.category.pk) & \
+               ~models.Q(product_property__value__isnull=True) & \
+               ~models.Q(product_property__value="")
+        filtered_props = self.category.properties.filter(cond) \
+            .order_by("category_property__filter_position", "name") \
+            .distinct()
+
+        # формируем поля для filterset
+        filterset_fields = {
+            # Фильтр по имени товара
+            "product_name": CharFilter(label=_("Название товара"), field_name="name",
+                                       lookup_expr="icontains",
+                                       widget=CustomTextInput(attrs={
+                                           "class": "form-input form-input_full",
+                                           "placeholder": _("Название товара"),
+                                       }), ),
+            # Фильтр по цене
+            "product_price": RangeFilter(label=_("Цена"), field_name="price",
+                                         widget=CustomRangeWidget(attrs={
+                                             "class": "range-widget__input"
+                                         }), ),
+        }
+        for prop in filtered_props:
+            # Подзапросом выбираем все уникальные значения для одного свойства товара.
+            # Distinct не поможет, потому что он всегда добавляет id в select.
+            subquery = models.Subquery(PropertyProduct.objects.filter(
+                product__category=self.category.pk,
+                property__alias=prop.alias
+            ).values("value").annotate(id=models.Min("id")).values("id"))
+
+            # Добавляем фильтр для свойства товара
+            filterset_fields[prop.alias] = ModelMultipleChoiceFilter(
+                label=prop.name,
+                field_name="product_property__value",
+                to_field_name="value",
+                widget=CustomCheckboxSelectMultiple,
+                queryset=PropertyProduct.objects.filter(id__in=subquery).only("value").order_by("value")
+            )
+
+        # возвращаем настроенный фильтр
+        return filterset_factory(self.model, filterset=CustomFilterSet, model_fields=(), fields=filterset_fields)
+
+    def _get_filter(self):
+        filter_class = self._get_filter_class()
+        return filter_class(self.request.GET, queryset=self.get_queryset())
 
     def _get_sort_params(self):
         # sorts
@@ -193,167 +264,38 @@ class BaseProductListView(DisplayedPaginatedPagesMixin, ListView):
                     "sort": price_desc,
                     "class": sort_desc_class,
                 })
-                sort_params["order_by"] = "price_in_shop"
+                sort_params["order_by"] = "price"
             elif sort_kind == price_desc:
                 sort_params["price"].update({
                     "sort": price_asc,
                     "class": sort_asc_class,
                 })
-                sort_params["order_by"] = "-price_in_shop"
+                sort_params["order_by"] = "-price"
             elif sort_kind == rating_asc:
                 sort_params["rating"].update({
                     "sort": rating_desc,
                     "class": sort_desc_class,
                 })
-                sort_params["order_by"] = "product__rating"
+                sort_params["order_by"] = "rating"
             elif sort_kind == rating_desc:
                 sort_params["rating"].update({
                     "sort": rating_asc,
                     "class": sort_asc_class,
                 })
-                sort_params["order_by"] = "-product__rating"
+                sort_params["order_by"] = "-rating"
 
         return sort_params
 
 
-class CategoryProductListView(BaseProductListView):
-    template_name = "product_list.html"
-
-    category: Category
-
-    def setup(self, request, *args, **kwargs):
-        super().setup(request, *args, **kwargs)
-
-        category_id = self.request.resolver_match.kwargs["pk"]
-        self.__class__.category = Category.objects.get(pk=category_id)
-
-    def get_queryset(self):
-        products = super().get_queryset().filter(product__category=self.category.pk)
-
-        return products
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        # фильтр
-        category_filter = self._get_filter()
-
-        ctx = super().get_context_data(object_list=category_filter.qs, **kwargs)
-        # категория каталога товаров
-        ctx["category"] = self.category
-        # фильтр товаров
-        ctx["filter"] = category_filter
-
-        return ctx
-
-    def _get_filter_class(self):
-        # выбираем все свойства, участвующие в фильтре в данной категории.
-        # При этом значения свойств должны быть не пустыми
-        cond = models.Q(category_property__filtered=True) & \
-               models.Q(product_property__product__category=self.category.pk) & \
-               ~models.Q(product_property__value__isnull=True) & \
-               ~models.Q(product_property__value="")
-        filtered_props = self.category.properties.filter(cond) \
-            .order_by("category_property__filter_position", "name") \
-            .distinct()
-
-        # формируем поля для filterset
-        filterset_fields = {
-            # Фильтр по имени товара
-            "product_name": CharFilter(label=_("Название товара"), field_name="product__name",
-                                       lookup_expr="icontains",
-                                       widget=CustomTextInput(attrs={
-                                           "class": "form-input form-input_full",
-                                           "placeholder": _("Название товара"),
-                                       }), ),
-            # Фильтр по цене
-            "product_price": RangeFilter(label=_("Цена"), field_name="price_in_shop",
-                                         widget=CustomRangeWidget(attrs={
-                                             "class": "range-widget__input"
-                                         }), ),
-        }
-        for prop in filtered_props:
-            # Подзапросом выбираем все уникальные значения для одного свойства товара.
-            # Distinct не поможет, потому что он всегда добавляет id в select.
-            subquery = models.Subquery(PropertyProduct.objects.filter(
-                product__category=self.category.pk,
-                property__alias=prop.alias
-            ).values("value").annotate(id=models.Min("id")).values("id"))
-
-            # Добавляем фильтр для свойства товара
-            filterset_fields[prop.alias] = ModelMultipleChoiceFilter(
-                label=prop.name,
-                field_name="product__product_property__value",
-                to_field_name="value",
-                widget=CustomCheckboxSelectMultiple,
-                queryset=PropertyProduct.objects.filter(id__in=subquery).only("value").order_by("value")
-            )
-
-        # возвращаем настроенный фильтр
-        return filterset_factory(self.model, filterset=CustomFilterSet, model_fields=(), fields=filterset_fields)
-
-    def _get_filter(self):
-        filter_class = self._get_filter_class()
-        return filter_class(self.request.GET, queryset=self.get_queryset())
-
-
-class PromotionProductListView(BaseProductListView):
-    template_name = "promotion_product_list.html"
-
-    promotion: Promotions
-
-    def setup(self, request, *args, **kwargs):
-        super().setup(request, *args, **kwargs)
-
-        promotion_id = self.request.resolver_match.kwargs["pk"]
-        self.__class__.promotion = Promotions.objects.get(pk=promotion_id)
-
-    def get_queryset(self):
-        shop_product_filter.strategy = strategy_factory.get_promo_shop_product_filter_strategy()
-
-        products = shop_product_filter.filter(
-            super().get_queryset(),
-            additional_cond=models.Q(promotion=self.promotion)
-        )
-
-        return products
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        ctx = super().get_context_data(object_list=object_list, **kwargs)
-
-        # скидка
-        ctx["promotion"] = self.promotion
-
-        return ctx
-
-
-class PromotionGroupProductListView(BaseProductListView):
-    template_name = "promotion_product_list.html"
-
-    promotion_group: PromotionGroup
-
-    def setup(self, request, *args, **kwargs):
-        super().setup(request, *args, **kwargs)
-
-        promotion_group_id = self.request.resolver_match.kwargs["pk"]
-        self.__class__.promotion_group = PromotionGroup.objects.select_related(
-            "promotion",
-        ).get(pk=promotion_group_id)
-
-    def get_queryset(self):
-        shop_product_filter.strategy = strategy_factory.get_only_promo_group_shop_product_filter_strategy()
-
-        products = shop_product_filter.filter(
-            super().get_queryset(),
-            additional_cond=models.Q(product__promotion_group=self.promotion_group)
-        )
-
-        return products
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        ctx = super().get_context_data(object_list=object_list, **kwargs)
-
-        # группа скидок
-        ctx["promotion_group"] = self.promotion_group
-        # скидка
-        ctx["promotion"] = self.promotion_group.promotion
-
-        return ctx
+def lazy_load_reviews_views(request):
+    """ Подгружает по 5 отзывов к товару при нажатии на кнопку показать ещё """
+    data = get_lazy_load_reviews(
+        product_id=request.GET.get("product_id"),
+        skip=int(request.GET.get("skip", 0))
+    )
+    return JsonResponse(
+        {"reviews": data},
+        status=200,
+        content_type="application/json",
+        safe=False
+    )
