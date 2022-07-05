@@ -604,6 +604,10 @@ textarea {
     color: #fff;
   }
 }
+/*.btn_comment {*/
+/*  text-align: center;*/
+/*}*/
+
 .btn_muted {
   border-color: #e8eaef;
   color: #7c8088;
