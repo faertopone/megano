@@ -8,7 +8,6 @@ from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import DetailView, ListView
 from django_filters import ModelMultipleChoiceFilter, CharFilter, RangeFilter
-from django.core.cache import cache
 
 from accounts.services import add_product_in_history, add_product_in_history_session
 from shops.models import ShopProduct
@@ -16,7 +15,6 @@ from .filters import filterset_factory, CustomFilterSet
 from .models import (Product, PropertyProduct, Category, Tag, UserReviews)
 from .services import get_full_data_product_compare, get_user_reviews, get_lazy_load_reviews, get_count_reviews
 from .widgets import CustomCheckboxSelectMultiple, CustomTextInput, CustomRangeWidget
-from .services import get_full_data_product_compare
 
 
 class GoodsView(View):
@@ -45,14 +43,23 @@ class ProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         """ Отдаёт содержание страницы при get запросе """
         context = super().get_context_data(**kwargs)
-        context['reviews'] = UserReviews.objects.filter(product=self.object).all()
-        context["properties"] = list(zip(self.object.properties.all(), self.object.product_properties.all()))
+        context['reviews'] = get_user_reviews(
+            product=self.object,
+            skip=int(self.request.GET.get("skip", 0)),
+        )
+        context["count_reviews"] = get_count_reviews(product=self.object)
+
+        context["properties"] = list(
+            zip(
+                self.object.properties.all(),
+                self.object.product_properties.all()
+            )
+        )
         if not self.request.user.is_superuser:
             if self.request.user.is_authenticated:
                 add_product_in_history(user=self.request.user, product_pk=context.get('product').pk)
             else:
                 add_product_in_history_session(request=self.request, product_pk=context.get('product').pk)
-
         return context
 
     def post(self, request: HttpRequest, pk: int) -> JsonResponse:
