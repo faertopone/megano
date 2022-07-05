@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $("#UserReviewForm").submit(function (e) {
-        e.preventDefault();
+        e.preventDefault()
         $.ajax({
             method: 'POST',
             headers: {"X-CSRFToken": this.csrfmiddlewaretoken.value},
@@ -9,12 +9,12 @@ $(document).ready(function () {
             cache: false,
             success: function (response) {
                 let review = response["review"]
-                $(".Section-header_product").before(`
+                $("#insert_reviews").before(`
                     <div class="Comments">
                         <div class="Comment">
                             <div class="Comment-column Comment-column-pict">
                                 <div class="Comment-avatar">
-                                    <img src="${review.client_photo}" alt="${review.photo_name}">
+                                    <img width="90" height="75" src="${review.client_photo}" alt="${review.photo_name}">
                                 </div>
                             </div>
                             <div class="Comment-column">
