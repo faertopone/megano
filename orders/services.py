@@ -38,7 +38,7 @@ def order_service(order, user: HttpRequest) -> None:
                     'count': item.qty,
                     'seller': '',
                     'price': item.price,
-                    'old_price': ''
+                    'old_price': 0,
                     }
             order_item = OrderProductBasket.objects.create(**data)
             order.order_products.add(order_item)
@@ -53,8 +53,10 @@ def order_service(order, user: HttpRequest) -> None:
         order.total_price += freed_delivery
     if order.delivery == 'Экспресс доставка':
         order.total_price += price_delivery
-    # Привяжем заказ к текущем клиенту
+    # включим флаг, что нужно поставить в очередь на оплату
+    order.need_pay = True
     order.save()
     client.save()
     basket.delete()
+    # Привяжем заказ к текущем клиенту
     client.orders.add(order)

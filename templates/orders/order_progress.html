@@ -204,20 +204,21 @@
                   <div class="Cart-product">
                     <div class="Cart-block Cart-block_row">
 
-                      <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="{{ url('products:product-detail', args=[item.product.pk]) }}">
+                      <div class="Cart-block Cart-block_pict">
+                          <a class="Cart-pict" href="{{ url('products:product-detail', args=[item.product.pk]) }}">
                           {% for photos in  item.product.product_photo.all() %}
                                     {% if loop.first %}
                                         <img class="Cart-img" src="{{ photos.photo.url }}" alt="{{ photos.photo }}"/></a>
                                     {% endif %}
-                                {% endfor %}
+                          {% endfor %}
 
                       </div>
-                      <div class="Cart-block Cart-block_info"><a class="Cart-title" href="{{ url('products:product-detail', args=[item.product.pk]) }}">{{ item.product.name }}</a>
+                        <div class="Cart-block Cart-block_info"><a class="Cart-title" href="{{ url('products:product-detail', args=[item.product.pk]) }}">{{ item.product.name }}</a>
                         <div class="Cart-desc">{{ item.product.description }}
                         </div>
                       </div>
-                      <div class="Cart-block Cart-block_price">
-                        <div class="Cart-price"> {{ item.price * item.qty }} {{ _('руб.') }}
+                        <div class="Cart-block Cart-block_price">
+                          <div class="Cart-price"> {{ item.price * item.qty }} {{ _('руб.') }}
                         </div>
                       </div>
                     </div>

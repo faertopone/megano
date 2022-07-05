@@ -12,10 +12,15 @@ from orders.services import initial_order_form, order_service
 
 
 class OrderDetailView(LoginRequiredMixin, DetailView):
-    model = Order
+    """
+    Детальная страница отображение заказа, с возможностью его оплатить, если еще не оплачен
+    """
+
     context_object_name = 'order'
-    template_name = '??'
-    redirect_field_name = None
+    template_name = 'orders/order_detail.html'
+
+    def get_queryset(self):
+        return Order.objects.filter(pk=self.kwargs['pk'])
 
 
 class OrderProgressView(LoginRequiredMixin, FormView):
@@ -66,11 +71,25 @@ class OrderProgressView(LoginRequiredMixin, FormView):
         if self.pay_method == 'Онлайн картой':
             pass
 
-        return super(OrderProgressView, self).get_success_url()
+        return HttpResponseRedirect(reverse('index'))
 
 
 class OrderListView(LoginRequiredMixin, ListView):
-    model = Order
+    """
+    Вывод списка заказов клиента
+    """
+
     context_object_name = 'order_list'
-    template_name = '??'
-    redirect_field_name = None
+    template_name = 'orders/order_list.html'
+
+    def get_queryset(self):
+        client = Client.objects.select_related('user').prefetch_related('item_view', 'orders').get(
+            user=self.request.user)
+        return client.orders.all()
+
+    def get_context_data(self, **kwargs):
+        contex = super().get_context_data(**kwargs)
+        client = Client.objects.select_related('user').prefetch_related('item_view', 'orders').get(
+            user=self.request.user)
+        contex['client'] = client
+        return contex

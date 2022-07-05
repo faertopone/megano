@@ -1,6 +1,7 @@
 from django.core.validators import RegexValidator
 from django.db import models
 from django.forms import RadioSelect
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from accounts.models import Client
@@ -25,7 +26,7 @@ class Order(models.Model):
                                   error_messages={'max_length': 'Слишком длинное Отчество!'},
                                   verbose_name=_('Отчество'))
 
-    delivery = models.CharField(max_length=50, choices=CHOICES_DELIVERY, db_index=True,  default='Обычная доставка',
+    delivery = models.CharField(max_length=50, choices=CHOICES_DELIVERY, db_index=True, default='Обычная доставка',
                                 verbose_name=_('Способ доставки'))
     city = models.CharField(max_length=30, default='', verbose_name=_('Город'))
     address = models.TextField(verbose_name=_('Адрес'), default='')
@@ -52,9 +53,11 @@ class Order(models.Model):
                              max_length=16,
                              )
 
-
     def __str__(self):
         return _('Заказ_') + str(self.number_order)
+
+    def get_absolute_url(self):
+        return reverse('order-detail', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name = _('заказ')
@@ -82,6 +85,7 @@ class OrderProductBasket(models.Model):
         _('Стоимость '),
         max_digits=9,
         decimal_places=2,
+        null=True
     )
 
     class Meta:

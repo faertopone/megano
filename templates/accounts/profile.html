@@ -44,36 +44,53 @@
                 <div class="Order Order_anons">
                   <div class="Order-personal">
                     <div class="row">
-                        {# Тут доделать когда будет Заказ и история заказов сделана #}
-                      <div class="row-block"><a class="Order-title" href="#">Заказ&#32;<span class="Order-numberOrder">№200</span>&#32;от&#32;<span class="Order-dateOrder">21.07.2020</span></a>
-                        <div class="Account-editLink"><a href="#">{{ _('История заказов') }}</a>
+                        {%  if order_last %}
+                      <div class="row-block"><a class="Order-title" href="{{ order_last.get_absolute_url() }}">{{ _('Заказ') }}&#32;<span class="Order-numberOrder">№{{ order_last.number_order }}</span>&#32;{{ _('от') }}&#32;<span class="Order-dateOrder">{{ order_last.created_dt }}</span></a>
+                        <div class="Account-editLink"><a href="{{ url('orders') }}">{{ _('История заказов') }}</a>
                         </div>
                       </div>
+                        {% else %}
+                        <div class="row-block">
+                            {{ _('Заказов еще нет') }}
+                        </div>
+                        {% endif %}
                       <div class="row-block">
                         <div class="Order-info Order-info_delivery">
                             {# Тут тоже когда будет доп инфа #}
                           <div class="Order-infoType">{{ _('Тип доставки:') }}
                           </div>
-                          <div class="Order-infoContent">Обычная доставка
+                          <div class="Order-infoContent">{{ order_last.delivery }}
                           </div>
                         </div>
                         <div class="Order-info Order-info_pay">
-                          <div class="Order-infoType">Оплата:
+                          <div class="Order-infoType">{{ _('Оплата:')}}
                           </div>
-                          <div class="Order-infoContent">Онлайн картой
+                          <div class="Order-infoContent">{{ order_last.payment }}
                           </div>
                         </div>
                         <div class="Order-info">
-                          <div class="Order-infoType">Общая стоимость:
+                          <div class="Order-infoType">{{ _('Общая стоимость:') }}
                           </div>
-                          <div class="Order-infoContent">200.99$
+                          <div class="Order-infoContent"> {{ order_last.total_price }} {{ _('руб.') }}
                           </div>
                         </div>
                         <div class="Order-info Order-info_status">
-                          <div class="Order-infoType">Статус:
+                          <div class="Order-infoType">{{ _('Статус:') }}
                           </div>
-                          <div class="Order-infoContent">Не оплачен
+                          <div class="Order-infoContent">
+                              {% if order_last.status_pay %} {{ _('ОПЛАЧЕН') }}
+                              {% else %} {{ _('НЕ ОПЛАЧЕН') }}
+                              {% endif %}
                           </div>
+                            {% if order_last.error_pay %}
+                                 <div class="Order-info Order-info_error">
+                                      <div class="Order-infoType">{{ _('Оплата не прошла:') }}
+                                      </div>
+                                      <div class="Order-infoContent">
+                                          {{ order_last.error_pay }}
+                                      </div>
+                                </div>
+                            {% endif %}
                         </div>
                       </div>
                     </div>

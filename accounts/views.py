@@ -82,6 +82,11 @@ class ProfileView(LoginRequiredMixin, ListView):
             context['list_item_views'] = self.get_queryset().item_view.all().order_by('-client_products_views__id')[:3]
         except Exception:
             context['list_item_views'] = []
+        try:
+            context['order_last'] = self.get_queryset().orders.all().first()
+        except Exception:
+            context['order_last'] = []
+
         return context
 
 
@@ -117,7 +122,7 @@ class HistoryUserView(LoginRequiredMixin, DetailView):
     """
     Класс вывода просмотренных товаров, пользователем
     """
-    model = Client
+
     context_object_name = 'client'
     template_name = 'accounts/history_view.html'
     redirect_field_name = None
