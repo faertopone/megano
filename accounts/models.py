@@ -25,9 +25,10 @@ class Client(models.Model):
                              validators=[phoneNumberRegex],
                              max_length=16,
                              )
-    city = models.CharField(_('город'), max_length=256, blank=True)
-    street = models.CharField(_("улица"), max_length=256, blank=True)
+    city = models.CharField(_('город'), max_length=256, blank=True, null=True)
+    street = models.CharField(_("улица"), max_length=256, blank=True, null=True)
     house_number = models.IntegerField(_("номер дома"), blank=True, null=True)
+    full_address = models.TextField('Полный адрес', blank=True, null=True)
     apartment_number = models.IntegerField(
         _("номер квартиры"),
         blank=True, null=True

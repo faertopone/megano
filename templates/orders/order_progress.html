@@ -26,13 +26,13 @@
             </header>
             <div class="Section-columnContent">
               <ul class="menu menu_vt Order-navigate">
-                <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="#step1">Шаг 1. Параметры пользователя</a>
+                <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="#step1">{{ _('Шаг 1. Параметры пользователя') }}</a>
                 </li>
-                <li class="menu-item"><a class="menu-link" href="#step2">Шаг 2. Способ доставки</a>
+                <li class="menu-item"><a class="menu-link" href="#step2">{{ _('Шаг 2. Способ доставки') }}</a>
                 </li>
-                <li class="menu-item"><a class="menu-link" href="#step3">Шаг 3. Способ оплаты</a>
+                <li class="menu-item"><a class="menu-link" href="#step3">{{ _('Шаг 3. Способ оплаты') }}</a>
                 </li>
-                <li class="menu-item"><a class="menu-link" href="#step4">Шаг 4. Подтверждение заказа</a>
+                <li class="menu-item"><a class="menu-link" href="#step4">{{ _('Шаг 4. Подтверждение заказа') }}</a>
                 </li>
               </ul>
             </div>
@@ -144,7 +144,7 @@
             </div>
             <div class="Order-block" id="step4">
               <header class="Section-header Section-header_sm">
-                <h2 class="Section-title">Шаг 4. Подтверждение заказа
+                <h2 class="Section-title">{{ _('Шаг 4. Подтверждение заказа') }}
                 </h2>
               </header>
               <!--+div.Order.-confirmation-->
@@ -153,19 +153,19 @@
                   <div class="row">
                     <div class="row-block">
                       <div class="Order-info">
-                        <div class="Order-infoType">ФИО:
+                        <div class="Order-infoType">{{ _('ФИО:') }}
                         </div>
                         <div class="Order-infoContent" id="FIO">
                         </div>
                       </div>
                       <div class="Order-info">
-                        <div class="Order-infoType">Телефон:
+                        <div class="Order-infoType">{{ _('Телефон:') }}
                         </div>
                         <div class="Order-infoContent" id="phone">
                         </div>
                       </div>
                       <div class="Order-info">
-                        <div class="Order-infoType">E-mail:
+                        <div class="Order-infoType">{{ _('E-mail:') }}
                         </div>
                         <div class="Order-infoContent" id="email">
                         </div>
@@ -173,25 +173,25 @@
                     </div>
                     <div class="row-block">
                       <div class="Order-info Order-info_delivery">
-                        <div class="Order-infoType">Тип доставки:
+                        <div class="Order-infoType">{{ _('Тип доставки:') }}
                         </div>
                         <div class="Order-infoContent" id="delevery">
                         </div>
                       </div>
                       <div class="Order-info">
-                        <div class="Order-infoType">Город:
+                        <div class="Order-infoType">{{ _('Город:') }}
                         </div>
-                        <div class="Order-infoContent" id="city">Москва
+                        <div class="Order-infoContent" id="city">
                         </div>
                       </div>
                       <div class="Order-info">
-                        <div class="Order-infoType">Адрес:
+                        <div class="Order-infoType">{{ _('Адрес:') }}
                         </div>
                         <div class="Order-infoContent" id="address">
                         </div>
                       </div>
                       <div class="Order-info Order-info_pay">
-                        <div class="Order-infoType">Оплата:
+                        <div class="Order-infoType">{{ _('Оплата:') }}
                         </div>
                         <div class="Order-infoContent" id="pay">
                         </div>
@@ -200,87 +200,47 @@
                   </div>
                 </div>
                 <div class="Cart Cart_order">
+                    {% for item in item_in_basket %}
                   <div class="Cart-product">
                     <div class="Cart-block Cart-block_row">
-                      <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="assets/img/content/home/card.jpg" alt="card.jpg"/></a>
+
+                      <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="{{ url('products:product-detail', args=[item.product.pk]) }}">
+                          {% for photos in  item.product.product_photo.all() %}
+                                    {% if loop.first %}
+                                        <img class="Cart-img" src="{{ photos.photo.url }}" alt="{{ photos.photo }}"/></a>
+                                    {% endif %}
+                                {% endfor %}
+
                       </div>
-                      <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">Ноутбук</a>
-                        <div class="Cart-desc">Это супер ноутбук, 3 гб. 4 ядра
+                      <div class="Cart-block Cart-block_info"><a class="Cart-title" href="{{ url('products:product-detail', args=[item.product.pk]) }}">{{ item.product.name }}</a>
+                        <div class="Cart-desc">{{ item.product.description }}
                         </div>
                       </div>
                       <div class="Cart-block Cart-block_price">
-                        <div class="Cart-price">80.00$
+                        <div class="Cart-price"> {{ item.price * item.qty }} {{ _('руб.') }}
                         </div>
                       </div>
                     </div>
                     <div class="Cart-block Cart-block_row">
                       <div class="Cart-block Cart-block_seller">
-                        <div>Продавец:
+                        <div>{{ _('Продавец:') }}
                         </div>
-                        <div>shop good
+                        <div> ПРОДАВЕЦ
                         </div>
                       </div>
-                      <div class="Cart-block Cart-block_amount">1 шт.
+                      <div class="Cart-block Cart-block_amount">{{  item.qty }} {{ _('шт.') }}
                       </div>
                     </div>
                   </div>
-                  <div class="Cart-product">
-                    <div class="Cart-block Cart-block_row">
-                      <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="assets/img/content/sale/product.png" alt="product.png"/></a>
-                      </div>
-                      <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">Планшет</a>
-                        <div class="Cart-desc">Это планшет с современным железом. Процессор последнего поколения
-                        </div>
-                      </div>
-                      <div class="Cart-block Cart-block_price">
-                        <div class="Cart-price_old">60.99$
-                        </div>
-                        <div class="Cart-price">40.99$
-                        </div>
-                      </div>
-                    </div>
-                    <div class="Cart-block Cart-block_row">
-                      <div class="Cart-block Cart-block_seller">
-                        <div>Продавец:
-                        </div>
-                        <div>shop kke ываыва ыа ываыв а
-                        </div>
-                      </div>
-                      <div class="Cart-block Cart-block_amount">1 шт.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="Cart-product">
-                    <div class="Cart-block Cart-block_row">
-                      <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="assets/img/content/home/card.jpg" alt="card.jpg"/></a>
-                      </div>
-                      <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">Ноутбук</a>
-                        <div class="Cart-desc">Это супер ноутбук, 3 гб. 4 ядра
-                        </div>
-                      </div>
-                      <div class="Cart-block Cart-block_price">
-                        <div class="Cart-price">80.00$
-                        </div>
-                      </div>
-                    </div>
-                    <div class="Cart-block Cart-block_row">
-                      <div class="Cart-block Cart-block_seller">
-                        <div>Продавец:
-                        </div>
-                        <div>shop good
-                        </div>
-                      </div>
-                      <div class="Cart-block Cart-block_amount">1 шт.
-                      </div>
-                    </div>
-                  </div>
+                    {% endfor %}
                   <div class="Cart-total">
                     <div class="Cart-block Cart-block_total">
-                      <strong class="Cart-title">Итого:
-                      </strong><span class="Cart-price">200.99$</span><span class="Cart-price_old">250.99$</span>
+                      <strong class="Cart-title">{{ _('Итого:') }}
+                      </strong><span class="Cart-price" id="total_price" data-price='{{ total_price }}'>{{ _('руб.') }}</span>
+{#                        <span class="Cart-price_old">250.99$</span>#}
                     </div>
                     <div class="Cart-block">
-                      <button class="btn btn_primary btn_lg" type="submit">Оплатить
+                      <button class="btn btn_primary btn_lg" type="submit">{{ _('Оплатить') }}
                       </button>
                     </div>
                   </div>

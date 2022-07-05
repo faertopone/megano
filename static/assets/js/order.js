@@ -1,5 +1,10 @@
 $(document).ready(function () {
+    let url_path = $(location).attr('pathname')
+    let crsf = ($('input[name="csrfmiddlewaretoken"]').val())
+    let total_price_val = Number($('#total_price').attr('data-price'))
     let btn_step = $('.Order-next[href="#step4"]')
+    let total = 0
+     let total_delivery_price = 0
         // перед шагом, соберем всю инфу и выведем перед оканчательным заказом
     if (btn_step){
           btn_step.click(function (){
@@ -22,6 +27,43 @@ $(document).ready(function () {
               $('#city').text(city)
               $('#address').text(address)
               $('#pay').text(payment)
+
+              $.ajax({
+                url: url_path,
+                method:'POST',
+                dataType: 'json',
+                data:
+                    {csrfmiddlewaretoken: crsf
+                    },
+              cache: false,
+                success: function (data) {
+
+                    let price_delivery = data.price_delivery
+                    let freed_delivery = data.freed_delivery
+                     // если выбрана экспресс доставка доставка +500р
+                      if (delivery === 'Экспресс доставка'){
+                          total_delivery_price += price_delivery
+                      }
+                      // условие с доставкой
+                      if (total_price_val < 20000){
+                          total_delivery_price += freed_delivery
+                      }
+                      // сумма с доставкой
+                      total = total_price_val + total_delivery_price
+                      $('#total_price').text(total.toString() + ' руб.')
+
+                      $('#total_price').append(`
+                      <div class="Section-content"> Доставка: ${total_delivery_price} руб.</div>
+                      `)
+
+
+                },
+                error: function () {
+                        console.log("error");
+                        }
+        })
+
+
 
           })
     }

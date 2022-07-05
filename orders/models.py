@@ -54,13 +54,13 @@ class Order(models.Model):
 
 
     def __str__(self):
-        return _('Заказ_') + str(self.id)
+        return _('Заказ_') + str(self.number_order)
 
     class Meta:
         verbose_name = _('заказ')
         verbose_name_plural = _('заказы')
         db_table = 'Orders'
-        ordering = ['-created_dt']
+        ordering = ['-number_order']
 
 
 class OrderProductBasket(models.Model):
@@ -74,7 +74,12 @@ class OrderProductBasket(models.Model):
     seller = models.CharField(max_length=100, verbose_name=_('Продавец'))
     created_dt = models.DateField(auto_now_add=True)
     price = models.DecimalField(
-        _('Стоимость'),
+        _('Стоимость после скидки'),
+        max_digits=9,
+        decimal_places=2,
+    )
+    old_price = models.DecimalField(
+        _('Стоимость '),
         max_digits=9,
         decimal_places=2,
     )
