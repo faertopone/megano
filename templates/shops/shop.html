@@ -127,7 +127,11 @@
             <div class="row-block">
               <div class="ProductCard-look">
                 <div class="ProductCard-photo">
+                  {% if len(photos) %}
                   <img src="{{ photos[0] }}" alt="{{ photos[0] }}"/>
+                  {% else %}
+                  <img src="{{ static('assets/img/icons/advantages/quality.svg') }}" alt="quality.svg"/>
+                  {% endif %}
                 </div>
                 <div class="ProductCard-picts">
                   {% for photo in photos %}
@@ -158,29 +162,11 @@
             </div>
           </div>
           <header class="Section-header">
-            <h2 class="Section-title">{{ _('Популярные товары') }}
-            </h2>
+            <h2 class="Section-title">{{ _('Популярные товары') }}</h2>
           </header>
-          <div class="Cards">
-            {% for product in products %}
-              <div class="Card"><a class="Card-picture" href="#"><img src="{{ product.photo_url }}" alt="card.jpg"/></a>
-                <div class="Card-content">
-                  <strong class="Card-title"><a href="#">{{ product.product.name }}</a>
-                  </strong>
-                  <div class="Card-description">
-                    <div class="Card-cost"><span class="Card-priceOld">{{ product.price_in_shop }}</span><span class="Card-price">{{ product.special_price }}</span>
-                    </div>
-                    <div class="Card-category">Games / xbox
-                    </div>
-                    <div class="Card-hover"><a class="Card-btn" href="#"><img src="{{ static ('assets/img/icons/card/bookmark.svg') }}" alt="bookmark.svg"/></a><a class="Card-btn" href="#"><img src="{{ static ('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/></a><a class="Card-btn" href="#"><img src="{{ static ('assets/img/icons/card/change.svg') }}" alt="change.svg"/></a>
-                    </div>
-                  </div>
-                </div>
-                <div class="Card-sale">-{{ product.sale }}%
-                </div>
-              </div>
-            {% endfor %}
-          </div>
+
+          {% import 'base_templates/products.html' as product_viewer %}
+          {{ product_viewer.view_product_list(products, product_viewer.view_product, promotion_service) }}
 
         </div>
       </div>
