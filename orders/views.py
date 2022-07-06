@@ -5,8 +5,9 @@ from django.urls import reverse
 from django.views.generic import DetailView, FormView, ListView
 
 from accounts.models import Client
+from basket.basket import Basket
 from basket.models import BasketItem
-from orders.forms import OrderForm
+from orders.forms import OrderForm, OrderPay
 from orders.models import Order
 from orders.services import initial_order_form, order_service
 
@@ -29,7 +30,6 @@ class OrderProgressView(LoginRequiredMixin, FormView):
     """
     form_class = OrderForm
     template_name = 'orders/order_progress.html'
-    redirect_field_name = None
 
     def get_initial(self):
         return initial_order_form(request=self.request)
@@ -38,40 +38,38 @@ class OrderProgressView(LoginRequiredMixin, FormView):
         context = super(OrderProgressView, self).get_context_data(**kwargs)
         client = Client.objects.select_related('user').prefetch_related('item_view', 'orders').get(
             user=self.request.user)
-        total_basket = BasketItem.objects.filter(client=client).aggregate(price_sum=Sum(F('price') * F('qty')))
+        # total_basket = BasketItem.objects.filter(client=client).aggregate(price_sum=Sum(F('price') * F('qty')))
+        basket = Basket(self.request)
         context['client'] = client
         context['item_in_basket'] = BasketItem.objects.filter(client=client)
-        context['total_price'] = total_basket.get('price_sum')
+        context['total_price'] = basket.get_total_price()
         return context
 
     def form_valid(self, form):
         # Дополнительно сохраним изменения
         order = form.save()
-        order_service(order=order, user=self.request.user)
+        order_service(order=order, user=self.request.user, basket_total=Basket(self.request))
         # Этот id заказа потом передадим в ссылку перенаправления
         self.order = order.id
-        self.pay_method = order.payment
         return super().form_valid(form)
 
     def dispatch(self, request, *args, **kwargs):
-        if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == 'POST':
-            # ================= ТУТ ЗНАЧЕНИЯ ИЗ МОДЕЛИ СКИДОК
-            price_delivery = 500
-            freed_delivery = 200
-            return JsonResponse({'price_delivery': price_delivery,
-                                 'freed_delivery': freed_delivery})
+        if self.request.user.is_authenticated:
+            client = Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
+            order = BasketItem.objects.filter(client=client)
+            if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == 'POST':
+                # ================= ТУТ ЗНАЧЕНИЯ ИЗ МОДЕЛИ СКИДОК
+                price_delivery = 500
+                freed_delivery = 200
+                return JsonResponse({'price_delivery': price_delivery,
+                                     'freed_delivery': freed_delivery})
+            if not order:
+                return HttpResponseRedirect(reverse('index'))
 
-        client = Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
-        order = BasketItem.objects.filter(client=client)
-        if not order:
-            return HttpResponseRedirect(reverse('index'))
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        if self.pay_method == 'Онлайн картой':
-            pass
-
-        return HttpResponseRedirect(reverse('index'))
+        return HttpResponseRedirect(reverse('payment', kwargs={'pk': self.order}))
 
 
 class OrderListView(LoginRequiredMixin, ListView):
@@ -93,3 +91,21 @@ class OrderListView(LoginRequiredMixin, ListView):
             user=self.request.user)
         contex['client'] = client
         return contex
+
+
+class OrderPayment(LoginRequiredMixin, DetailView, FormView):
+    form_class = OrderPay
+    context_object_name = 'order'
+    template_name = 'orders/order_payment.html'
+
+
+    def get_queryset(self):
+        return Order.objects.filter(pk=self.kwargs['pk'])
+
+    def form_valid(self, form):
+        order = form
+        temp = self.get_queryset()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return HttpResponseRedirect(reverse('order-detail', kwargs={'pk': self.kwargs['pk']}))

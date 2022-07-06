@@ -78,11 +78,16 @@
                       <div class="Order-infoContent">{{ order.payment }}
                       </div>
                     </div>
-                        <div class="Order-infoContent">
+                        <div class="Order-info Order-info_status">
+                      <div class="Order-infoType">{{ _('Статус:') }}
+                      </div>
+                     <div class="Order-infoContent">
                                       {% if order.status_pay %} {{ _('ОПЛАЧЕН') }}
                                       {% else %} {{ _('НЕ ОПЛАЧЕН') }}
                                       {% endif %}
                                   </div>
+                    </div>
+
                             {% if order.error_pay %}
                                  <div class="Order-info Order-info_error">
                                       <div class="Order-infoType">{{ _('Оплата не прошла:') }}
@@ -100,20 +105,19 @@
                 <div class="Cart-product">
                   <div class="Cart-block Cart-block_row">
                     <div class="Cart-block Cart-block_pict">
-                         <a class="Cart-pict" href="{{ url('products:product-detail', args=[items.product.pk]) }}">
-                          {% for photos in  items.product.product_photo.all() %}
-                                    {% if loop.first %}
-                                        <img class="Cart-img" src="{{ photos.photo.url }}" alt="{{ photos.photo }}"/></a>
-                                    {% endif %}
-                          {% endfor %}
-
+                         <a class="Cart-pict" href="{{ url('products:product-detail', args=[items.product.product_pk]) }}">
+                             {% if items.product.photo %}
+                                 <img class="Cart-img" src="{{ items.product.photo.url }}" alt="{{ items.product.photo.name }}"/>
+                             {% endif %}
+                         </a>
                     </div>
-                    <div class="Cart-block Cart-block_info"><a class="Cart-title" href="{{ url('products:product-detail', args=[items.product.pk]) }}">{{ items.product.name }}</a>
+
+                    <div class="Cart-block Cart-block_info"><a class="Cart-title" href="{{ url('products:product-detail', args=[items.product.product_pk]) }}">{{ items.product.name }}</a>
                         <div class="Cart-desc">{{ items.product.description }}
                         </div>
                       </div>
                     <div class="Cart-block Cart-block_price">
-                      <div class="Cart-price"> {{ items.price * items.count }} {{ _('руб.') }}
+                      <div class="Cart-price"> {{ items.price }} {{ _('руб.') }}
                         </div>
                     </div>
                   </div>
@@ -135,9 +139,14 @@
                     <strong class="Cart-title">{{ _('Итого:') }}<span class="Cart-price">{{ order.total_price }} {{ _('руб.') }}</span>
 {#                        <span class="Cart-price_old">250.99$</span>#}
                     </strong>
+                      <div class="Section-content">{{ _(' Доставка:') }}
+                          {% if order.delivery_price == 0 %} {{ _('Бесплатно') }}
+                              {% else %}{{ order.delivery_price }} руб.
+                          {% endif %}
+                      </div>
                   </div>
                     {% if not order.status_pay and not order.need_pay %}
-                        <div class="Cart-block"><a class="btn btn_primary btn_lg" href="#">Оплатить</a>
+                        <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{{ url('payment', kwargs={'pk': order.pk}) }}">{{ _('Оплатить') }}</a>
                       {% elif not order.status_pay and order.need_pay %}
                         <div class="Cart-block"><a class="btn btn_primary btn_lg">{{ _('ИДЕТ ОПЛАТА') }}</a></div>
                       {% else %}

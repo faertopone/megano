@@ -44,11 +44,7 @@ $(document).ready(function () {
                       if (delivery === 'Экспресс доставка'){
                           total_delivery_price += price_delivery
                       }
-                      // условие с доставкой
-                      if (total_price_val < 20000){
-                          total_delivery_price += freed_delivery
-                      }
-                      // сумма с доставкой
+                                            // сумма с доставкой
                       total = total_price_val + total_delivery_price
                       $('#total_price').text(total.toString() + ' руб.')
 

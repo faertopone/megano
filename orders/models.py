@@ -40,7 +40,7 @@ class Order(models.Model):
     need_pay = models.BooleanField(default=False, verbose_name=_('Флаг, что нужно поставить в очередь на оплату'))
     error_pay = models.CharField(max_length=300, verbose_name=_('Ошибки, если оплата не прошла'), null=True)
     transaction = models.PositiveBigIntegerField(verbose_name=_('Номер транзакции оплаты'), unique=True, null=True)
-    number_visa = models.PositiveBigIntegerField(verbose_name=_('Номер карты оплаты'), null=True)
+    number_visa = models.PositiveBigIntegerField(verbose_name=_('Номер карты оплаты'), null=True, blank=True)
     number_order = models.IntegerField(verbose_name=_('Номер заказа'), default=1)
     email = models.EmailField(verbose_name=_('email'))
     phoneNumberRegex = RegexValidator(
@@ -53,11 +53,16 @@ class Order(models.Model):
                              max_length=16,
                              )
 
-    def __str__(self):
-        return _('Заказ_') + str(self.number_order)
+    delivery_price = models.DecimalField(verbose_name=_("цена доставки"),
+                                         max_digits=9,
+                                         decimal_places=2,
+                                         default=0)
 
-    def get_absolute_url(self):
-        return reverse('order-detail', kwargs={'pk': self.pk})
+    def __str__(self):
+        return _('Заказ_№') + str(self.number_order)
+
+    # def get_absolute_url(self):
+    #     return reverse('order-detail', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name = _('заказ')
@@ -66,15 +71,33 @@ class Order(models.Model):
         ordering = ['-number_order']
 
 
+def order_copy_product_directory_path(instance, filename):
+    # путь, куда будет осуществлена загрузка
+    return 'orders_photo/{name}_photo_+{filename}'.format(name=instance.name, filename=filename)
+
+
+class OrderCopyProduct(models.Model):
+    name = models.CharField(max_length=1000, verbose_name=_("название товара"))
+    product_pk = models.IntegerField(verbose_name=_("id_товара"))
+    description = models.CharField(max_length=255, verbose_name=_("описание товара"), blank=True)
+    price = models.DecimalField(max_digits=12, decimal_places=2, default=1,
+                                verbose_name=_("цена"))
+    photo = models.ImageField(
+        models.ImageField(_("фотография"), upload_to=order_copy_product_directory_path, null=True, blank=True))
+
+    class Meta:
+        db_table = 'OrderCopyProduct'
+
+
 class OrderProductBasket(models.Model):
     """
     Модель одного продукта товара в корзине с параметрами
     """
-    product = models.ForeignKey('products.Product', on_delete=models.PROTECT,
-                                related_name='order_product',
+    product = models.ForeignKey('OrderCopyProduct', on_delete=models.PROTECT,
+                                related_name='order_product_copy',
                                 related_query_name='client_products_basket')
     count = models.IntegerField(default=1, verbose_name=_('Сколько товара'))
-    seller = models.CharField(max_length=100, verbose_name=_('Продавец'))
+    seller = models.CharField(max_length=100, verbose_name=_('Продавец'), blank=True)
     created_dt = models.DateField(auto_now_add=True)
     price = models.DecimalField(
         _('Стоимость после скидки'),
@@ -85,8 +108,10 @@ class OrderProductBasket(models.Model):
         _('Стоимость '),
         max_digits=9,
         decimal_places=2,
-        null=True
+        null=True,
+        blank=True
     )
 
     class Meta:
         ordering = ("-created_dt",)
+        db_table = 'OrderProductBasket'

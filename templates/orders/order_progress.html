@@ -211,14 +211,13 @@
                                         <img class="Cart-img" src="{{ photos.photo.url }}" alt="{{ photos.photo }}"/></a>
                                     {% endif %}
                           {% endfor %}
-
                       </div>
                         <div class="Cart-block Cart-block_info"><a class="Cart-title" href="{{ url('products:product-detail', args=[item.product.pk]) }}">{{ item.product.name }}</a>
                         <div class="Cart-desc">{{ item.product.description }}
                         </div>
                       </div>
                         <div class="Cart-block Cart-block_price">
-                          <div class="Cart-price"> {{ item.price * item.qty }} {{ _('руб.') }}
+                          <div class="Cart-price"> {{ item.price  }} {{ _('руб.') }}
                         </div>
                       </div>
                     </div>
@@ -239,6 +238,7 @@
                       <strong class="Cart-title">{{ _('Итого:') }}
                       </strong><span class="Cart-price" id="total_price" data-price='{{ total_price }}'>{{ _('руб.') }}</span>
 {#                        <span class="Cart-price_old">250.99$</span>#}
+
                     </div>
                     <div class="Cart-block">
                       <button class="btn btn_primary btn_lg" type="submit">{{ _('Оплатить') }}

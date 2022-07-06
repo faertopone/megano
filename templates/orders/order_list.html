@@ -29,10 +29,11 @@
                                     <div class="Order Order_anons">
                           <div class="Order-personal">
                             <div class="row">
-                              <div class="row-block"><a class="Order-title" href="{{ url('order-detail', kwargs={'pk': order.id }) }}">{{ _('Заказ') }}&#32;<span class="Order-numberOrder">№{{ order.number_order }}</span>&#32;{{ _('от') }}&#32;<span class="Order-dateOrder">{{ order.created_dt }}</span></a>
+                                <div class="row-block">
+                                  <a class="Order-title" href="{{ url('order-detail', kwargs={'pk': order.pk }) }}">{{ _('Заказ') }}&#32;<span class="Order-numberOrder">№{{ order.number_order }}</span>&#32;{{ _('от') }}&#32;<span class="Order-dateOrder">{{ order.created_dt }}</span></a>
                                 </div>
-                              </div>
-                              <div class="row-block">
+
+                                <div class="row-block">
                                 <div class="Order-info Order-info_delivery">
                                     {# Тут тоже когда будет доп инфа #}
                                   <div class="Order-infoType">{{ _('Тип доставки:') }}
@@ -71,6 +72,7 @@
                                     {% endif %}
                                 </div>
                               </div>
+                                </div>
                             </div>
                           </div>
                                 {% endfor %}

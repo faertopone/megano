@@ -4,6 +4,16 @@ from django.utils.translation import gettext_lazy as _
 from orders.models import Order
 
 
+class OrderPay(forms.Form):
+
+    number_visa = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-input Payment-bill',
+        'placeholder': '9999 9999',
+        'data-mask': '9999 9999',
+        'data-validate': 'require pay'
+    }))
+
+
 class OrderForm(forms.ModelForm):
     """
     Форма заполнения ЗАКАЗА

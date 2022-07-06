@@ -1,8 +1,15 @@
+import os
+from django.core.files.base import File as DjangoFile
+
 from django.db.models import Sum, F, DecimalField, FloatField, Max
+from django.core.files.images import ImageFile
 from django.http import HttpRequest
+
+
 from accounts.models import Client
+from basket.basket import Basket
 from basket.models import BasketItem
-from orders.models import OrderProductBasket
+from orders.models import OrderProductBasket, OrderCopyProduct
 
 
 def initial_order_form(request: HttpRequest) -> dict:
@@ -23,7 +30,7 @@ def initial_order_form(request: HttpRequest) -> dict:
     return initial_client
 
 
-def order_service(order, user: HttpRequest) -> None:
+def order_service(order, user: HttpRequest, basket_total) -> None:
     """
     Функция добавляет номер заказу и добавляет заказ к этому клиенту
     """
@@ -34,7 +41,18 @@ def order_service(order, user: HttpRequest) -> None:
     freed_delivery = 200
     if basket.exists():
         for item in basket:
-            data = {'product': item.product,
+            order_product_copy = OrderCopyProduct.objects.create(
+                product_pk=item.product.pk,
+                name=item.product.name,
+                description=item.product.description,
+                price=item.product.price,
+            )
+            if item.product.product_photo.first():
+                # если есть фотка, создаем новый в нужной модели через ImageFile
+                order_product_copy.photo = ImageFile(item.product.product_photo.first().photo)
+                order_product_copy.save()
+
+            data = {'product': order_product_copy,
                     'count': item.qty,
                     'seller': '',
                     'price': item.price,
@@ -46,15 +64,12 @@ def order_service(order, user: HttpRequest) -> None:
         order.number_order = len(client.orders.all())
     client.full_address = order.address
     client.city = order.city
-    total_basket = basket.aggregate(price_sum=Sum(F('price') * F('qty')))
-    order.total_price = total_basket.get('price_sum')
+    order.total_price = basket_total.get_total_price()
     # тут еще добавить условие про разных продавцом (если продукты из разных магазинов)
-    if order.total_price <= 2000:
-        order.total_price += freed_delivery
     if order.delivery == 'Экспресс доставка':
         order.total_price += price_delivery
+        order.delivery_price += price_delivery
     # включим флаг, что нужно поставить в очередь на оплату
-    order.need_pay = True
     order.save()
     client.save()
     basket.delete()
