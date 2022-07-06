@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django_filters',
     'django_celery_beat',
     "autocomplete_all",
-
+    'orders',
     'accounts',
     'app_webshop',
     'banners.apps.BannersConfig',
