@@ -17,8 +17,8 @@ def basket_add(request):
         )
         client_basket = BasketItem.objects.smart_filter(request=request)
         response = JsonResponse({
-            'qty': client_basket.total_count(),
-            'subtotal': client_basket.get_total_price(),
+            'qty': client_basket.total_count,
+            'subtotal': client_basket.total_price,
             'product_subtotal': basket_item.total_price,
             'item_qty': basket_item.qty
         })
@@ -36,7 +36,7 @@ def basket_delete(request):
         basket_item.delete()
         client_basket = BasketItem.objects.smart_filter(request=request)
         response = JsonResponse({
-            'qty': client_basket.total_count(),
-            'subtotal': client_basket.get_total_price()
+            'qty': client_basket.total_count,
+            'subtotal': client_basket.total_price
         })
         return response

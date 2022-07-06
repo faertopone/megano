@@ -8,7 +8,9 @@ from accounts.models import Client
 
 
 class BasketQuerySet(QuerySet):
-    def get_total_price(self):
+
+    @property
+    def total_price(self):
         """
         Сумма всех объектов корзины пользователя
         """
@@ -17,6 +19,7 @@ class BasketQuerySet(QuerySet):
         ).aggregate(Sum('total_price'))['total_price__sum']
         return r if r is not None else 0
 
+    @property
     def total_count(self):
         """
         Суммарное количество товаров всех объектов корзины
@@ -59,11 +62,13 @@ class BasketManager(Manager):
     def get_queryset(self):
         return BasketQuerySet(self.model, using=self._db)
 
-    def get_total_price(self):
-        return self.get_queryset().get_total_price()
+    @property
+    def total_price(self):
+        return self.get_queryset().total_price
 
+    @property
     def total_count(self):
-        return self.get_queryset().total_count()
+        return self.get_queryset().total_count
 
     def smart_filter(self, request):
         return self.get_queryset().smart_filter(request)
@@ -135,4 +140,3 @@ class BasketItem(models.Model):
         if self.qty == 0:
             return super(BasketItem, self).delete()
         return super(BasketItem, self).save()
-
