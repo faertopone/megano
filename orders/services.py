@@ -1,7 +1,7 @@
 from django.core.files.images import ImageFile
 from django.http import HttpRequest
 from accounts.models import Client
-from basket.models import BasketItem, BasketQuerySet
+from basket.models import BasketItem
 from orders.models import OrderProductBasket, OrderCopyProduct
 
 
@@ -23,6 +23,17 @@ def initial_order_form(request: HttpRequest) -> dict:
     return initial_client
 
 
+def calculation_delivery(total_price, item_in_basket):
+    """
+    Дополнительная стоимость на доставку
+    """
+    # ТУТ будет модель админа с настрйоками
+    ORDER_SETTING_PRICE = 20000
+
+    if total_price.real < ORDER_SETTING_PRICE:
+        return 200
+    return 0
+
 def order_service(order, user: HttpRequest) -> None:
     """
     Функция добавляет номер заказу и добавляет заказ к этому клиенту
@@ -32,7 +43,8 @@ def order_service(order, user: HttpRequest) -> None:
 
     # ================= ТУТ ЗНАЧЕНИЯ ИЗ МОДЕЛИ СКИДОК
     price_delivery = 500
-    freed_delivery = 200
+    # ===============================================
+
     if basket.exists():
         for item in basket:
             order_product_copy = OrderCopyProduct.objects.create(
@@ -59,7 +71,7 @@ def order_service(order, user: HttpRequest) -> None:
     client.full_address = order.address
     client.city = order.city
     order.total_price = basket.total_price
-    # тут еще добавить условие про разных продавцом (если продукты из разных магазинов)
+
     if order.delivery == 'Экспресс доставка':
         order.total_price += price_delivery
         order.delivery_price += price_delivery

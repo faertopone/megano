@@ -7,7 +7,7 @@ from accounts.models import Client
 from basket.models import BasketItem, BasketQuerySet, BasketManager
 from orders.forms import OrderForm, OrderPay
 from orders.models import Order
-from orders.services import initial_order_form, order_service
+from orders.services import initial_order_form, order_service, calculation_delivery
 
 
 class OrderDetailView(LoginRequiredMixin, DetailView):
@@ -30,23 +30,32 @@ class OrderProgressView(LoginRequiredMixin, FormView):
     template_name = 'orders/order_progress.html'
 
     def get_initial(self):
+
         return initial_order_form(request=self.request)
 
     def get_context_data(self, **kwargs):
         context = super(OrderProgressView, self).get_context_data(**kwargs)
         client = Client.objects.select_related('user').prefetch_related('item_view', 'orders').get(
             user=self.request.user)
+        item_in_basket = BasketItem.objects.filter(client=client)
+        ORDER_PARAMETR = 2000
+        delivery_price = calculation_delivery(total_price=item_in_basket.total_price, item_in_basket=item_in_basket)
         context['client'] = client
-        context['item_in_basket'] = BasketItem.objects.filter(client=client)
+        context['item_in_basket'] = item_in_basket
+        context['total_price'] = item_in_basket.total_price + delivery_price
+        # вычисляем нужно ли за доставку накинуть цену
+        context['delivery_price'] = calculation_delivery(total_price=item_in_basket.total_price, item_in_basket=item_in_basket)
+
         return context
 
     def form_valid(self, form):
         # Дополнительно сохраним изменения
         order = form.save()
-        order_service(order=order, user=self.request.user)
+        order_service(order=order, user=self.request.user,)
         # Этот id заказа потом передадим в ссылку перенаправления
         self.order = order.id
         return super().form_valid(form)
+
 
     def dispatch(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
@@ -55,9 +64,11 @@ class OrderProgressView(LoginRequiredMixin, FormView):
             if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == 'POST':
                 # ================= ТУТ ЗНАЧЕНИЯ ИЗ МОДЕЛИ СКИДОК
                 price_delivery = 500
-                freed_delivery = 200
+                delivery_price = self.get_context_data().get('delivery_price')
+
                 return JsonResponse({'price_delivery': price_delivery,
-                                     'freed_delivery': freed_delivery})
+                                     'delivery_price': delivery_price,
+                                     })
             if not order:
                 return HttpResponseRedirect(reverse('index'))
 

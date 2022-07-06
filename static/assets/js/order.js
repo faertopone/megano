@@ -4,7 +4,7 @@ $(document).ready(function () {
     let total_price_val = Number($('#total_price').attr('data-price'))
     let btn_step = $('.Order-next[href="#step4"]')
     let total = 0
-     let total_delivery_price = 0
+     let total_price = 0
         // перед шагом, соберем всю инфу и выведем перед оканчательным заказом
     if (btn_step){
           btn_step.click(function (){
@@ -39,17 +39,17 @@ $(document).ready(function () {
                 success: function (data) {
 
                     let price_delivery = data.price_delivery
-                    let freed_delivery = data.freed_delivery
-                     // если выбрана экспресс доставка доставка +500р
+                    let delivery_price = data.delivery_price
+                     // если выбрана экспресс доставка +500р
                       if (delivery === 'Экспресс доставка'){
-                          total_delivery_price += price_delivery
+                           delivery_price += price_delivery
                       }
                                             // сумма с доставкой
-                      total = total_price_val + total_delivery_price
+                      total = total_price_val + delivery_price
                       $('#total_price').text(total.toString() + ' руб.')
 
                       $('#total_price').append(`
-                      <div class="Section-content"> Доставка: ${total_delivery_price} руб.</div>
+                      <div class="Section-content"> Доставка: ${delivery_price} руб.</div>
                       `)
 
 

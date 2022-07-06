@@ -139,11 +139,7 @@
                     <strong class="Cart-title">{{ _('Итого:') }}<span class="Cart-price">{{ order.total_price }} {{ _('руб.') }}</span>
 {#                        <span class="Cart-price_old">250.99$</span>#}
                     </strong>
-                      <div class="Section-content">{{ _(' Доставка:') }}
-                          {% if order.delivery_price == 0 %} {{ _('Бесплатно') }}
-                              {% else %}{{ order.delivery_price }} руб.
-                          {% endif %}
-                      </div>
+
                   </div>
                     {% if not order.status_pay and not order.need_pay %}
                         <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{{ url('payment', kwargs={'pk': order.pk}) }}">{{ _('Оплатить') }}</a>
