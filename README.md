@@ -108,9 +108,9 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
    ```
    python manage.py loaddata fixtures\accounts\client.json
    ```
-   7. Загрузить магазины и скидки
+   7. Загрузить магазины
    ```
-   python manage.py loaddata fixtures\shops\shop.json fixtures\shops\shop_product.json
+   python manage.py loaddata fixtures\shops\shop.json fixtures\shops\shop_photo.json fixtures\shops\shop_product.json
    ```
    8. Загрузить периодическую задачу
    ```

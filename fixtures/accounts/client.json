@@ -15,8 +15,7 @@
     "is_seller": false,
     "patronymic": "Петрушкина",
     "limit_items_views": 20,
-    "item_in_page_views": 8,
-    "item_view": []
+    "item_in_page_views": 8
   }
 }
 ]

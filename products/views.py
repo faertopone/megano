@@ -10,7 +10,10 @@ from django.views.generic import DetailView, ListView
 from django_filters import ModelMultipleChoiceFilter, CharFilter, RangeFilter
 
 from accounts.services import add_product_in_history, add_product_in_history_session
+from promotions.models import Promotions, PromotionGroup
+from promotions.utils.promo_filter import shop_product_filter, strategy_factory
 from shops.models import ShopProduct
+from utils.paginator import DisplayedPaginatedPagesMixin
 from .filters import filterset_factory, CustomFilterSet
 from .models import (Product, PropertyProduct, Category, Tag, UserReviews)
 from .services import get_full_data_product_compare, get_user_reviews, get_lazy_load_reviews, get_count_reviews
@@ -139,14 +142,132 @@ class HistoryView(View):
         return render(request, 'products/historyview.html', context=context)
 
 
-class ProductListView(ListView):
-    template_name = "product_list.html"
+class ProductComment(View):
+    def get(self, request, *args, **kwargs):
+        context = dict()
+        context['product'] = {'pk': kwargs['pk'], 'info': 'Будет база - будет инфо'}
+        return render(request, 'products/product_comment.html', context=context)
+
+    def post(self, request, *args, **kwargs):
+        context = dict()
+        context['users_review'] = {'name': request.POST.get('name'),
+                                   'review': request.POST.get('review'),
+                                   'email': request.POST.get('email')}
+        return HttpResponse(content=context.values())
+
+
+class ProductComparison(View):
+    def get(self, request, *args, **kwargs):
+        context = dict()
+        context['text'] = f"Сравниваем по ID {kwargs['pk']}"
+        context['products'] = [
+            {
+                'name': 'test_name',
+                'href': '#',
+                'photo': {'url': 'http://127.0.0.1:8000/static/assets/img/content/home/test.jpg'},
+                'new_price': '1999',
+                'old_price': '5000',
+                'sale': '-70%'
+            },
+            {
+                'name': 'test_name_1',
+                'href': '#',
+                'photo': {'url': 'http://127.0.0.1:8000/static/assets/img/content/home/card.jpg'},
+                'new_price': '2999',
+                'old_price': '3000',
+                'sale': '-1%'
+            }
+        ]
+        return render(request, 'products/historyview.html', context=context)
+
+
+class BaseProductListView(DisplayedPaginatedPagesMixin, ListView):
     model = ShopProduct
     context_object_name = "products"
     paginate_by = 30
 
-    category: Category
     displayed_pages = 15  # Количество страниц отображаемых в пагинаторе
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.sort_params = self._get_sort_params()
+
+    def get_queryset(self):
+        products = self.model.objects.select_related(
+            "shop", "product", "promotion", "product__category"
+        )
+
+        if (order := self.sort_params["order_by"]) is not None:
+            products = products.order_by(order)
+
+        return products
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        ctx = super().get_context_data(object_list=object_list, **kwargs)
+        # параметры сортировки
+        ctx["sort_params"] = self.sort_params
+        # пагинатор
+        ctx.update(self.get_paginated_range(ctx["page_obj"], ctx["paginator"]))
+
+        return ctx
+
+    def _get_sort_params(self):
+        # sorts
+        price_asc = "price_asc"
+        price_desc = "price_desc"
+        rating_asc = "rating_asc"
+        rating_desc = "rating_desc"
+
+        # CSS classes
+        sort_asc_class = "Sort-sortBy_inc"
+        sort_desc_class = "Sort-sortBy_dec"
+
+        # defaults
+        sort_params = {
+            "price": {
+                "sort": price_asc,
+                "class": None,
+            },
+            "rating": {
+                "sort": rating_asc,
+                "class": None,
+            },
+            "order_by": None,  # field name for model sorting
+        }
+
+        if sort_kind := self.request.GET.get("sort"):
+            if sort_kind == price_asc:
+                sort_params["price"].update({
+                    "sort": price_desc,
+                    "class": sort_desc_class,
+                })
+                sort_params["order_by"] = "price_in_shop"
+            elif sort_kind == price_desc:
+                sort_params["price"].update({
+                    "sort": price_asc,
+                    "class": sort_asc_class,
+                })
+                sort_params["order_by"] = "-price_in_shop"
+            elif sort_kind == rating_asc:
+                sort_params["rating"].update({
+                    "sort": rating_desc,
+                    "class": sort_desc_class,
+                })
+                sort_params["order_by"] = "product__rating"
+            elif sort_kind == rating_desc:
+                sort_params["rating"].update({
+                    "sort": rating_asc,
+                    "class": sort_asc_class,
+                })
+                sort_params["order_by"] = "-product__rating"
+
+        return sort_params
+
+
+class CategoryProductListView(BaseProductListView):
+    template_name = "product_list.html"
+
+    category: Category
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
@@ -154,15 +275,8 @@ class ProductListView(ListView):
         category_id = self.request.resolver_match.kwargs["pk"]
         self.__class__.category = Category.objects.get(pk=category_id)
 
-        self.sort_params = self._get_sort_params()
-
     def get_queryset(self):
-        products = self.model.objects.select_related(
-            "shop", "product", "promotion", "product__category"
-        ).filter(product__category=self.category.pk)
-
-        if (order := self.sort_params["order_by"]) is not None:
-            products = products.order_by(order)
+        products = super().get_queryset().filter(product__category=self.category.pk)
 
         return products
 
@@ -175,22 +289,6 @@ class ProductListView(ListView):
         ctx["category"] = self.category
         # фильтр товаров
         ctx["filter"] = category_filter
-        # параметры сортировки
-        ctx["sort_params"] = self.sort_params
-        # пагинатор
-        if (page_num := ctx["page_obj"].number) <= self.displayed_pages:
-            ctx["first_page_num"] = 1
-
-            # если число отображаемых страниц меньше общего кол-ва страниц, ...
-            if self.displayed_pages <= (num_pages := ctx["paginator"].num_pages):
-                # ... то выводим число отображаемых страниц
-                ctx["last_page_num"] = self.displayed_pages
-            else:
-                # ... в противном случае выводим общее кол-во страниц
-                ctx["last_page_num"] = num_pages
-        else:
-            ctx["first_page_num"] = page_num - self.displayed_pages + 1
-            ctx["last_page_num"] = ctx["page_obj"].number
 
         return ctx
 
@@ -244,57 +342,69 @@ class ProductListView(ListView):
         filter_class = self._get_filter_class()
         return filter_class(self.request.GET, queryset=self.get_queryset())
 
-    def _get_sort_params(self):
-        # sorts
-        price_asc = "price_asc"
-        price_desc = "price_desc"
-        rating_asc = "rating_asc"
-        rating_desc = "rating_desc"
 
-        # CSS classes
-        sort_asc_class = "Sort-sortBy_inc"
-        sort_desc_class = "Sort-sortBy_dec"
+class PromotionProductListView(BaseProductListView):
+    template_name = "promotion_product_list.html"
 
-        # defaults
-        sort_params = {
-            "price": {
-                "sort": price_asc,
-                "class": None,
-            },
-            "rating": {
-                "sort": rating_asc,
-                "class": None,
-            },
-            "order_by": None,  # field name for model sorting
-        }
+    promotion: Promotions
 
-        if sort_kind := self.request.GET.get("sort"):
-            if sort_kind == price_asc:
-                sort_params["price"].update({
-                    "sort": price_desc,
-                    "class": sort_desc_class,
-                })
-                sort_params["order_by"] = "price_in_shop"
-            elif sort_kind == price_desc:
-                sort_params["price"].update({
-                    "sort": price_asc,
-                    "class": sort_asc_class,
-                })
-                sort_params["order_by"] = "-price_in_shop"
-            elif sort_kind == rating_asc:
-                sort_params["rating"].update({
-                    "sort": rating_desc,
-                    "class": sort_desc_class,
-                })
-                sort_params["order_by"] = "product__rating"
-            elif sort_kind == rating_desc:
-                sort_params["rating"].update({
-                    "sort": rating_asc,
-                    "class": sort_asc_class,
-                })
-                sort_params["order_by"] = "-product__rating"
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
 
-        return sort_params
+        promotion_id = self.request.resolver_match.kwargs["pk"]
+        self.__class__.promotion = Promotions.objects.get(pk=promotion_id)
+
+    def get_queryset(self):
+        shop_product_filter.strategy = strategy_factory.get_promo_shop_product_filter_strategy()
+
+        products = shop_product_filter.filter(
+            super().get_queryset(),
+            additional_cond=models.Q(promotion=self.promotion)
+        )
+
+        return products
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        ctx = super().get_context_data(object_list=object_list, **kwargs)
+
+        # скидка
+        ctx["promotion"] = self.promotion
+
+        return ctx
+
+
+class PromotionGroupProductListView(BaseProductListView):
+    template_name = "promotion_product_list.html"
+
+    promotion_group: PromotionGroup
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+
+        promotion_group_id = self.request.resolver_match.kwargs["pk"]
+        self.__class__.promotion_group = PromotionGroup.objects.select_related(
+            "promotion",
+        ).get(pk=promotion_group_id)
+
+    def get_queryset(self):
+        shop_product_filter.strategy = strategy_factory.get_only_promo_group_shop_product_filter_strategy()
+
+        products = shop_product_filter.filter(
+            super().get_queryset(),
+            additional_cond=models.Q(product__promotion_group=self.promotion_group)
+        )
+
+        return products
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        ctx = super().get_context_data(object_list=object_list, **kwargs)
+
+        # группа скидок
+        ctx["promotion_group"] = self.promotion_group
+        # скидка
+        ctx["promotion"] = self.promotion_group.promotion
+
+        return ctx
 
 
 def lazy_load_reviews_views(request):

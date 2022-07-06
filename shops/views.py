@@ -4,7 +4,7 @@ from .models import Shops, ShopProduct
 
 class ShopDetailVew(generic.DetailView):
     """
-    Returns information about a specific object from the model 'ShopProfile'
+    Возвращает детальную информацию о магазине
     """
     model = Shops
     template_name = 'shops/shop.html'
