@@ -112,5 +112,9 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
    ```
    python manage.py loaddata fixtures\shops\shop.json fixtures\shops\shop_product.json
    ```
+   8. Загрузить периодическую задачу
+   ```
+   python manage.py loaddata fixtures\basket\interval.json fixtures\basket\clearing_basket_every_60_min.json
+   ```
    
    :warning: Не забываем добавлять здесь, как загружать новые фикстуры!
