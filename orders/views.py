@@ -64,7 +64,7 @@ class OrderProgressView(LoginRequiredMixin, FormView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        return HttpResponseRedirect(reverse('payment', kwargs={'pk': self.order}))
+        return reverse('payment', kwargs={'pk': self.order})
 
 
 class OrderListView(LoginRequiredMixin, ListView):
@@ -93,14 +93,16 @@ class OrderPayment(LoginRequiredMixin, DetailView, FormView):
     context_object_name = 'order'
     template_name = 'orders/order_payment.html'
 
-
     def get_queryset(self):
         return Order.objects.filter(pk=self.kwargs['pk'])
 
     def form_valid(self, form):
-        order = form
-        temp = self.get_queryset()
+        # Просто статус ставлю ОПЛАЧЕНО
+        order = self.get_queryset()[0]
+        order.number_visa = form.cleaned_data.get('number_visa')
+        order.status_pay = True
+        order.save()
         return super().form_valid(form)
 
     def get_success_url(self):
-        return HttpResponseRedirect(reverse('order-detail', kwargs={'pk': self.kwargs['pk']}))
+        return reverse('order-detail', kwargs={'pk': self.kwargs['pk']})

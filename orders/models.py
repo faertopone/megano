@@ -40,7 +40,7 @@ class Order(models.Model):
     need_pay = models.BooleanField(default=False, verbose_name=_('Флаг, что нужно поставить в очередь на оплату'))
     error_pay = models.CharField(max_length=300, verbose_name=_('Ошибки, если оплата не прошла'), null=True)
     transaction = models.PositiveBigIntegerField(verbose_name=_('Номер транзакции оплаты'), unique=True, null=True)
-    number_visa = models.PositiveBigIntegerField(verbose_name=_('Номер карты оплаты'), null=True, blank=True)
+    number_visa = models.CharField(max_length=30, verbose_name=_('Номер карты оплаты'), null=True, blank=True)
     number_order = models.IntegerField(verbose_name=_('Номер заказа'), default=1)
     email = models.EmailField(verbose_name=_('email'))
     phoneNumberRegex = RegexValidator(

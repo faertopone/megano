@@ -150,7 +150,7 @@
                       {% elif not order.status_pay and order.need_pay %}
                         <div class="Cart-block"><a class="btn btn_primary btn_lg">{{ _('ИДЕТ ОПЛАТА') }}</a></div>
                       {% else %}
-                        <div class="Cart-block"><a class="btn btn_primary btn_lg">{{ _('ОПЛАЧЕНО') }}</a></div>
+                        <div class="Cart-block"><a class="btn btn_primary btn_lg good_payment" >{{ _('ОПЛАЧЕНО') }}</a></div>
                     {% endif %}
                   </div>
                 </div>

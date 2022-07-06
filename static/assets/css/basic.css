@@ -2559,3 +2559,12 @@ input[type="text"].range-widget__input {
 .errorlist {
   color: red;
 }
+
+.good_payment{
+  background-color: lawngreen;
+  border-color: green;
+}
+.good_payment:hover{
+  background-color: lawngreen;
+}
+
