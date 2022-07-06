@@ -3,10 +3,8 @@ from django.db.models import Sum, F
 from django.http import JsonResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import DetailView, FormView, ListView
-
 from accounts.models import Client
-from basket.basket import Basket
-from basket.models import BasketItem
+from basket.models import BasketItem, BasketQuerySet, BasketManager
 from orders.forms import OrderForm, OrderPay
 from orders.models import Order
 from orders.services import initial_order_form, order_service
@@ -38,17 +36,14 @@ class OrderProgressView(LoginRequiredMixin, FormView):
         context = super(OrderProgressView, self).get_context_data(**kwargs)
         client = Client.objects.select_related('user').prefetch_related('item_view', 'orders').get(
             user=self.request.user)
-        # total_basket = BasketItem.objects.filter(client=client).aggregate(price_sum=Sum(F('price') * F('qty')))
-        basket = Basket(self.request)
         context['client'] = client
         context['item_in_basket'] = BasketItem.objects.filter(client=client)
-        context['total_price'] = basket.get_total_price()
         return context
 
     def form_valid(self, form):
         # Дополнительно сохраним изменения
         order = form.save()
-        order_service(order=order, user=self.request.user, basket_total=Basket(self.request))
+        order_service(order=order, user=self.request.user)
         # Этот id заказа потом передадим в ссылку перенаправления
         self.order = order.id
         return super().form_valid(form)

@@ -236,7 +236,9 @@
                   <div class="Cart-total">
                     <div class="Cart-block Cart-block_total">
                       <strong class="Cart-title">{{ _('Итого:') }}
-                      </strong><span class="Cart-price" id="total_price" data-price='{{ total_price }}'>{{ _('руб.') }}</span>
+                          {% for item_ in item_in_basket %}
+                      </strong><span class="Cart-price" id="total_price" data-price='{{ item_.total_price }}'>{{ _('руб.') }}</span>
+                        {% endfor %}
 {#                        <span class="Cart-price_old">250.99$</span>#}
 
                     </div>
