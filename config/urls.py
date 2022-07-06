@@ -25,6 +25,7 @@ urlpatterns = [
     path("", include("app_webshop.urls")),
     path("products/", include("products.urls")),
     path("shops/", include("shops.urls")),
+    path("promotions/", include("promotions.urls")),
     path('i18n/', include('django.conf.urls.i18n')),
 ]
 

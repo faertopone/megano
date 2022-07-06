@@ -1,21 +1,24 @@
 from django.contrib import admin
-from .models import Shops, ShopPhoto, Promotions, ShopUser, ShopProduct
+from .models import Shops, ShopPhoto, ShopUser, ShopProduct
 from django.utils.translation import gettext_lazy as _
 
 
 class ShopPhotoInline(admin.TabularInline):
     fk_name = 'shop'
     model = ShopPhoto
+    extra = 0
 
 
 class ShopProductInline(admin.TabularInline):
     fk_name = 'shop'
     model = ShopProduct
+    extra = 0
 
 
 class ShopUserInline(admin.TabularInline):
     fk_name = 'shop'
     model = ShopUser
+    extra = 0
 
 
 class ShopsAdmin(admin.ModelAdmin):
@@ -29,14 +32,6 @@ class ShopsAdmin(admin.ModelAdmin):
         return _('профиль магазина')
 
 
-class PromotionsAdmin(admin.ModelAdmin):
-    list_display = ['name', 'description', 'discount']
-    search_fields = ['name']
-
-    def __str__(self):
-        return _('акции')
-
-
 class ProductShopAdmin(admin.ModelAdmin):
     list_display = ['shop', 'product', 'amount', 'price_in_shop', 'promotion', 'special_price']
     search_fields = ['name']
@@ -47,4 +42,3 @@ class ProductShopAdmin(admin.ModelAdmin):
 
 admin.site.register(Shops, ShopsAdmin)
 admin.site.register(ShopProduct, ProductShopAdmin)
-admin.site.register(Promotions, PromotionsAdmin)

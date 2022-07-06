@@ -71,35 +71,30 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
    1. Загрузить суперпользователя
    ```
    python manage.py loaddata fixtures\superuser.json
-   
    ```
-   2. Загрузить категории каталога и товары
+   2. Загрузить скидки
+   ```
+   python manage.py loaddata fixtures\promotions\promotions.json fixtures\promotions\promotion_group.json
+   ```
+   3. Загрузить категории каталога и товары
    ```
    python manage.py loaddata fixtures\products\category.json fixtures\products\product.json
    ```
-   3. Загрузить свойства товаров и их связи с товарами и категориями
+   4. Загрузить свойства товаров и их связи с товарами и категориями
    ```
    python manage.py loaddata fixtures\products\property.json fixtures\products\property_product.json fixtures\products\property_category.json
    ```
-   4. Загрузить баннеры
+   5. Загрузить баннеры
    ```
    python manage.py loaddata fixtures\banners\banners.json
-    ```
-   5. Загрузить 1 профиль (покупатель)  
-    ```
+   ```
+   6. Загрузить 1 профиль (покупатель)  
+   ```
    python manage.py loaddata fixtures\accounts\client.json
-    ```
-   6. Загрузить профили магазинов в следующем порядке:
-    ```
-   python manage.py loaddata fixtures\shops\promotions.json
-    ```
-    ```
-   python manage.py loaddata fixtures\shops\shop.json
-    ```
-    ```
-   python manage.py loaddata fixtures\shops\shop_photo.json
-    ```
-    ```
-   python manage.py loaddata fixtures\shops\shop_product.json
-    ```
+   ```
+   7. Загрузить магазины
+   ```
+   python manage.py loaddata fixtures\shops\shop.json fixtures\shops\shop_photo.json fixtures\shops\shop_product.json
+   ```
+   
    :warning: Не забываем добавлять здесь, как загружать новые фикстуры!

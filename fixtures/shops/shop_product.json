@@ -3,12 +3,12 @@
   "model": "shops.shopproduct",
   "pk": 1,
   "fields": {
-    "shop": 1,
+    "shop": 4,
     "product": 2,
-    "amount": 4,
-    "price_in_shop": "10000.00",
-    "promotion": 2,
-    "special_price": "10000.00",
+    "amount": 10,
+    "price_in_shop": "3300.00",
+    "promotion": null,
+    "special_price": "3300.00",
     "photo_url": "",
     "sale": 0
   }
@@ -17,12 +17,12 @@
   "model": "shops.shopproduct",
   "pk": 2,
   "fields": {
-    "shop": 1,
-    "product": 3,
-    "amount": 5,
-    "price_in_shop": "3000.00",
-    "promotion": 3,
-    "special_price": "3000.00",
+    "shop": 4,
+    "product": 2,
+    "amount": 20,
+    "price_in_shop": "3500.00",
+    "promotion": 7,
+    "special_price": "3500.00",
     "photo_url": "",
     "sale": 0
   }
@@ -31,12 +31,12 @@
   "model": "shops.shopproduct",
   "pk": 3,
   "fields": {
-    "shop": 1,
-    "product": 5,
-    "amount": 50,
-    "price_in_shop": "300.00",
-    "promotion": 4,
-    "special_price": "300.00",
+    "shop": 4,
+    "product": 3,
+    "amount": 10,
+    "price_in_shop": "1500.00",
+    "promotion": null,
+    "special_price": "1500.00",
     "photo_url": "",
     "sale": 0
   }
@@ -45,12 +45,12 @@
   "model": "shops.shopproduct",
   "pk": 4,
   "fields": {
-    "shop": 2,
-    "product": 8,
+    "shop": 4,
+    "product": 4,
     "amount": 10,
-    "price_in_shop": "30000.00",
-    "promotion": 1,
-    "special_price": "30000.00",
+    "price_in_shop": "1500.00",
+    "promotion": null,
+    "special_price": "1500.00",
     "photo_url": "",
     "sale": 0
   }
@@ -59,12 +59,12 @@
   "model": "shops.shopproduct",
   "pk": 5,
   "fields": {
-    "shop": 2,
-    "product": 9,
+    "shop": 4,
+    "product": 5,
     "amount": 10,
-    "price_in_shop": "35000.00",
-    "promotion": 2,
-    "special_price": "35000.00",
+    "price_in_shop": "610.00",
+    "promotion": null,
+    "special_price": "610.00",
     "photo_url": "",
     "sale": 0
   }
@@ -73,12 +73,12 @@
   "model": "shops.shopproduct",
   "pk": 6,
   "fields": {
-    "shop": 2,
-    "product": 2,
-    "amount": 5,
-    "price_in_shop": "1000.00",
-    "promotion": 3,
-    "special_price": "1000.00",
+    "shop": 4,
+    "product": 6,
+    "amount": 10,
+    "price_in_shop": "1399.00",
+    "promotion": 6,
+    "special_price": "1399.00",
     "photo_url": "",
     "sale": 0
   }
@@ -87,12 +87,12 @@
   "model": "shops.shopproduct",
   "pk": 7,
   "fields": {
-    "shop": 2,
-    "product": 3,
-    "amount": 7,
-    "price_in_shop": "1200.00",
-    "promotion": 4,
-    "special_price": "1200.00",
+    "shop": 5,
+    "product": 6,
+    "amount": 10,
+    "price_in_shop": "1500.00",
+    "promotion": 5,
+    "special_price": "1500.00",
     "photo_url": "",
     "sale": 0
   }
@@ -101,12 +101,12 @@
   "model": "shops.shopproduct",
   "pk": 8,
   "fields": {
-    "shop": 2,
-    "product": 5,
-    "amount": 15,
-    "price_in_shop": "340.00",
-    "promotion": 4,
-    "special_price": "340.00",
+    "shop": 5,
+    "product": 7,
+    "amount": 10,
+    "price_in_shop": "1299.00",
+    "promotion": null,
+    "special_price": "1299.00",
     "photo_url": "",
     "sale": 0
   }
@@ -115,12 +115,12 @@
   "model": "shops.shopproduct",
   "pk": 9,
   "fields": {
-    "shop": 3,
-    "product": 2,
-    "amount": 50,
-    "price_in_shop": "20000.00",
+    "shop": 5,
+    "product": 8,
+    "amount": 10,
+    "price_in_shop": "67880.00",
     "promotion": null,
-    "special_price": "20000.00",
+    "special_price": "67880.00",
     "photo_url": "",
     "sale": 0
   }
@@ -129,12 +129,12 @@
   "model": "shops.shopproduct",
   "pk": 10,
   "fields": {
-    "shop": 3,
-    "product": 3,
-    "amount": 55,
-    "price_in_shop": "3000.00",
-    "promotion": null,
-    "special_price": "3000.00",
+    "shop": 5,
+    "product": 9,
+    "amount": 10,
+    "price_in_shop": "16980.00",
+    "promotion": 5,
+    "special_price": "16980.00",
     "photo_url": "",
     "sale": 0
   }
@@ -143,12 +143,26 @@
   "model": "shops.shopproduct",
   "pk": 11,
   "fields": {
-    "shop": 3,
-    "product": 5,
-    "amount": 100,
-    "price_in_shop": "700.00",
+    "shop": 5,
+    "product": 10,
+    "amount": 10,
+    "price_in_shop": "3300.00",
     "promotion": null,
-    "special_price": "700.00",
+    "special_price": "3300.00",
+    "photo_url": "",
+    "sale": 0
+  }
+},
+{
+  "model": "shops.shopproduct",
+  "pk": 12,
+  "fields": {
+    "shop": 5,
+    "product": 10,
+    "amount": 15,
+    "price_in_shop": "4000.00",
+    "promotion": null,
+    "special_price": "4000.00",
     "photo_url": "",
     "sale": 0
   }

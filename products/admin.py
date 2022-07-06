@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
+from .filters import CustomFilterSet
 from .models import Category, Product, Property, PropertyProduct, PropertyCategory, UserReviews, ProductPhoto
 
 
@@ -92,7 +93,7 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("name", "article", "category_view", "price",
-                    "rating_view", "flag_limit", "property_count_view")
+                    "rating_view", "promotion_group", "flag_limit", "property_count_view")
     list_display_links = ("name", "article")
     list_editable = ("price",)
 
@@ -106,6 +107,9 @@ class ProductAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             "fields": ("name", "article", "category", "description", "tag")
+        }),
+        ("Скидки", {
+            "fields": ("promotion_group",)
         }),
         ("Склад", {
             "fields": ("price", "flag_limit")
@@ -151,6 +155,12 @@ class ProductAdmin(admin.ModelAdmin):
     @admin.display(description=_("количество свойств"))
     def property_count_view(obj: Product):
         return obj.properties.count()
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+
+        key = f"{CustomFilterSet.cache_key_prefix}:category_filter:{obj.category.pk}*"
+        CustomFilterSet.delete_cache(key)
 
 
 @admin.register(Property)
