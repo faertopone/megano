@@ -128,6 +128,9 @@
                 action: 'add'
             },
             success: function (json) {
+                if (json.item_qty === 0) {
+                    $('.product-item[data-index=' + prodid + ']').remove();
+                }
                 document.getElementById('basket-qty').innerHTML = json.qty;
                 document.getElementById('h-subtotal').innerHTML = json.subtotal;
                 document.getElementById('subtotal').innerHTML = json.subtotal;
