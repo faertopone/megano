@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
+    'django_celery_beat',
     "autocomplete_all",
+
     'accounts',
     'app_webshop',
     'banners.apps.BannersConfig',
