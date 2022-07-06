@@ -15,7 +15,23 @@
    ```
    python -m pip install -r requirements\dev.txt
    ```
-   
+5. Установить redis-server
+   ```
+   sudo apt install redis-server
+   ```
+   Проверить что статус сервера active (running)
+   ```
+   systemctl status redis-server
+   ```
+6. Запустить celery worker
+   ```
+   celery -A config worker -l info
+   ```
+7. Запустить celery beat
+   ```
+   celery -A config beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+   ```
+
 ## Выполнение задач по разработке
 1. Перед выполнением очередной задачи нужно переключиться на ветку ``develop``
    ```

@@ -98,14 +98,14 @@
                     {{ count_product_compare }}
                   </span></a>
               <a class="CartBlock-block" href="{{ url('basket_page') }}"><img class="CartBlock-img" src="{{ static('assets/img/icons/cart.svg') }}" alt="cart.svg"/><span class="CartBlock-amount">
-              {% with total_qty=basket.total_count() %}
+              {% with total_qty=basket.total_count %}
                 <div id="basket-qty">
                     {{ total_qty }}
                 </div>
               {% endwith %}
           </span></a>
             <div class="CartBlock-block">
-                <span id="h-subtotal" class="CartBlock-price">{{ basket.get_total_price() }}</span>
+                <span id="h-subtotal" class="CartBlock-price">{{ basket.total_price }}</span>
                 <span id="h-subtotal" class="CartBlock-price">₽</span>
             </div>
           </div>
