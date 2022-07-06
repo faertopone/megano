@@ -1,10 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Sum, F
 from django.http import JsonResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import DetailView, FormView, ListView
 from accounts.models import Client
-from basket.models import BasketItem, BasketQuerySet, BasketManager
+from basket.models import BasketItem
 from orders.forms import OrderForm, OrderPay
 from orders.models import Order
 from orders.services import initial_order_form, order_service, calculation_delivery
@@ -38,24 +37,23 @@ class OrderProgressView(LoginRequiredMixin, FormView):
         client = Client.objects.select_related('user').prefetch_related('item_view', 'orders').get(
             user=self.request.user)
         item_in_basket = BasketItem.objects.filter(client=client)
-        ORDER_PARAMETR = 2000
         delivery_price = calculation_delivery(total_price=item_in_basket.total_price, item_in_basket=item_in_basket)
         context['client'] = client
         context['item_in_basket'] = item_in_basket
         context['total_price'] = item_in_basket.total_price + delivery_price
         # вычисляем нужно ли за доставку накинуть цену
-        context['delivery_price'] = calculation_delivery(total_price=item_in_basket.total_price, item_in_basket=item_in_basket)
+        context['delivery_price'] = calculation_delivery(total_price=item_in_basket.total_price,
+                                                         item_in_basket=item_in_basket)
 
         return context
 
     def form_valid(self, form):
         # Дополнительно сохраним изменения
         order = form.save()
-        order_service(order=order, user=self.request.user,)
+        order_service(order=order, user=self.request.user, )
         # Этот id заказа потом передадим в ссылку перенаправления
         self.order = order.id
         return super().form_valid(form)
-
 
     def dispatch(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
@@ -111,6 +109,7 @@ class OrderPayment(LoginRequiredMixin, DetailView, FormView):
         # Просто статус ставлю ОПЛАЧЕНО
         order = self.get_queryset()[0]
         order.number_visa = form.cleaned_data.get('number_visa')
+        order.need_pay = True
         order.status_pay = True
         order.save()
         return super().form_valid(form)

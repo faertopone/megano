@@ -34,6 +34,7 @@ def calculation_delivery(total_price, item_in_basket):
         return 200
     return 0
 
+
 def order_service(order, user: HttpRequest) -> None:
     """
     Функция добавляет номер заказу и добавляет заказ к этому клиенту
