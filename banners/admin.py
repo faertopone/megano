@@ -71,5 +71,5 @@ class BannersAdmin(admin.ModelAdmin):
         )
 
 
-admin.site.site_title = _('Django Megano Admin')
-admin.site.site_header = _('Django Megano Admin')
+admin.site.site_title = _('Джанго Мегано Админ')
+admin.site.site_header = _('Джанго Мегано Админ')

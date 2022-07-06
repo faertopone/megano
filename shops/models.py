@@ -64,7 +64,7 @@ class ShopUser(models.Model):
     shop = models.ForeignKey(Shops, on_delete=models.CASCADE,
                              related_name="shop_users", related_query_name="shop_user",
                              verbose_name=_('магазин'))
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('продавец'))
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('пользователь'))
 
 
 class ShopProduct(models.Model):

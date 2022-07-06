@@ -5,6 +5,16 @@
         <div class="row ControlPanel-row">
           <div class="row-block">
             <div class="row ControlPanel-rowSplit">
+              <div class="row-block">
+                  <form action="/i18n/setlang/" method="post">
+                    {{ csrf_input }}
+                    {% if LANGUAGE_CODE == "ru" %}
+                        <input name="language" style="border: none; color: #808080" type="submit" value="en"/>
+                    {% else %}
+                        <input name="language" style="border: none; color: #808080" type="submit" value="ru"/>
+                    {% endif %}
+                  </form>
+              </div>
               <div class="row-block"><a class="ControlPanel-title" href="#">{{ _('Бесплатная доставка') }}</a>
               </div>
               <div class="row-block hide_700"><span class="ControlPanel-title">{{ _('Подписаться') }}</span>
@@ -82,8 +92,19 @@
           </div>
         </nav>
         <div class="row-block">
-          <div class="CartBlock"><a class="CartBlock-block" href="#"><img class="CartBlock-img" src="{{ static('assets/img/icons/exchange.svg') }}" alt="exchange.svg"/><span class="CartBlock-amount">4</span></a><a class="CartBlock-block" href="#"><img class="CartBlock-img" src="{{ static('assets/img/icons/cart.svg') }}" alt="cart.svg"/><span class="CartBlock-amount">0</span></a>
-            <div class="CartBlock-block"><span class="CartBlock-price">0.00$</span>
+          <div class="CartBlock">
+                <a class="CartBlock-block" href="/products/comparison/"><img class="CartBlock-img" src="{{ static('assets/img/icons/exchange.svg') }}" alt="exchange.svg"/>
+                  <span class="CartBlock-amount" id="compare_count_id">
+                    {{ count_product_compare }}
+                  </span></a>
+              <a class="CartBlock-block" href="{{ url('basket_page') }}"><img class="CartBlock-img" src="{{ static('assets/img/icons/cart.svg') }}" alt="cart.svg"/><span class="CartBlock-amount">
+              {% with total_qty=basket|length %}
+                <div id="basket-qty">
+                    {{ total_qty }}
+                </div>
+              {% endwith %}
+          </span></a>
+            <div class="CartBlock-block"><span id="h-subtotal" class="CartBlock-price">{{ basket.get_total_price() }}</span><span id="h-subtotal" class="CartBlock-price">₽</span>
             </div>
           </div>
         </div>

@@ -1,8 +1,9 @@
 from datetime import datetime
 
+from django.core.cache import cache
 from django.db import models
 from django.http import HttpRequest, JsonResponse
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import DetailView, ListView
@@ -15,6 +16,7 @@ from shops.models import ShopProduct
 from utils.paginator import DisplayedPaginatedPagesMixin
 from .filters import filterset_factory, CustomFilterSet
 from .models import (Product, PropertyProduct, Category, Tag, UserReviews)
+from .services import get_full_data_product_compare, get_user_reviews, get_lazy_load_reviews, get_count_reviews
 from .widgets import CustomCheckboxSelectMultiple, CustomTextInput, CustomRangeWidget
 
 
@@ -44,14 +46,23 @@ class ProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         """ Отдаёт содержание страницы при get запросе """
         context = super().get_context_data(**kwargs)
-        context['reviews'] = UserReviews.objects.filter(product=self.object).all()
-        context["properties"] = list(zip(self.object.properties.all(), self.object.product_properties.all()))
+        context['reviews'] = get_user_reviews(
+            product=self.object,
+            skip=int(self.request.GET.get("skip", 0)),
+        )
+        context["count_reviews"] = get_count_reviews(product=self.object)
+
+        context["properties"] = list(
+            zip(
+                self.object.properties.all(),
+                self.object.product_properties.all()
+            )
+        )
         if not self.request.user.is_superuser:
             if self.request.user.is_authenticated:
                 add_product_in_history(user=self.request.user, product_pk=context.get('product').pk)
             else:
                 add_product_in_history_session(request=self.request, product_pk=context.get('product').pk)
-
         return context
 
     def post(self, request: HttpRequest, pk: int) -> JsonResponse:
@@ -87,6 +98,32 @@ class ProductTagListView(ListView):
         context = super().get_context_data(**kwargs)
         context['products'] = Tag.objects.get(id=self.kwargs['pk']).products.all()
         return context
+
+
+class ProductCompareView(View):
+
+    def get(self, request):
+        """ Показывает список товаров по get запросу """
+        session_key = request.session.session_key
+        context = get_full_data_product_compare(session_key)
+        context['count_compare'] = cache.get(str(session_key) + '_compare_count')
+        context['session_key'] = session_key
+
+        return render(request, 'products/compare.html', context=context)
+
+    def post(self, request, **kwargs):
+        if request.POST['product_delete']:
+            session_key = str(request.session.session_key) + '_compare'
+            product_list = cache.get(session_key)
+            for i in product_list:
+                if int(i['product']['id']) == int(request.POST['product_delete']):
+                    product_list.remove(i)
+
+            cache.set(session_key, product_list, 3600)
+            count = cache.get(session_key + '_count') - 1
+            cache.set(session_key + '_count', count)
+
+        return self.get(request)
 
 
 class HistoryView(View):
@@ -368,3 +405,17 @@ class PromotionGroupProductListView(BaseProductListView):
         ctx["promotion"] = self.promotion_group.promotion
 
         return ctx
+
+
+def lazy_load_reviews_views(request):
+    """ Подгружает по 5 отзывов к товару при нажатии на кнопку показать ещё """
+    data = get_lazy_load_reviews(
+        product_id=request.GET.get("product_id"),
+        skip=int(request.GET.get("skip", 0))
+    )
+    return JsonResponse(
+        {"reviews": data},
+        status=200,
+        content_type="application/json",
+        safe=False
+    )

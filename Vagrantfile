@@ -34,6 +34,8 @@ Vagrant.configure("2") do |config|
 
         develop.vm.provision "ansible_local" do |ansible|
             ansible.playbook = "scripts/ansible/develop/provision.yml"
+            ansible.become = true
+            ansible.verbose = "vv"
         end
     end
 end

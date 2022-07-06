@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from . import views, services
 
 
 app_name = "products"
@@ -15,6 +15,15 @@ urlpatterns = [
     path("category/<int:pk>/", views.CategoryProductListView.as_view(), name="product_list"),
     path('product_detail/<int:pk>/', views.ProductDetailView.as_view(), name='product-detail'),
     path("products/<int:pk>/", views.ProductTagListView.as_view(), name="product-tag"),
+    path("sale/<int:pk>/", views.PromotionProductListView.as_view(), name="product_sale"),
+    path("sale_group/<int:pk>/", views.PromotionGroupProductListView.as_view(), name="product_sale_group"),
+    path("comment/<int:pk>/", views.ProductComment.as_view(), name="product comment"),
+    path("comparison/", views.ProductCompareView.as_view(), name="product-comparison"),
+    path("category/<int:pk>/", views.CategoryProductListView.as_view(), name="product_list"),
+    path('product_detail/<int:pk>/', views.ProductDetailView.as_view(), name='product-detail'),
+    path("products/<int:pk>/", views.ProductTagListView.as_view(), name="product-tag"),
+    path("count_compare_add/", services.count_compare_add, name="count-compare-add"),
+    path('lazy_load_reviews/', views.lazy_load_reviews_views, name='lazy_load_reviews'),
     path("sale/<int:pk>/", views.PromotionProductListView.as_view(), name="product_sale"),
     path("sale_group/<int:pk>/", views.PromotionGroupProductListView.as_view(), name="product_sale_group"),
 ]
