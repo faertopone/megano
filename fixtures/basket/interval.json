@@ -1,0 +1,1 @@
+[{"model": "django_celery_beat.intervalschedule", "pk": 1, "fields": {"every": 1, "period": "hours"}}]
