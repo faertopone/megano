@@ -1,4 +1,3 @@
-from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -13,7 +12,6 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_str
 from django.views.generic import DetailView, ListView, FormView
 
-from basket.basket import Basket
 from basket.models import BasketItem
 from .forms import RegistrationForm, ProfileEditForm
 from .models import Client
@@ -152,20 +150,18 @@ class LogView(LoginView):
     form_class = AuthenticationForm
 
     def form_valid(self, form):
-        """Security check complete. Log the user in."""
+        """Копируем корзину из сессии в модель, если у клиента она пустая"""
+        session_key = self.request.session.session_key
         user = form.get_user()
         login(self.request, user)
-        basket = self.request.session.get('skey')
-        if not user.client.basket_items.all() and basket:
-            items = []
-            for prod_id in basket:
-                item = BasketItem(
-                    client=user.client,
-                    product_id=prod_id,
-                    qty=basket[prod_id]['qty'],
-                    price=basket[prod_id]['price']
-                )
-                items.append(item)
-            BasketItem.objects.bulk_create(items)
 
+        client_basket = BasketItem.objects.filter(
+            client=self.request.user.client
+        )
+        session_basket = BasketItem.objects.filter(session=session_key)
+        if not client_basket and session_basket:
+            for item in session_basket:
+                item.client = self.request.user.client
+                item.session = None
+                item.save()
         return HttpResponseRedirect(self.get_success_url())
