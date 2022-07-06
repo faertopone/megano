@@ -90,7 +90,7 @@ class ShopProduct(models.Model):
     def save(self, *args, **kwargs):
         try:
             self.photo_url = ProductPhoto.objects.filter(product=self.product)[0].photo.url
-        except Exception:
+        except IndexError:
             pass
         self.special_price = self.price_in_shop * (100 - self.sale)/100
         super(ShopProduct, self).save(*args, **kwargs)
