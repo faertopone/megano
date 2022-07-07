@@ -136,3 +136,5 @@ class DeliverySetting(models.Model):
 
     class Meta:
         db_table = 'DeliverySetting'
+        verbose_name = _("настройка тарифа доставки")
+        verbose_name_plural = _("настройка тарифов доставки")

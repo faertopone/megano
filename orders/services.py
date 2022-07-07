@@ -87,9 +87,11 @@ class OrderService:
             order.total_price = basket.total_price
         else:
             order.total_price = basket.total_price + self.get_delivery_price()
+            order.delivery_price += self.get_delivery_price()
 
         if order.delivery == 'Экспресс доставка':
             order.total_price += self.get_express_delivery_price()
+            order.delivery_price += self.get_express_delivery_price()
         order.save()
         client.save()
         basket.delete()

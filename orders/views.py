@@ -38,7 +38,7 @@ class OrderProgressView(LoginRequiredMixin, FormView):
         Проверка, что в БД есть модель DeliverySetting - и инициализируем параметры от корзины
         """
         super().setup(request, *args, **kwargs)
-        if not DeliverySetting.objects.filter(id=1).exists():
+        if not DeliverySetting.objects.all().exists():
             DeliverySetting.objects.create(name='Настройка  цен доставки')
         self.order_service.check_basket(request=self.request)
         self.order_service.check_free_delivery()
