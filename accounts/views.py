@@ -6,6 +6,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponseNotFound, JsonResponse, \
     HttpResponseRedirect
+from django.core.cache import cache
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_decode
@@ -15,6 +16,7 @@ from django.views.generic import DetailView, ListView, FormView
 
 from basket.basket import Basket
 from basket.models import BasketItem
+from shops.models import ShopUser
 from .forms import RegistrationForm, ProfileEditForm
 from .models import Client
 from .services import get_context_data, get_context_data_ajax, \
@@ -78,6 +80,8 @@ class ProfileView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        if cache.get(self.request.user.username + '_shop'):
+            context['user_shop'] = 'yes'
         try:
             context['list_item_views'] = self.get_queryset().item_view.all().order_by('-client_products_views__id')[:3]
         except Exception:
@@ -100,6 +104,8 @@ class ProfileEditView(LoginRequiredMixin, SuccessMessageMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super(ProfileEditView, self).get_context_data(**kwargs)
         context['client'] = Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
+        if cache.get(self.request.user.username + '_shop'):
+            context['user_shop'] = 'yes'
         return context
 
     def form_valid(self, form):
@@ -131,6 +137,8 @@ class HistoryUserView(LoginRequiredMixin, DetailView):
         data = get_context_data(user=self.request.user)
         context['list_item_views'] = data[0]
         context['all_items_complete'] = data[1]
+        if cache.get(self.request.user.username + '_shop'):
+            context['user_shop'] = 'yes'
         return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -156,6 +164,10 @@ class LogView(LoginView):
         user = form.get_user()
         login(self.request, user)
         basket = self.request.session.get('skey')
+        user_shop_list = [i.shop for i in ShopUser.objects.prefetch_related('shop').filter(user=user)]
+        if len(user_shop_list) != 0:
+            cache_key = user.username + '_shop'
+            cache.set(cache_key, user_shop_list, 3600)
         if not user.client.basket_items.all() and basket:
             items = []
             for prod_id in basket:

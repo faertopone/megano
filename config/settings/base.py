@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'app_webshop',
     'banners.apps.BannersConfig',
     'basket',
+    'for_import',
     "products.apps.ProductsConfig",
     'shops.apps.ShopsConfig',
 ]
