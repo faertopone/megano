@@ -1,12 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import DetailView, FormView, ListView
 from accounts.models import Client
 from basket.models import BasketItem
 from orders.forms import OrderForm, OrderPay
-from orders.models import Order
-from orders.services import initial_order_form, order_service, calculation_delivery
+from orders.models import Order, DeliverySetting
+from orders.services import initial_order_form, OrderService
 
 
 class OrderDetailView(LoginRequiredMixin, DetailView):
@@ -27,53 +28,45 @@ class OrderProgressView(LoginRequiredMixin, FormView):
     """
     form_class = OrderForm
     template_name = 'orders/order_progress.html'
+    order_service = OrderService()
 
     def get_initial(self):
-
         return initial_order_form(request=self.request)
+
+    def setup(self, request, *args, **kwargs):
+        """
+        Проверка, что в БД есть модель DeliverySetting - и инициализируем параметры от корзины
+        """
+        super().setup(request, *args, **kwargs)
+        if not DeliverySetting.objects.filter(id=1).exists():
+            DeliverySetting.objects.create(name='Настройка  цен доставки')
+        self.order_service.check_basket(request=self.request)
+        self.order_service.check_free_delivery()
 
     def get_context_data(self, **kwargs):
         context = super(OrderProgressView, self).get_context_data(**kwargs)
-        client = Client.objects.select_related('user').prefetch_related('item_view', 'orders').get(
-            user=self.request.user)
-        item_in_basket = BasketItem.objects.filter(client=client)
-        delivery_price = calculation_delivery(total_price=item_in_basket.total_price, item_in_basket=item_in_basket)
-        context['client'] = client
-        context['item_in_basket'] = item_in_basket
-        context['total_price'] = item_in_basket.total_price + delivery_price
-        # вычисляем нужно ли за доставку накинуть цену
-        context['delivery_price'] = calculation_delivery(total_price=item_in_basket.total_price,
-                                                         item_in_basket=item_in_basket)
-
+        context['client'] = self.order_service.client
+        context['item_in_basket'] = self.order_service.basket
+        context['total_price'] = self.order_service.total_basket_price
         return context
 
     def form_valid(self, form):
-        # Дополнительно сохраним изменения
         order = form.save()
-        order_service(order=order, user=self.request.user, )
-        # Этот id заказа потом передадим в ссылку перенаправления
-        self.order = order.id
+        self.order_service.order_copy_data(order=order)
         return super().form_valid(form)
 
     def dispatch(self, request, *args, **kwargs):
-        if self.request.user.is_authenticated:
-            client = Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
-            order = BasketItem.objects.filter(client=client)
-            if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == 'POST':
-                # ================= ТУТ ЗНАЧЕНИЯ ИЗ МОДЕЛИ СКИДОК
-                price_delivery = 500
-                delivery_price = self.get_context_data().get('delivery_price')
 
-                return JsonResponse({'price_delivery': price_delivery,
-                                     'delivery_price': delivery_price,
-                                     })
-            if not order:
-                return HttpResponseRedirect(reverse('index'))
+        if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == 'POST':
+            return JsonResponse({'express_delivery_price': self.order_service.get_express_delivery_price(),
+                                 'delivery_price': self.order_service.get_delivery_price(),
+                                 'check_free_delivery': self.order_service.check_free_delivery()
+                                 })
 
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse('payment', kwargs={'pk': self.order})
+        return reverse('payment', kwargs={'pk': self.order_service.new_order_id})
 
 
 class OrderListView(LoginRequiredMixin, ListView):

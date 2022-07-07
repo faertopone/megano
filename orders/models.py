@@ -61,8 +61,6 @@ class Order(models.Model):
     def __str__(self):
         return _('Заказ_№') + str(self.number_order)
 
-    # def get_absolute_url(self):
-    #     return reverse('order-detail', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name = _('заказ')
@@ -115,3 +113,26 @@ class OrderProductBasket(models.Model):
     class Meta:
         ordering = ("-created_dt",)
         db_table = 'OrderProductBasket'
+
+
+class DeliverySetting(models.Model):
+    """
+    Модель управлением ценами и условиями на доставку товаров
+    """
+    name = models.CharField(verbose_name=_('Настройка доставки'), max_length=20)
+    limit_price_free = models.PositiveIntegerField(verbose_name=_('Минимальная цена для бесплатной доставки'),
+                                                   default=2000,
+                                                   help_text=_('Установите цену, при которой сумма товаров в корзине '
+                                                               'даст клиенту на бесплатную доставку'))
+    express_delivery_price = models.PositiveIntegerField(verbose_name=_('Цена экспресс доставки'), default=500)
+    delivery_price = models.PositiveIntegerField(verbose_name=_('Цена обычной доставки'), default=200,
+                                           help_text=_('Если сумма товаров меньше определенной суммы или действует '
+                                                       'условие, что товары от разных продавцом')
+                                           )
+    is_active = models.BooleanField(verbose_name=_('Включить эту версию настроек доставки'), default=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'DeliverySetting'

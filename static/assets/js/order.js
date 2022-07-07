@@ -1,10 +1,10 @@
 $(document).ready(function () {
     let url_path = $(location).attr('pathname')
     let crsf = ($('input[name="csrfmiddlewaretoken"]').val())
-    let total_price_val = Number($('#total_price').attr('data-price'))
+    let total_price = $('#total_price')
     let btn_step = $('.Order-next[href="#step4"]')
     let total = 0
-     let total_price = 0
+    let total_delivery_price = 0
         // перед шагом, соберем всю инфу и выведем перед оканчательным заказом
     if (btn_step){
           btn_step.click(function (){
@@ -37,31 +37,36 @@ $(document).ready(function () {
                     },
               cache: false,
                 success: function (data) {
-
-                    let price_delivery = data.price_delivery
+                    let express_delivery_price = data.express_delivery_price
                     let delivery_price = data.delivery_price
-                     // если выбрана экспресс доставка +500р
-                      if (delivery === 'Экспресс доставка'){
-                           delivery_price += price_delivery
-                      }
-                                            // сумма с доставкой
-                      total = total_price_val + delivery_price
-                      $('#total_price').text(total.toString() + ' руб.')
+                    let check_free_delivery = data.check_free_delivery
 
-                      $('#total_price').append(`
-                      <div class="Section-content"> Доставка: ${delivery_price} руб.</div>
+                    if (!(check_free_delivery)){
+                        total_delivery_price += delivery_price
+                    }
+
+                    // если выбрана экспресс доставка +500р
+                      if (delivery === 'Экспресс доставка'){
+                           total_delivery_price += express_delivery_price
+                      }
+                      // сумма с доставкой
+                      total =  Number(total_price.attr('data-price')) + total_delivery_price
+                      total_price.text(total.toString() + ' руб.')
+                      total_price.append(`
+                      <div class="Section-content"> Доставка: ${total_delivery_price} руб.</div>
                       `)
+                          // обновим, иначе после перезагрузки страницы сумма увеличивается
+                      total_delivery_price = 0
 
 
                 },
                 error: function () {
                         console.log("error");
                         }
-        })
-
-
 
           })
+
+        })
     }
 
 })
