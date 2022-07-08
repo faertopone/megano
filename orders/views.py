@@ -1,10 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse, HttpResponseRedirect
-from django.shortcuts import redirect
+from django.http import JsonResponse
 from django.urls import reverse
 from django.views.generic import DetailView, FormView, ListView
 from accounts.models import Client
-from basket.models import BasketItem
 from orders.forms import OrderForm, OrderPay
 from orders.models import Order, DeliverySetting
 from orders.services import initial_order_form, OrderService, PaymentService
