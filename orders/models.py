@@ -61,7 +61,6 @@ class Order(models.Model):
     def __str__(self):
         return _('Заказ_№') + str(self.number_order)
 
-
     class Meta:
         verbose_name = _('заказ')
         verbose_name_plural = _('заказы')

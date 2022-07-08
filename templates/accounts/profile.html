@@ -39,21 +39,17 @@
                 </div><a class="Account-editLink" href="{{ url('profile-edit', kwargs={'pk': request.user.pk }) }}">{{ _('Редактировать профиль') }}</a>
               </div>
             </div>
+          {%  if order_last %}
             <div class="Account-group">
               <div class="Account-column Account-column_full">
                 <div class="Order Order_anons">
-                  <div class="Order-personal">
+                    <div class="Order-personal">
                     <div class="row">
-                        {%  if order_last %}
                       <div class="row-block"><a class="Order-title" href="{{ url('order-detail', kwargs={'pk': order_last.pk }) }}">{{ _('Заказ') }}&#32;<span class="Order-numberOrder">№{{ order_last.number_order }}</span>&#32;{{ _('от') }}&#32;<span class="Order-dateOrder">{{ order_last.created_dt }}</span></a>
                         <div class="Account-editLink"><a href="{{ url('orders') }}">{{ _('История заказов') }}</a>
                         </div>
                       </div>
-                        {% else %}
-                        <div class="row-block">
-                            {{ _('Заказов еще нет') }}
-                        </div>
-                        {% endif %}
+
                       <div class="row-block">
                         <div class="Order-info Order-info_delivery">
                             {# Тут тоже когда будет доп инфа #}
@@ -98,14 +94,23 @@
                 </div>
               </div>
             </div>
+          {% else %}
+                 <header class="Section-header">
+                  <h2 class="Section-title">{{ _('История Заказов') }}
+                  </h2>
+                </header>
+                    <div class="Cards Cards_account">
+                        <h3 class="Middle-title Title_no_order" >{{ _('Заказов еще нет') }}</h3>
+                    </div>
+          {% endif %}
             <div class="Account-group">
               <div class="Account-column Account-column_full">
                 <header class="Section-header">
                   <h2 class="Section-title">{{ _('История просмотров') }}
                   </h2>
                 </header>
+              {%  if list_item_views %}
                 <div class="Cards Cards_account">
-                 {%  if list_item_views %}
                     {% for item in list_item_views %}
                         <div class="Card">
                     <a class="Card-picture" href="{{ url('products:product-detail', kwargs = {'pk': item.pk}) }}">
@@ -132,11 +137,12 @@
                   <div class="Card-sale">-60%</div>
                 </div>
                     {% endfor %}
-                     <div class="Account-editLink Account-editLink_view"><a href="{{ url('history_user', kwargs={'pk': client.pk }) }}">{{ _('Перейти на полный список') }}</a>
+                </div>
+                     <div class="Account-editLink Account-editLink_view"><a href="{{ url('history_user', kwargs={'pk': client.pk }) }}">{{ _('Перейти на полный список') }}</a></div>
                  {% else %}
                 <h3 class="Middle-title">{{ _('Просмотренныех товаров еще нет!') }}</h3>
-                 {% endif %}
                 </div>
+              {% endif %}
 
                 </div>
               </div>

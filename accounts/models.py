@@ -64,7 +64,7 @@ class Client(models.Model):
                                              blank=True,
                                              )
 
-    orders = models.ManyToManyField('orders.Order', verbose_name=_('Заказы'), related_name='orders')
+    orders = models.ManyToManyField('orders.Order', verbose_name=_('Заказы'), related_name='orders',)
 
     # Проверяем, не больше ли чем позволено
     def item_in_page_views_check(self):
