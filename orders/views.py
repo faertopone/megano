@@ -98,11 +98,11 @@ class OrderPayment(LoginRequiredMixin, DetailView, FormView):
         return self.payment_service.get_current_order(Order.objects.filter(pk=self.kwargs['pk']))
 
     def form_valid(self, form):
-        self.payment_service.add_visa_in_order(form)
-        self.payment_service.complete_payment()
+        self.payment_service.get_visa_and_start_pay(form)
         return super().form_valid(form)
 
     def get_success_url(self):
+        self.payment_service.complete_payment()
         return reverse('order-detail', kwargs={'pk': self.kwargs['pk']})
 
 

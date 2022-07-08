@@ -131,7 +131,7 @@ class PaymentService:
         self.current_order = order[0]
         return order
 
-    def add_visa_in_order(self, form):
+    def get_visa_and_start_pay(self, form):
         self.current_order.number_visa = form.cleaned_data.get('number_visa')
         self.current_order.need_pay = True
         self.current_order.save()
