@@ -7,7 +7,7 @@ from accounts.models import Client
 from basket.models import BasketItem
 from orders.forms import OrderForm, OrderPay
 from orders.models import Order, DeliverySetting
-from orders.services import initial_order_form, OrderService
+from orders.services import initial_order_form, OrderService, PaymentService
 
 
 class OrderDetailView(LoginRequiredMixin, DetailView):
@@ -94,18 +94,17 @@ class OrderPayment(LoginRequiredMixin, DetailView, FormView):
     form_class = OrderPay
     context_object_name = 'order'
     template_name = 'orders/order_payment.html'
+    payment_service = PaymentService()
 
     def get_queryset(self):
-        return Order.objects.filter(pk=self.kwargs['pk'])
+        return self.payment_service.get_current_order(Order.objects.filter(pk=self.kwargs['pk']))
 
     def form_valid(self, form):
-        # Просто статус ставлю ОПЛАЧЕНО
-        order = self.get_queryset()[0]
-        order.number_visa = form.cleaned_data.get('number_visa')
-        order.need_pay = True
-        order.status_pay = True
-        order.save()
+        self.payment_service.add_visa_in_order(form)
+        self.payment_service.complete_payment()
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse('order-detail', kwargs={'pk': self.kwargs['pk']})
+
+

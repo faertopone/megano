@@ -1,10 +1,14 @@
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Any
+
+from django.db.models import QuerySet
 from django.http import HttpRequest
+from kombu.abstract import Object
+
 from accounts.models import Client
 from basket.models import BasketItem
-from orders.models import OrderProductBasket, OrderCopyProduct, DeliverySetting
+from orders.models import OrderProductBasket, OrderCopyProduct, DeliverySetting, Order
 
 
 @dataclass
@@ -54,7 +58,7 @@ class OrderService:
             return False
         return True
 
-    def order_copy_data(self, order: Any) -> None:
+    def order_copy_data(self, order: Order) -> None:
         """
         Функция добавляет номер заказу и добавляет заказ к этому клиенту
         """
@@ -115,5 +119,26 @@ def initial_order_form(request: HttpRequest) -> dict:
         'address': client.full_address
     }
     return initial_client
+
+@dataclass
+class PaymentService:
+    """
+    Бизнес логика сервиса платы
+    """
+    current_order: Any = None
+
+    def get_current_order(self, order):
+        self.current_order = order[0]
+        return order
+
+    def add_visa_in_order(self, form):
+        self.current_order.number_visa = form.cleaned_data.get('number_visa')
+        self.current_order.need_pay = True
+        self.current_order.save()
+
+    def complete_payment(self):
+        self.current_order.status_pay = True
+        self.current_order.save()
+
 
 

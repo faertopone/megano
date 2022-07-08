@@ -128,7 +128,7 @@ class DeliverySetting(models.Model):
                                            help_text=_('Если сумма товаров меньше определенной суммы или действует '
                                                        'условие, что товары от разных продавцом')
                                            )
-    is_active = models.BooleanField(verbose_name=_('Включить эту версию настроек доставки'), default=True)
+    is_active = models.BooleanField(verbose_name=_('Статус'), default=True)
 
     def __str__(self):
         return self.name

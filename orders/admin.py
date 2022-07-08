@@ -7,9 +7,9 @@ from orders.models import DeliverySetting
 
 @admin.register(DeliverySetting)
 class DeliverySettingAdmin(admin.ModelAdmin):
-    list_display = ('name', 'id', 'express_delivery_price', 'delivery_price', 'is_active')
-    list_display_links = ('name', 'id', )
-    list_editable = ('express_delivery_price', 'delivery_price')
+    list_display = ('name', 'express_delivery_price', 'delivery_price', 'limit_price_free', 'is_active')
+    list_display_links = ('name', )
+    list_editable = ('express_delivery_price', 'delivery_price', 'limit_price_free')
     list_filter = ['name', 'is_active']
     actions = ['active', 'not_active']
     # Поиск по имени и совпадение с началом слова типа startswith
