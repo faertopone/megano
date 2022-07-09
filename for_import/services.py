@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse
 from django.core.cache import cache
 from django.utils.translation import gettext as _
-from products.models import Product, Category, PropertyCategory
+from products.models import Product, Category, PropertyCategory, ProductPhoto, PropertyProduct, Property
+from shops.models import ShopProduct
 from .forms import UploadFileForm
 from accounts.models import Client
 from csv import reader
@@ -11,14 +12,9 @@ from csv import reader
 def list_prop_category(request):
     new_list = PropertyCategory.objects.select_related('property').filter(category_id=int(request.GET['category']))
     text = '<ul><li><h2>Заполните в файле .cvs вот эти поля в таком же порядке:</h2></li>' \
-           '<li>Наименание | Артикул | Описание | Цена | Рейтинг | Наличие |</li><li>'
-    index = 0
+           '<li>Наименание | Артикул | Описание | Цена | Рейтинг | Количество |</li><li>'
     for i in new_list:
-        index += 1
-        if index % 6 != 0 and index != len(new_list):
-            text += str(i.property.name) + ' | '
-        else:
-            text += '</li><li>'
+        text += str(i.property.name) + ' | '
     text += '</li></ul>'
     ret_data = {'text': text, 'category_id': request.GET['category'], 'shop_id': request.GET['shop']}
     return JsonResponse(ret_data)
@@ -52,41 +48,41 @@ def update_product_list(request):
         if upload_file_form.is_valid():
             # category_list = [i.category_name for i in Category.objects.all()]
             product_file = upload_file_form.cleaned_data['file'].read()
-            product_str = product_file.decode("utf-8").split('\n')[1:-1]
+            product_str = product_file.decode("utf-8").split('\n')[1::]
             print('************', product_str)
             csv_reader = reader(product_str, delimiter=";", quotechar='"')
             for row_list in csv_reader:
-                row = row_list[0].split(',')
                 try:
-                    Product.objects.filter(article=row[1]).update(
-                        name=row[0], description=row[2], price=float(row[3]),
-                        rating=int(row[4]))
+                    row = row_list[0].split(',')
+                    if len(Product.objects.filter(article=row[1])) != 0:
+                        new_product = Product.objects.filter(article=row[1]).update(
+                                              name=row[0], description=row[2], price=float(row[3]),
+                                              rating=int(row[4]))
+                        if len(ShopProduct.objects.filter(shop_id=shop_id, product=new_product)) != 0:
+                            ShopProduct.objects.filter(shop_id=shop_id, product=new_product).update(
+                                amount=int(row[5])
+                            )
+
+                    else:
+                        new_product = Product(article=row[1],
+                                              category_id=category_id,
+                                              name=row[0], description=row[2],
+                                              price=float(row[3]), rating=int(row[4]))
+                        new_product.save()
+                        new_shop_product = ShopProduct(product=new_product, shop_id=shop_id, amount=int(row[5]))
+                        new_shop_product.save()
+                        product_properties_list = PropertyCategory.objects.select_related('property').filter(
+                            category_id=category_id)  # это список свойств данной категории
+                        for i in range(len(product_properties_list)):
+                            product_property_value = PropertyProduct(product=new_product,
+                                                                     property=product_properties_list[i].property,
+                                                                     value=row[6 + i])
+                            product_property_value.save()
+
                 except:
-                    new_product = Product(article=row[1], category=Category.objects.get(id=category_id),
-                                          name=row[0], description=row[2],
-                                          price=float(row[3]), rating=int(row[4]))
-                    new_product.save()
-                # if len(row) == 7:
-                #     if len(Product.objects.filter(article=row[0])) != 0:
-                #         Product.objects.filter(article=row[0]).update(
-                #             name=row[2], description=row[3], price=float(row[4]),
-                #             amount=int(row[6]))
-                #     else:
-                #         if not row[1] in category_list:
-                #             category_list.append(row[1])
-                #             new_category = Category()
-                #             new_category.name = row[1]
-                #             new_category.save()
-                #         try:
-                #             new_product = Product(article=row[0], category=Category.objects.get(name=row[1]),
-                #                                   name=row[2], description=row[3],
-                #                                   price=float(row[4]), photo=row[5],
-                #                                   amount=int(row[6]))
-                #             new_product.save()
-                #         except:
-                #             pass
+                    print(f'++++++++++++++++++++++++++++++Ошибка в строке {row_list}', Exception.__dict__)
             return render(request, 'for_import/upload_product.html', context=context)
-    # else:
-    #     upload_file_form = UploadFileForm()
-    #     context['form'] = upload_file_form
-    #     return render(request, 'for_import/upload_product.html', context=context)
+        # else:
+        #     upload_file_form = UploadFileForm()
+        #     context['form'] = upload_file_form
+        #     return render(request, 'for_import/upload_product.html', context=context)
