@@ -1,26 +1,27 @@
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
-from basket.basket import Basket
+from basket.models import BasketItem
 from products.models import Product
 
 
 def basket_add(request):
-    basket = Basket(request)
     if request.POST.get('action') == 'add':
         product_id = int(request.POST.get('product_id'))
         qty = int(request.POST.get('product_qty'))
         product = get_object_or_404(Product, id=product_id)
-        basket.add(product, qty)
-        basket_total = basket.get_total_price()
-        basketqty = basket.__len__()
-        product_subtotal = product.price * qty
+        basket_item, _ = BasketItem.objects.my_update_or_create(
+            request=request,
+            product=product,
+            defaults={'qty': qty, 'price': product.price}
+        )
+        client_basket = BasketItem.objects.smart_filter(request=request)
         response = JsonResponse({
-            'qty': basketqty,
-            'subtotal': basket_total,
-            'product_subtotal': product_subtotal,
+            'qty': client_basket.total_count,
+            'subtotal': client_basket.total_price,
+            'product_subtotal': basket_item.total_price,
+            'item_qty': basket_item.qty
         })
-
     return response
 
 
@@ -29,14 +30,13 @@ def basket_page(request):
 
 
 def basket_delete(request):
-    basket = Basket(request)
     if request.POST.get('action') == 'post':
         product_id = request.POST.get('productid')
-        basket.delete(product_id=product_id)
-
-        basket_qty = basket.__len__()
-        basket_total = basket.get_total_price()
-        response = JsonResponse(
-            {'qty': basket_qty, 'subtotal': basket_total})
+        basket_item = BasketItem.objects.get_item(request=request, product=product_id)
+        basket_item.delete()
+        client_basket = BasketItem.objects.smart_filter(request=request)
+        response = JsonResponse({
+            'qty': client_basket.total_count,
+            'subtotal': client_basket.total_price
+        })
         return response
-

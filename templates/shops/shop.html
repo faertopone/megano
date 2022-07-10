@@ -127,7 +127,11 @@
             <div class="row-block">
               <div class="ProductCard-look">
                 <div class="ProductCard-photo">
+                  {% if len(photos) %}
                   <img src="{{ photos[0] }}" alt="{{ photos[0] }}"/>
+                  {% else %}
+                  <img src="{{ static('assets/img/icons/advantages/quality.svg') }}" alt="quality.svg"/>
+                  {% endif %}
                 </div>
                 <div class="ProductCard-picts">
                   {% for photo in photos %}
@@ -158,8 +162,7 @@
             </div>
           </div>
           <header class="Section-header">
-            <h2 class="Section-title">{{ _('Популярные товары') }}
-            </h2>
+            <h2 class="Section-title">{{ _('Популярные товары') }}</h2>
           </header>
           <div class="Cards">
             {% for product in products %}

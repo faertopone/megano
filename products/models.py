@@ -5,6 +5,8 @@ from django.core.validators import FileExtensionValidator, MinValueValidator, Re
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from promotions.models import PromotionGroup
+
 
 class Category(models.Model):
     """
@@ -54,6 +56,13 @@ class Product(models.Model):
                                         verbose_name=_("свойства товара"))
     tag = models.TextField(max_length=100, verbose_name=_('теги'), blank=True)
     tags = models.ManyToManyField('Tag', related_name='products')
+    promotion_group = models.ForeignKey(PromotionGroup, on_delete=models.SET_DEFAULT, default=None,
+                                        null=True, blank=True,
+                                        related_name="products", related_query_name="product",
+                                        verbose_name=_("скидочная группа товаров"),
+                                        help_text=_("Товар может входить в группу товаров со скидкой."
+                                                    " В этом случае на каждый товар в группе действует"
+                                                    " определенная скидка"))
 
     class Meta:
         verbose_name = _("товар")
@@ -208,7 +217,8 @@ class UserReviews(models.Model):
     """
     Модель добавления комментария к товару
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('пользователь'), related_name="user_review")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('пользователь'),
+                             related_name="user_review")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('товар'))
     reviews = models.TextField(max_length=1024, blank=True, verbose_name=_('отзыв'))
     created_date = models.DateTimeField(auto_now_add=True)

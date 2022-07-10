@@ -97,7 +97,7 @@
                             <span>{{ _("Дополнительная информация") }}</span>
                         </a>
                         <a class="Tabs-link" href="#reviews">
-                            <span id="count-reviews-1">{{ _("Отзывы") }} ({{ (reviews.count()) }})</span>
+                            <span id="count-reviews-1">{{ _("Отзывы") }} ({{ (count_reviews) }})</span>
                         </a>
                     </div>
                     <div class="Tabs-wrap">
@@ -145,7 +145,7 @@
                                             <strong>{{ shop.price_in_shop }} {{ _("$") }}</strong>
                                         </div>
                                         <div class="Categories-block Categories-button">
-                                            <a class="btn btn_primary" href="#">
+                                            <a class="btn btn_primary add_button" href="#">
                                                 <img class="img-icon" src="{{ static('assets/img/icons/card/cart_white.svg') }}" alt="cart_white.svg">
                                                 <span class="btn-content">{{ _("Купить") }}</span>
                                             </a>
@@ -162,15 +162,15 @@
                         <div class="Tabs-block" id="reviews">
                             {% if reviews %}
                                 <header class="Section-header">
-                                    <h3 class="Section-title" id="count-reviews-2">{{ (reviews.count()) }} {{ _("Отзывов") }}</h3>
+                                    <h3 class="Section-title" id="count-reviews-2">{{ (count_reviews) }} {{ _("Отзывов") }}</h3>
                                 </header>
                                 {% for review in reviews %}
                                     <div class="Comments">
                                         <div class="Comment">
                                             <div class="Comment-column Comment-column-pict">
-                                                {% if review.user.client.photo %}
+                                                {% if review.user.client.photo.url %}
                                                     <div class="Comment-avatar">
-                                                        <img src="{{ review.user.client.photo.url }}" alt="{{ review.user.client.photo.name }}">
+                                                        <img width="90" height="75" src="{{ review.user.client.photo.url }}" alt="{{ review.user.client.photo.name }}">
                                                     </div>
                                                 {% else %}
                                                     <div class="Comment-avatar"></div>
@@ -190,6 +190,9 @@
                                         </div>
                                     </div>
                                 {% endfor %}
+                                <div id="insert_reviews" class="form-group" style="display: flex; justify-content: center">
+                                    <button id="lazy_load_reviews" class="btn btn_muted" data-page="{{ (reviews.count()) }}" value="{{ product.pk }}" type="button">{{ _("Показать ещё") }}</button>
+                                </div>
                             {% else %}
                                 <header class="Section-header">
                                     <h3 class="Section-title">{{ _("Отзывов на товар нет") }}</h3>
@@ -205,13 +208,6 @@
                                         <div class="form-group">
                                             <textarea class="form-textarea" name="review" id="review" placeholder="{{ _('Отзыв') }}"></textarea>
                                         </div>
-{#                                        <div class="form-group">#}
-{#                                            <div class="row">#}
-{#                                                <div class="row-block">#}
-{#                                                    <input class="form-input" id="username" name="username" type="text" placeholder="{{ _('Имя') }}">#}
-{#                                                </div>#}
-{#                                            </div>#}
-{#                                        </div>#}
                                         <div class="form-group">
                                             <button class="btn btn_muted" type="submit">{{ _("Добавить отзыв") }}</button>
                                         </div>

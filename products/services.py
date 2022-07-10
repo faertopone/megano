@@ -13,9 +13,10 @@
 # TODO: Задача 20.7. Интеграция с сервисом скидок на товар
 #       Сервис и его методы реализуются в рамках
 #       "Задача 34.2. Интеграция сервиса скидок с реальными данными по скидкам"
+from datetime import datetime
 
 from django.core.cache import cache
-from .models import PropertyProduct, ProductPhoto, Product
+from .models import PropertyProduct, ProductPhoto, Product, UserReviews
 from django.http import HttpResponseRedirect, JsonResponse
 from django.utils.translation import gettext as _
 
@@ -119,3 +120,37 @@ def get_full_data_product_compare(session_key):
                 else:
                     context['similar_properties_add'][key] = value
     return context
+
+
+def get_count_reviews(product: Product) -> int:
+    """ Возвращает кол-во отзывов """
+    return UserReviews.objects.filter(product=product).count()
+
+
+def get_user_reviews(product: Product, skip: int):
+    """ Возвращает 10 последних отзывов на товар """
+    return UserReviews.objects.filter(product=product).order_by('-pk')[skip:skip + 5]
+
+
+def get_lazy_load_reviews(product_id: int, skip: int):
+    """ Сервис, отдаёт отзывы по 5 шт """
+    reviews_list = []
+
+    db_reviews = UserReviews.objects.select_related(
+        "user__client"
+    ).filter(
+        product_id=product_id
+    ).order_by(
+        '-pk'
+    )[skip:skip + 5]
+    if db_reviews:
+        for index, review in enumerate(db_reviews):
+            reviews_list.append({
+                "user": review.user.username,
+                "review": review.reviews,
+                "created_at": datetime.strftime(review.created_date, '%B / %d / %Y / %H:%M'),
+                "client_photo": review.user.client.photo.url,
+                "photo_name": review.user.client.photo.name,
+            })
+        return reviews_list
+    return None

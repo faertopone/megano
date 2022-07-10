@@ -1,6 +1,6 @@
 [
 {
-  "model": "shops.promotions",
+  "model": "promotions.promotions",
   "pk": 1,
   "fields": {
     "name": "TestPromo",
@@ -9,7 +9,7 @@
   }
 },
 {
-  "model": "shops.promotions",
+  "model": "promotions.promotions",
   "pk": 2,
   "fields": {
     "name": "TestPromo",
@@ -18,7 +18,7 @@
   }
 },
 {
-  "model": "shops.promotions",
+  "model": "promotions.promotions",
   "pk": 3,
   "fields": {
     "name": "TestPromo",
@@ -27,12 +27,39 @@
   }
 },
 {
-  "model": "shops.promotions",
+  "model": "promotions.promotions",
   "pk": 4,
   "fields": {
     "name": "TestPromo",
     "description": "Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt  Test txt",
     "discount": 10.0
+  }
+},
+{
+  "model": "promotions.promotions",
+  "pk": 5,
+  "fields": {
+    "name": "Минус 10%",
+    "description": "",
+    "discount": 10.0
+  }
+},
+{
+  "model": "promotions.promotions",
+  "pk": 6,
+  "fields": {
+    "name": "Минус 20%",
+    "description": "",
+    "discount": 20.0
+  }
+},
+{
+  "model": "promotions.promotions",
+  "pk": 7,
+  "fields": {
+    "name": "Минус 30%",
+    "description": "",
+    "discount": 30.0
   }
 }
 ]

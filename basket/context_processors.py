@@ -1,9 +1,12 @@
-from basket.basket import Basket
+from basket.models import BasketItem
 
 
 def basket(request):
     """
-    При помощи этого контекст процессора у нас при загрузке страницы
-    инициализируется класс Basket
+    При помощи этого контекст процессора на странице всегда есть инфа о корзине
     """
-    return {'basket':  Basket(request)}
+    if request.user.is_authenticated:
+        basket = BasketItem.objects.filter(client=request.user.client)
+    else:
+        basket= BasketItem.objects.filter(session=request.session.session_key)
+    return {'basket':  basket}

@@ -1,0 +1,18 @@
+[
+{
+  "model": "promotions.promotiongroup",
+  "pk": 1,
+  "fields": {
+    "name": "Ремни",
+    "promotion": 5
+  }
+},
+{
+  "model": "promotions.promotiongroup",
+  "pk": 2,
+  "fields": {
+    "name": "Смартфоны",
+    "promotion": 7
+  }
+}
+]

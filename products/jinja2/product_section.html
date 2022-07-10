@@ -1,0 +1,15 @@
+        <div class="Section-content">
+          <div class="Sort">
+            <div class="Sort-title">{{ _('Сортировать по') }}:
+            </div>
+            <div class="Sort-variants">
+                <a class="Sort-sortBy{% if sort_params['rating']['class'] %} {{ sort_params['rating']['class'] }}{% endif %}" data-sort="{{ sort_params['rating']['sort'] }}" href="">{{ _('Популярности') }}</a>
+                <a class="Sort-sortBy{% if sort_params['price']['class'] %} {{ sort_params['price']['class'] }}{% endif %}" data-sort="{{ sort_params['price']['sort'] }}" href="">{{ _('Цене') }}</a>
+            </div>
+          </div>
+
+          {% import 'base_templates/products.html' as products_viewer %}
+          {{ products_viewer.view_product_list(products, products_viewer.view_product, promotion_service) }}
+
+          {% include 'base_templates/pagination.html' %}
+        </div>

@@ -1,0 +1,48 @@
+{% extends 'base_templates/base.html' %}
+
+{% block content %}
+  <div class="Middle Middle_top">
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h1 class="Middle-title">Скидки</h1>
+          <ul class="breadcrumbs Middle-breadcrumbs">
+            <li class="breadcrumbs-item"><a href="/">{{ _('Главная') }}</a></li>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>{{ _('Скидки') }}</span></li>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="Section">
+      <div class="wrap">
+        <h1>{{ promotion.name }}</h1>
+        <div>
+          {{ promotion.description }}
+        </div>
+        {% set promo_products_link %}
+          <span class="Promotion-title">
+            <a href="{{ url('products:product_sale', kwargs={'pk': promotion.pk}) }}">{{ _('Товары') }}</a>
+          </span>
+        {% endset %}
+
+        {% import 'base_templates/products.html' as products_viewer %}
+        {{ products_viewer.view_product_list(products_with_promo[:displayed_products], products_viewer.view_product,
+                                             promotion_service, header=promo_products_link,) }}
+
+        {% for promotion_group in promotion.promotion_groups.all() %}
+          {% set promo_products_link %}
+            <span class="Promotion-title">
+              <a href="{{ url('products:product_sale_group', kwargs={'pk': promotion_group.pk}) }}">{{ promotion_group.name }}</a>
+            </span>
+          {% endset %}
+
+          {{ products_viewer.view_product_list(
+              products_in_promo_group.filter(product__promotion_group=promotion_group)[:displayed_products],
+              products_viewer.view_product, promotion_service, header=promo_products_link,
+            ) }}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock content %}

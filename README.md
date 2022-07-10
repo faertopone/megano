@@ -15,7 +15,23 @@
    ```
    python -m pip install -r requirements\dev.txt
    ```
-   
+5. Установить redis-server
+   ```
+   sudo apt install redis-server
+   ```
+   Проверить что статус сервера active (running)
+   ```
+   systemctl status redis-server
+   ```
+6. Запустить celery worker
+   ```
+   celery -A config worker -l info
+   ```
+7. Запустить celery beat
+   ```
+   celery -A config beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+   ```
+
 ## Выполнение задач по разработке
 1. Перед выполнением очередной задачи нужно переключиться на ветку ``develop``
    ```
@@ -71,35 +87,34 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
    1. Загрузить суперпользователя
    ```
    python manage.py loaddata fixtures\superuser.json
-   
    ```
-   2. Загрузить категории каталога и товары
+   2. Загрузить скидки
+   ```
+   python manage.py loaddata fixtures\promotions\promotions.json fixtures\promotions\promotion_group.json
+   ```
+   3. Загрузить категории каталога и товары
    ```
    python manage.py loaddata fixtures\products\category.json fixtures\products\product.json
    ```
-   3. Загрузить свойства товаров и их связи с товарами и категориями
+   4. Загрузить свойства товаров и их связи с товарами и категориями
    ```
    python manage.py loaddata fixtures\products\property.json fixtures\products\property_product.json fixtures\products\property_category.json
    ```
-   4. Загрузить баннеры
+   5. Загрузить баннеры
    ```
    python manage.py loaddata fixtures\banners\banners.json
-    ```
-   5. Загрузить 1 профиль (покупатель)  
-    ```
+   ```
+   6. Загрузить 1 профиль (покупатель)  
+   ```
    python manage.py loaddata fixtures\accounts\client.json
-    ```
-   6. Загрузить профили магазинов в следующем порядке:
-    ```
-   python manage.py loaddata fixtures\shops\promotions.json
-    ```
-    ```
-   python manage.py loaddata fixtures\shops\shop.json
-    ```
-    ```
-   python manage.py loaddata fixtures\shops\shop_photo.json
-    ```
-    ```
-   python manage.py loaddata fixtures\shops\shop_product.json
-    ```
+   ```
+   7. Загрузить магазины
+   ```
+   python manage.py loaddata fixtures\shops\shop.json fixtures\shops\shop_photo.json fixtures\shops\shop_product.json
+   ```
+   8. Загрузить периодическую задачу
+   ```
+   python manage.py loaddata fixtures\basket\interval.json fixtures\basket\clearing_basket_every_60_min.json
+   ```
+   
    :warning: Не забываем добавлять здесь, как загружать новые фикстуры!

@@ -81,7 +81,7 @@
           <div class="Cart-total">
             <div class="Cart-block Cart-block_total">
               <strong class="Cart-title">Итого:
-              </strong><span id="subtotal" class="Cart-price">{{ basket.get_total_price() }} ₽</span><span class="Cart-price_old">250.99$</span>
+              </strong><span id="subtotal" class="Cart-price">{{ basket.total_price }} ₽</span><span class="Cart-price_old">250.99$</span>
             </div>
             <div class="Cart-block"><a class="btn btn_success btn_lg" href="order.html">Оформить заказ</a>
             </div>
@@ -128,6 +128,9 @@
                 action: 'add'
             },
             success: function (json) {
+                if (json.item_qty === 0) {
+                    $('.product-item[data-index=' + prodid + ']').remove();
+                }
                 document.getElementById('basket-qty').innerHTML = json.qty;
                 document.getElementById('h-subtotal').innerHTML = json.subtotal;
                 document.getElementById('subtotal').innerHTML = json.subtotal;

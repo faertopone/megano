@@ -735,7 +735,7 @@
 @media screen and (min-width: 990px) {
   .Card:hover .Card-hover {
     top: 0;
-    transition: top 300ms;
+    # transition: top 300ms;
   }
 }
 .Card-picture {
@@ -866,7 +866,8 @@
     transition: all 300ms;
   }
 }
-.Card-title {
+.Card-title,
+.Promotion-title {
   display: block;
   font-weight: normal;
   line-height: 26px;
@@ -876,7 +877,8 @@
   padding-bottom: 8px;
   margin-bottom: 3px;
 }
-.Card-title a {
+.Card-title a,
+.Promotion-title a {
   color: #000;
 }
 .Card-description {
@@ -923,21 +925,23 @@
   margin-left: 12px;
 }
 .Card-hover {
-  position: absolute;
+  # position: absolute;
   left: 0;
   top: 100%;
   height: 100%;
   right: 0;
   display: flex;
+  margin-top: 11px;
   background: #fff;
   justify-content: center;
   align-items: center;
-  transition: top 300ms;
+  # transition: top 300ms;
 }
 .Card-sale {
   position: absolute;
   left: 19px;
   top: -23px;
+  z-index: 1;
   color: #fff;
   font-size: 13px;
   font-weight: 400;
@@ -2182,7 +2186,7 @@ a.Cart-title {
   width: 99px;
   height: 99px;
   border-radius: 100px;
-  background: #0063d1 url("../img/icons/user_icon.svg") center center no-repeat;
+  /*background: #0063d1 url("../img/icons/user_icon.svg") center center no-repeat;*/
 }
 .Comment-rating {
   position: absolute;

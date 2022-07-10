@@ -1,0 +1,17 @@
+<div class="Pagination">
+  <div class="Pagination-ins">
+      <a class="Pagination-element{% if page_obj.has_previous() %} Pagination-button{% endif %}"{% if page_obj.has_previous() %} href="" data-page="{{ page_obj.previous_page_number() }}"{% endif %}>
+          <img src="{{ static('assets/img/icons/prevPagination.svg') }}" alt="prevPagination.svg"/>
+      </a>
+
+      {% for page_num in range(first_page_num, last_page_num + 1) %}
+      <a class="Pagination-element Pagination-page{% if page_num == page_obj.number %} Pagination-element_current{% endif %}" href="" data-page="{{ page_num }}">
+          <span class="Pagination-text">{{ page_num }}</span>
+      </a>
+      {% endfor %}
+
+      <a class="Pagination-element{% if page_obj.has_next() %} Pagination-button{% endif %}"{% if page_obj.has_next() %} href="" data-page="{{ page_obj.next_page_number() }}"{% endif %}>
+          <img src="{{ static('assets/img/icons/nextPagination.svg') }}" alt="nextPagination.svg"/>
+      </a>
+  </div>
+</div>
