@@ -53,6 +53,7 @@ $(document).ready(function () {
                 $('#category_list').html(data.text);
                 document.getElementById('update').style.display='block';
                 document.getElementById('file_button').value=data.shop_id + '|' + data.category_id;
+                document.getElementById('file').href='/import/export/' + data.category_id
                 },
             error: function() {
                 console.log('error')

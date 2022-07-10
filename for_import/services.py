@@ -1,20 +1,21 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.core.cache import cache
 from django.utils.translation import gettext as _
 from products.models import Product, Category, PropertyCategory, ProductPhoto, PropertyProduct, Property
 from shops.models import ShopProduct
 from .forms import UploadFileForm
 from accounts.models import Client
+import csv
 from csv import reader
 
 
 def list_prop_category(request):
     new_list = PropertyCategory.objects.select_related('property').filter(category_id=int(request.GET['category']))
     text = '<ul><li><h2>Заполните в файле .cvs вот эти поля в таком же порядке:</h2></li>' \
-           '<li>Наименание | Артикул | Описание | Цена | Рейтинг | Количество |</li><li>'
+           '<li>Наименание, Артикул, Описание, Цена, Рейтинг, Количество,</li><li>'
     for i in new_list:
-        text += str(i.property.name) + ' | '
+        text += str(i.property.name) + ', '
     text += '</li></ul>'
     ret_data = {'text': text, 'category_id': request.GET['category'], 'shop_id': request.GET['shop']}
     return JsonResponse(ret_data)
@@ -46,10 +47,8 @@ def update_product_list(request):
         category_id = int(shop_category[1])
         upload_file_form = UploadFileForm(request.POST, request.FILES)
         if upload_file_form.is_valid():
-            # category_list = [i.category_name for i in Category.objects.all()]
             product_file = upload_file_form.cleaned_data['file'].read()
             product_str = product_file.decode("utf-8").split('\n')[1::]
-            print('************', product_str)
             csv_reader = reader(product_str, delimiter=";", quotechar='"')
             for row_list in csv_reader:
                 try:
@@ -86,3 +85,14 @@ def update_product_list(request):
         #     upload_file_form = UploadFileForm()
         #     context['form'] = upload_file_form
         #     return render(request, 'for_import/upload_product.html', context=context)
+
+
+def export_file_csv(request, *args, **kwargs):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Dispositions'] = 'attachment; filename="users.csv"'
+    parameter_list = ['Наименание', 'Артикул', 'Описание', 'Цена', 'Рейтинг', 'Количество']
+    parameter_list += [i.property.name for i in
+                       PropertyCategory.objects.select_related('property').filter(category_id=kwargs['pk'])]
+    writer = csv.writer(response)
+    writer.writerow(parameter_list)
+    return response
