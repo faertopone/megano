@@ -1,5 +1,6 @@
 from django.urls import path
-from .services import update_product_list, list_prop_category, export_file_csv
+from .views import update_product_list
+from .services import list_prop_category, export_file_csv
 
 
 urlpatterns = [

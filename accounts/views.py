@@ -163,23 +163,10 @@ class LogView(LoginView):
         session_key = self.request.session.session_key
         user = form.get_user()
         login(self.request, user)
-
-        basket = self.request.session.get('skey')
         user_shop_list = [i.shop for i in ShopUser.objects.prefetch_related('shop').filter(user=user)]
         if len(user_shop_list) != 0:
             cache_key = user.username + '_shop'
             cache.set(cache_key, user_shop_list, 3600)
-        # if not user.client.basket_items.all() and basket:
-        #     items = []
-        #     for prod_id in basket:
-        #         item = BasketItem(
-        #             client=user.client,
-        #             product_id=prod_id,
-        #             qty=basket[prod_id]['qty'],
-        #             price=basket[prod_id]['price']
-        #         )
-        #         items.append(item)
-        #     BasketItem.objects.bulk_create(items)
         client_basket = BasketItem.objects.filter(
             client=self.request.user.client
         )
