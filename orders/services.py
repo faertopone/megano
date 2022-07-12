@@ -52,7 +52,7 @@ class OrderService:
 
     def check_free_delivery(self):
         """
-        Проверка на условие на бесплатную доставку True - значит беслпатно
+        Проверка на условие на бесплатную доставку True - значит бесплатно
         """
         if self.total_basket_price < self.get_limit_price_free():
             return False
@@ -119,6 +119,7 @@ def initial_order_form(request: HttpRequest) -> dict:
         'address': client.full_address
     }
     return initial_client
+
 
 @dataclass
 class PaymentService:
