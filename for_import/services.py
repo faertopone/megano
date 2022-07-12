@@ -35,11 +35,8 @@ def export_file_csv(request, *args, **kwargs):
 
 def from_file_in_db(file, shop_id, category_id):
     """Считывает данные файла .csv, обрабатывает и заполняет базу данных"""
-    product_str = file.decode("utf-8").split('\n')[1::]
-    csv_reader = reader(product_str, delimiter=";", quotechar='"')
-    for row_list in csv_reader:
+    for row in file:
         try:
-            row = row_list[0].split(',')
             if len(Product.objects.filter(article=row[1])) != 0:
                 new_product = Product.objects.filter(article=row[1]).update(
                     name=row[0], description=row[2], price=float(row[3]),
@@ -66,4 +63,4 @@ def from_file_in_db(file, shop_id, category_id):
                     product_property_value.save()
 
         except:
-            print(f'++++++++++++++++++++++++++++++Ошибка в строке {row_list}', Exception.__dict__)
+            print(f'-----------Ошибка в строке {row}')

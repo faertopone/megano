@@ -1,11 +1,12 @@
 from django.core.cache import cache
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, HttpResponse
-from .tasks import send_file_in_db_task
+from .tasks import from_file_in_db_task
 from products.models import Category
 from .forms import UploadFileForm
 from accounts.models import Client
-from .services import from_file_in_db
+from csv import reader
+from django.utils.translation import gettext_lazy as _
 
 
 def update_product_list(request):
@@ -35,7 +36,8 @@ def update_product_list(request):
         upload_file_form = UploadFileForm(request.POST, request.FILES)
         if upload_file_form.is_valid():
             product_file = upload_file_form.cleaned_data['file'].read()
-            # Для Celery не работает???
-            # send_file_in_db_task.delay(file=product_file, shop_id=shop_id, category_id=category_id)
-            from_file_in_db(file=product_file, shop_id=shop_id, category_id=category_id)
+            product_str = product_file.decode("utf-8").split('\n')[1::]
+            product_list = [i for i in reader(product_str, delimiter=",", quotechar='"')]
+            from_file_in_db_task.delay(file=product_list, shop_id=shop_id, category_id=category_id)
+            context['info'] = _(f"Файл {request.FILES['file']} отправлен на обработку")
             return render(request, 'for_import/upload_product.html', context=context)
