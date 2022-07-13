@@ -36,7 +36,7 @@ INSTALLED_APPS.append('django_extensions')  # noqa: F405
 INSTALLED_APPS.append('fixturemedia')  # noqa: F405
 
 MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: F405
-
+#
 try:
     INTERNAL_IPS.append('127.0.0.1')  # noqa: F405
 except Exception:

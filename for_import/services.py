@@ -3,7 +3,6 @@ from django.utils.translation import gettext as _
 from products.models import Product, PropertyCategory, PropertyProduct
 from shops.models import ShopProduct
 import csv
-from csv import reader
 
 
 def list_prop_category(request):
@@ -55,12 +54,12 @@ def from_file_in_db(file, shop_id, category_id):
                 new_shop_product = ShopProduct(product=new_product, shop_id=shop_id, amount=int(row[5]))
                 new_shop_product.save()
                 product_properties_list = PropertyCategory.objects.select_related('property').filter(
-                    category_id=category_id)  # это список свойств данной категории
+                    category_id=category_id)
                 for i in range(len(product_properties_list)):
                     product_property_value = PropertyProduct(product=new_product,
                                                              property=product_properties_list[i].property,
                                                              value=row[6 + i])
                     product_property_value.save()
 
-        except:
-            print(f'-----------Ошибка в строке {row}')
+        except Exception as err:
+            print(f'-----------Ошибка в строке {row}: {err}')

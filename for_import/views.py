@@ -6,7 +6,7 @@ from products.models import Category
 from .forms import UploadFileForm
 from accounts.models import Client
 from csv import reader
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext as _
 
 
 def update_product_list(request):
