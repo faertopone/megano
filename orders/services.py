@@ -143,7 +143,6 @@ class PaymentService:
     Бизнес логика сервиса платы
     """
     current_order: Any = None
-    status: str = ''
 
     def get_current_order(self, order):
         """

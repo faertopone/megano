@@ -100,7 +100,7 @@ class OrderPayment(LoginRequiredMixin, DetailView, FormView):
     payment_service = PaymentService()
 
     def get_queryset(self):
-        return self.payment_service.get_current_order(Order.objects.filter(pk=self.kwargs['pk']))
+        return self.payment_service.get_current_order(order=Order.objects.filter(pk=self.kwargs['pk']))
 
     def form_valid(self, form):
         self.payment_service.start_pay()

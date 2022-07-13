@@ -15,8 +15,9 @@ class OrderPay(forms.Form):
 
     def clean_number_visa(self):
         number_visa = self.cleaned_data.get('number_visa')
-        if number_visa.isdigit():
-            return number_visa
+        str_visa = ''.join(number_visa.split())
+        if str_visa.isdigit():
+            return int(str_visa)
         raise forms.ValidationError('Введите только цифры')
 
 
