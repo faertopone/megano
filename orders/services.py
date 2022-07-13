@@ -13,6 +13,7 @@ def pay_order_(id_order: int, visa_number: int):
     """
     Ставим в очередь ТАКС на оплату. Если номер карты четный значит оплачено, иначе ошибка
     """
+
     order = Order.objects.get(id=id_order)
     if visa_number // 2 == 0:
         # Имитация оплаты заказа

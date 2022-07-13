@@ -13,6 +13,12 @@ class OrderPay(forms.Form):
         'data-validate': 'require pay'
     }))
 
+    def clean_number_visa(self):
+        number_visa = self.cleaned_data.get('number_visa')
+        if number_visa.isdigit():
+            return number_visa
+        raise forms.ValidationError('Введите только цифры')
+
 
 class OrderForm(forms.ModelForm):
     """
