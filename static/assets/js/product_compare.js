@@ -37,4 +37,28 @@ $(document).ready(function () {
         });
         return false;
     });
+
+    $("#category_id").click(function () {
+    var sh_id = document.getElementById("selshop").value;
+    var cat_id = document.getElementById("selcategory").value;
+        $.ajax ({
+            url: "/import/ajax/",
+            type: "GET",
+            data: {'shop': sh_id, 'category': cat_id
+            },
+            cache: false,
+            success: function (data) {
+                console.log('ok');
+                console.log(data);
+                $('#category_list').html(data.text);
+                document.getElementById('update').style.display='block';
+                document.getElementById('file_button').value=data.shop_id + '|' + data.category_id;
+                document.getElementById('file').href='/import/export/' + data.category_id
+                },
+            error: function() {
+                console.log('error')
+                }
+        });
+        return false;
+    });
 })

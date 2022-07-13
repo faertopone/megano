@@ -38,7 +38,7 @@
                       {% endif %}
                     </div>
                     <div class="Card-category">
-                      <a href="{{ url('shop detail', kwargs={'pk': product.shop.pk}) }}" style="color: #999;">
+                      <a href="{{ url('shop-detail', kwargs={'pk': product.shop.pk}) }}" style="color: #999;">
                         {{ product.shop.name }}
                       </a>
                       / {{ product.product.category.category_name }}

@@ -164,10 +164,8 @@
           <header class="Section-header">
             <h2 class="Section-title">{{ _('Популярные товары') }}</h2>
           </header>
-
           {% import 'base_templates/products.html' as product_viewer %}
           {{ product_viewer.view_product_list(products, product_viewer.view_product, promotion_service) }}
-
         </div>
       </div>
     </div>
