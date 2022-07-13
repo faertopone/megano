@@ -6,6 +6,7 @@ from accounts.models import Client
 from orders.forms import OrderForm, OrderPay
 from orders.models import Order, DeliverySetting
 from orders.services import initial_order_form, OrderService, PaymentService
+from orders.tasks import pay_order_task
 
 
 class OrderDetailView(LoginRequiredMixin, DetailView):
@@ -33,7 +34,8 @@ class OrderProgressView(LoginRequiredMixin, FormView):
 
     def setup(self, request, *args, **kwargs):
         """
-        Проверка, что в БД есть модель DeliverySetting - и инициализируем параметры от корзины
+        Проверка, что в БД есть модель DeliverySetting, если нет создадим по дефолту - и инициализируем параметры от
+        корзины
         """
         super().setup(request, *args, **kwargs)
         if not DeliverySetting.objects.all().exists():
@@ -89,6 +91,9 @@ class OrderListView(LoginRequiredMixin, ListView):
 
 
 class OrderPayment(LoginRequiredMixin, DetailView, FormView):
+    """
+    Страница оплаты заказа по номеру карты
+    """
     form_class = OrderPay
     context_object_name = 'order'
     template_name = 'orders/order_payment.html'
@@ -98,11 +103,11 @@ class OrderPayment(LoginRequiredMixin, DetailView, FormView):
         return self.payment_service.get_current_order(Order.objects.filter(pk=self.kwargs['pk']))
 
     def form_valid(self, form):
-        self.payment_service.get_visa_and_start_pay(form)
+        self.payment_service.start_pay()
+        pay_order_task.delay(id_order=self.kwargs['pk'],
+                             visa_number=form.cleaned_data.get('number_visa'),
+                             user=self.request.user)
         return super().form_valid(form)
 
     def get_success_url(self):
-        self.payment_service.complete_payment()
         return reverse('order-detail', kwargs={'pk': self.kwargs['pk']})
-
-

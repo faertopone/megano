@@ -2,6 +2,8 @@ from django.test import TestCase
 from django.urls import reverse
 from banners.models import Banners
 from products.models import Product, Category
+from django.conf import settings
+
 
 COUNT_BANNERS = 10
 
@@ -10,6 +12,9 @@ class BannersTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
+        settings.DEBUG_TOOLBAR_PANELS.remove("debug_toolbar.panels.sql.SQLPanel")
+        settings.DEBUG_TOOLBAR_PANELS.remove("debug_toolbar.panels.templates.TemplatesPanel")
+
         name_file = 'Баннер_1_photo_video.png'
         # Создали тестовую категорию товара
         category_test = Category.objects.create(category_name='category_name_TEST', icon_photo=name_file)

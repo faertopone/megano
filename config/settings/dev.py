@@ -22,12 +22,13 @@ LOGGING = {
             'filters': ['require_debug_true'],
         },
     },
+    # django.db.backends - выводит запросы в БД
     'loggers': {
-        'django.db.backends': {
-            'level': 'DEBUG',
-            'handlers': ['debug-console'],
-            'propagate': False,
-        }
+        # 'django.db.backends': {
+        #     'level': 'DEBUG',
+        #     'handlers': ['debug-console'],
+        #     'propagate': False,
+        # }
     },
 }
 
