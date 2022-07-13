@@ -25,9 +25,10 @@ class Client(models.Model):
                              validators=[phoneNumberRegex],
                              max_length=16,
                              )
-    city = models.CharField(_('город'), max_length=256, blank=True)
-    street = models.CharField(_("улица"), max_length=256, blank=True)
+    city = models.CharField(_('город'), max_length=256, blank=True, null=True)
+    street = models.CharField(_("улица"), max_length=256, blank=True, null=True)
     house_number = models.IntegerField(_("номер дома"), blank=True, null=True)
+    full_address = models.TextField('Полный адрес', blank=True, null=True)
     apartment_number = models.IntegerField(
         _("номер квартиры"),
         blank=True, null=True
@@ -63,6 +64,8 @@ class Client(models.Model):
                                              blank=True,
                                              )
 
+    orders = models.ManyToManyField('orders.Order', verbose_name=_('Заказы'), related_name='orders',)
+
     # Проверяем, не больше ли чем позволено
     def item_in_page_views_check(self):
         if self.item_in_page_views >= self.limit_items_views:
@@ -86,6 +89,8 @@ class ClientProductView(models.Model):
                                 related_name='client_products_view',
                                 related_query_name='client_products_views')
 
+    created_dt = models.DateField(auto_now_add=True, null=True)
+
     class Meta:
-        ordering = ("id",)
+        ordering = ("-created_dt",)
 
