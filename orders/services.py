@@ -9,7 +9,7 @@ from orders.models import OrderProductBasket, OrderCopyProduct, DeliverySetting,
 
 
 @transaction.atomic
-def pay_order_(id_order: int, visa_number: int):
+def pay_order(id_order: int, visa_number: int):
     """
     Ставим в очередь ТАКС на оплату. Если номер карты четный значит оплачено, иначе ошибка
     """
@@ -19,12 +19,14 @@ def pay_order_(id_order: int, visa_number: int):
         # Имитация оплаты заказа
         order.status_pay = True
         order.transaction = f'{(visa_number // 6) * 3}'
+        order.number_visa = visa_number
         order.error_pay = None
     else:
         order.status_pay = False
         order.error_pay = f'Карта с №{str(visa_number)} - не действительна!'
 
     order.need_pay = False
+    order.save()
 
 
 @dataclass
@@ -87,7 +89,7 @@ class OrderService:
                     name=item.product.name,
                     description=item.product.description,
                     price=item.product.price,
-                    photo=item.product.product_photo.first()
+                    photo=item.product.product_photo.first().photo
                 )
 
                 data = {'product': order_product_copy,

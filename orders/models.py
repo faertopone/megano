@@ -74,6 +74,9 @@ def order_copy_product_directory_path(instance, filename):
 
 
 class OrderCopyProduct(models.Model):
+    """
+    Копия модели продукта
+    """
     name = models.CharField(max_length=1000, verbose_name=_("название товара"))
     product_pk = models.IntegerField(verbose_name=_("id_товара"))
     description = models.CharField(max_length=255, verbose_name=_("описание товара"), blank=True)
@@ -88,7 +91,7 @@ class OrderCopyProduct(models.Model):
 
 class OrderProductBasket(models.Model):
     """
-    Модель одного продукта товара в корзине с параметрами
+    Модель корзины товаров с параметрами
     """
     product = models.ForeignKey('OrderCopyProduct', on_delete=models.PROTECT,
                                 related_name='order_product_copy',
@@ -108,6 +111,9 @@ class OrderProductBasket(models.Model):
         null=True,
         blank=True
     )
+
+    def __str__(self):
+        return f'Корзина с продуктами №{self.id}'
 
     class Meta:
         ordering = ("-created_dt",)
