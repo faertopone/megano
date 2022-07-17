@@ -72,6 +72,14 @@
         regexp: "^REDIS_URL="
         line: "REDIS_URL=redis://127.0.0.1:6379/0"
 
+    - name: Change venv ownership, group and permissions
+      ansible.builtin.file:
+        path: /home/vagrant/venv
+        recurse: yes
+        owner: vagrant
+        group: vagrant
+        mode: '0744'
+
 
   handlers:
     - name: postgresql restart
