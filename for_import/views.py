@@ -38,6 +38,9 @@ def update_product_list(request):
             product_file = upload_file_form.cleaned_data['file'].read()
             product_str = product_file.decode("utf-8").split('\n')[1::]
             product_list = [i for i in reader(product_str, delimiter=",", quotechar='"')]
-            from_file_in_db_task.delay(file=product_list, shop_id=shop_id, category_id=category_id)
-            context['info'] = _(f"Файл {request.FILES['file']} отправлен на обработку")
+            from_file_in_db_task.delay(file=product_list, shop_id=shop_id,
+                                       category_id=category_id, email=str(request.user.email),
+                                       file_name=str(request.FILES['file']))
+            context['info'] = _(f"Файл {request.FILES['file']} отправлен на обработку. "
+                                f"Отчет отправлен на {request.user.email}")
             return render(request, 'for_import/upload_product.html', context=context)
