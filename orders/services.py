@@ -15,7 +15,7 @@ def pay_order(id_order: int, visa_number: int):
     """
 
     order = Order.objects.get(id=id_order)
-    if visa_number // 2 == 0:
+    if visa_number % 2 == 0:
         # Имитация оплаты заказа
         order.status_pay = True
         order.transaction = f'{(visa_number // 6) * 3}'
@@ -152,10 +152,3 @@ class PaymentService:
         """
         self.current_order = order[0]
         return order
-
-    def start_pay(self):
-        """
-        Ставим статус, что нужно оплачивать.
-        """
-        self.current_order.need_pay = True
-        self.current_order.save()

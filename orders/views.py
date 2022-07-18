@@ -103,9 +103,13 @@ class OrderPayment(LoginRequiredMixin, DetailView, FormView):
         return self.payment_service.get_current_order(order=Order.objects.filter(pk=self.kwargs['pk']))
 
     def form_valid(self, form):
-        self.payment_service.start_pay()
-        pay_order_task.delay(id_order=self.kwargs['pk'],
-                             visa_number=int(form.cleaned_data.get('number_visa')))
+        visa_number = form.cleaned_data.get('number_visa')
+        order = Order.objects.get(pk=self.kwargs['pk'])
+        order.number_visa = visa_number
+        order.need_pay = True
+        order.save()
+        # pay_order_task.delay(id_order=self.kwargs['pk'],
+        #                      visa_number=int(form.cleaned_data.get('number_visa')))
         return super().form_valid(form)
 
     def get_success_url(self):
