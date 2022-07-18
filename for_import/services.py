@@ -57,7 +57,7 @@ def from_file_in_db(file, shop_id, category_id, email, file_name):
                 new_shop_product = ShopProduct(product=new_product, shop_id=shop_id, amount=int(row[5]))
                 new_shop_product.save()
                 new_product_photo = ProductPhoto(product=new_product)
-                new_product_photo.image_field = row[6]
+                new_product_photo.photo = 'products_photo/' + row[6]
                 new_product_photo.save()
                 product_properties_list = PropertyCategory.objects.select_related('property').filter(
                     category_id=category_id)
@@ -70,7 +70,6 @@ def from_file_in_db(file, shop_id, category_id, email, file_name):
         except Exception as err:
             message += f'Ошибка в строке {row}: {err} \n'
             print(f'-----------Ошибка в строке {row}: {err}')
-            print(email, file_name)
 
     send_mail(
         subject=f'Загрузка файла {file_name}',
