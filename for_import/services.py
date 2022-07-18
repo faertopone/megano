@@ -12,7 +12,7 @@ def list_prop_category(request):
     необходимых для заполнения в файле свойств
     загружаемых в базу товаров"""
     new_list = PropertyCategory.objects.select_related('property').filter(category_id=int(request.GET['category']))
-    text = '<ul><li><h2>Заполните в файле .cvs вот эти поля в таком же порядке:</h2></li>' \
+    text = '<ul><li><h2>Заполните в файле .csv вот эти поля в таком же порядке:</h2></li>' \
            '<li>Наименание, Артикул, Описание, Цена, Рейтинг, Количество, Ссылка на фото,</li><li>'
     for i in new_list:
         text += str(i.property.name) + ', '
