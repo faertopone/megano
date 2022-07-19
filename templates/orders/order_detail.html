@@ -139,12 +139,14 @@
                     <strong class="Cart-title">{{ _('Итого:') }}<span class="Cart-price">{{ order.total_price }} {{ _('руб.') }}</span>
 {#                        <span class="Cart-price_old">250.99$</span>#}
                     </strong>
-
+                       <div class="Section-content"> {{ _('Доставка: ') }}{{ order.delivery_price }} {{ _('руб.') }}</div>
                   </div>
+
+
                     {% if not order.status_pay and not order.need_pay %}
-                        <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{{ url('payment', kwargs={'pk': order.pk}) }}">{{ _('Оплатить') }}</a>
+                        <div class="Cart-block"><a class="btn btn_primary btn_lg"  href="{{ url('payment', kwargs={'pk': order.pk}) }}">{{ _('Оплатить') }}</a>
                       {% elif not order.status_pay and order.need_pay %}
-                        <div class="Cart-block"><a class="btn btn_primary btn_lg">{{ _('ИДЕТ ОПЛАТА') }}</a></div>
+                        <div class="Cart-block"><a class="btn btn_primary btn_lg" style="background-color: #f98561; border-color: #e98338">{{ _('ИДЕТ ОПЛАТА') }}</a></div>
                       {% else %}
                         <div class="Cart-block"><a class="btn btn_primary btn_lg good_payment" >{{ _('ОПЛАЧЕНО') }}</a></div>
                     {% endif %}

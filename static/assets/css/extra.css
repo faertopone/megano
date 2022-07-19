@@ -57,7 +57,7 @@
 }
 .Account-editLink_view {
   color: #424650;
-  text-align: right;
+  text-align: center;
 }
 @media screen and (max-width: 1200px) {
   .Account-editLink_view {

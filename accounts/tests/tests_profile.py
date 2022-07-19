@@ -1,5 +1,4 @@
 import os
-
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -30,6 +29,9 @@ class ProfileTest(TestCase):
         """
         Начальная настройка для тестов
         """
+        settings.DEBUG_TOOLBAR_PANELS.remove("debug_toolbar.panels.sql.SQLPanel")
+        settings.DEBUG_TOOLBAR_PANELS.remove("debug_toolbar.panels.templates.TemplatesPanel")
+
         name_file = 'Баннер_1_photo_video.png'
         # Создали тестовую категорию товара
         category_test = Category.objects.create(category_name='category_name_TEST', icon_photo=name_file)

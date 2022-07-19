@@ -1,14 +1,32 @@
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Any
-
-from django.db.models import QuerySet
+from django.db import transaction
 from django.http import HttpRequest
-from kombu.abstract import Object
-
 from accounts.models import Client
 from basket.models import BasketItem
 from orders.models import OrderProductBasket, OrderCopyProduct, DeliverySetting, Order
+
+
+@transaction.atomic
+def pay_order(id_order: int, visa_number: int):
+    """
+    Ставим в очередь ТАКС на оплату. Если номер карты четный значит оплачено, иначе ошибка
+    """
+
+    order = Order.objects.get(id=id_order)
+    if visa_number % 2 == 0:
+        # Имитация оплаты заказа
+        order.status_pay = True
+        order.transaction = f'{(visa_number // 6) * 3}'
+        order.number_visa = visa_number
+        order.error_pay = None
+    else:
+        order.status_pay = False
+        order.error_pay = f'Карта с №{str(visa_number)} - не действительна!'
+
+    order.need_pay = False
+    order.save()
 
 
 @dataclass
@@ -41,7 +59,7 @@ class OrderService:
 
     def check_basket(self, request: HttpRequest):
         """
-        Проверка корзины. Если корзина пустая, перенаправим на главную, иначе возьмем данные из корзины
+        Проверка корзины.
         """
         client = Client.objects.select_related('user').prefetch_related('item_view', 'orders').get(
             user=request.user)
@@ -71,7 +89,7 @@ class OrderService:
                     name=item.product.name,
                     description=item.product.description,
                     price=item.product.price,
-                    photo=item.product.product_photo.first()
+                    photo=item.product.product_photo.first().photo
                 )
 
                 data = {'product': order_product_copy,
@@ -129,17 +147,8 @@ class PaymentService:
     current_order: Any = None
 
     def get_current_order(self, order):
+        """
+        Получаем нужный заказ
+        """
         self.current_order = order[0]
         return order
-
-    def get_visa_and_start_pay(self, form):
-        self.current_order.number_visa = form.cleaned_data.get('number_visa')
-        self.current_order.need_pay = True
-        self.current_order.save()
-
-    def complete_payment(self):
-        self.current_order.status_pay = True
-        self.current_order.save()
-
-
-
