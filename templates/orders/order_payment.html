@@ -27,6 +27,7 @@
               <label class="form-label">{{ _('Номер карты') }}
               </label>
                 {{ form.number_visa }}
+                {{ form.number_visa.errors }}
             </div>
               {% if order.payment == 'Онлайн со случайного чужого счета' %}
                 <div class="form-group"><a class="btn btn_success Payment-generate" href="#">{{ _('Сгенирировать случайный счет') }}</a>

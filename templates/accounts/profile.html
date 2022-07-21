@@ -78,7 +78,10 @@
                               {% else %} {{ _('НЕ ОПЛАЧЕН') }}
                               {% endif %}
                           </div>
-                            {% if order_last.error_pay %}
+
+                        </div>
+
+                        {% if order_last.error_pay %}
                                  <div class="Order-info Order-info_error">
                                       <div class="Order-infoType">{{ _('Оплата не прошла:') }}
                                       </div>
@@ -87,7 +90,6 @@
                                       </div>
                                 </div>
                             {% endif %}
-                        </div>
                       </div>
                     </div>
                   </div>

@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.core.cache import cache
 from django.db import models
-from django.http import HttpRequest, JsonResponse
+from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.views import View
@@ -58,11 +58,10 @@ class ProductDetailView(DetailView):
                 self.object.product_properties.all()
             )
         )
-        if not self.request.user.is_superuser:
-            if self.request.user.is_authenticated:
-                add_product_in_history(user=self.request.user, product_pk=context.get('product').pk)
-            else:
-                add_product_in_history_session(request=self.request, product_pk=context.get('product').pk)
+        if self.request.user.is_authenticated:
+            add_product_in_history(user=self.request.user, product_pk=context.get('product').pk)
+        else:
+            add_product_in_history_session(request=self.request, product_pk=context.get('product').pk)
         return context
 
     def post(self, request: HttpRequest, pk: int) -> JsonResponse:
