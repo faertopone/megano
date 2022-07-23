@@ -33,7 +33,7 @@
                       <img  src="{{ product.product_photo.first().photo.url  }}"  alt="{{ product.product_photo.first().photo.url }}" width="240" height="160"/>
                   </a>
                   {% else %}
-                  <a class="Cart-pict" href="#"><img class="Cart-img" src="assets/img/content/home/card.jpg" alt="card.jpg"/></a>
+                  <a class="Cart-pict" href="#"><img class="Cart-img" src="/static/assets/img/content/home/card.jpg" alt="card.jpg"/></a>
                   {% endif %}
               </div>
 
@@ -41,26 +41,23 @@
                 <div class="Cart-desc">Это супер ноутбук, 3 гб. 4 ядра
                 </div>
               </div>
-              <div class="Cart-block Cart-block_price">
-                <div id="productsubotal{{ product.id }}" class="Cart-price">{{ item.total_price }}
-                </div><span  class="Cart-price">₽
+              <div  class="Cart-block Cart-block_price">
+                <div id="productsubotal{{ product.id }}" class="Cart-price">{{ item.total_price }}₽
+                </div><span  class="Cart-price">
                 </span>
               </div>
             </div>
             <div class="Cart-block Cart-block_row">
               <div class="Cart-block Cart-block_seller">
                 <!-- - var options = setOptions(items, ['value', 'selected', 'disabled']);-->
-                <select class="form-select">
-                  <option value="good" selected="selected">shop good
-                  </option>
-                  <option value="kke">shop kke
-                  </option>
-                  <option value="sssssl">market sssssl
-                  </option>
+                <select  class="form-select change_shop" id="select{{product.id}}">
+                    {% for shop_product in product.shop_product.all() %}
+                  <option value="{{ shop_product.id }}"  {% if shop_product.id == item.shop_product.id%}selected="selected"{% endif %}>{{ shop_product.shop.name }}</option>
+                    {% endfor %}
                 </select>
               </div>
-              <div class="Cart-block Cart-block_amount">
-                <div class="Cart-amount">
+              <div  class="Cart-block Cart-block_amount">
+                <div  class="Cart-amount">
                   <div class="Amount">
                     <button class="Amount-remove add-button" type="button" value={{product.id}} data-index="{{ product.id }}">
                     </button>
@@ -70,7 +67,7 @@
                   </div>
                 </div>
               </div>
-              <div class="Cart-block Cart-block_delete"><a type="button" id="delete-button" class="Cart-delete" data-index="{{ product.id }}"><img src="assets/img/icons/card/delete.svg" alt="delete.svg"/></a>
+              <div class="Cart-block Cart-block_delete"><a type="button" id="delete-button" class="Cart-delete" data-index="{{ product.id }}"><img src="/static/assets/img/icons/card/delete.svg" alt="delete.svg"/></a>
               </div>
             </div>
           </div>
@@ -79,9 +76,9 @@
 
 
           <div class="Cart-total">
-            <div class="Cart-block Cart-block_total">
+            <div  class="Cart-block Cart-block_total">
               <strong class="Cart-title">Итого:
-              </strong><span id="subtotal" class="Cart-price">{{ basket.total_price }} ₽</span><span class="Cart-price_old">250.99$</span>
+              </strong><span id="subtotal" class="Cart-price">{{ basket.total_price }}</span><span class="Cart-price">₽</span><span class="Cart-price_old">250.99$</span>
             </div>
             <div class="Cart-block"><a class="btn btn_success btn_lg" href="{{ url('order-progress') }}">Оформить заказ</a>
             </div>
@@ -125,7 +122,8 @@
                 product_id: $(this).val(),
                 product_qty: $('.select' + $(this).val()).val(),
                 csrfmiddlewaretoken: '{{csrf_token}}',
-                action: 'add'
+                action: 'add',
+                shop_product_id: $('#select' + prodid + ' option:selected').val()
             },
             success: function (json) {
                 if (json.item_qty === 0) {
@@ -134,7 +132,33 @@
                 document.getElementById('basket-qty').innerHTML = json.qty;
                 document.getElementById('h-subtotal').innerHTML = json.subtotal;
                 document.getElementById('subtotal').innerHTML = json.subtotal;
-                document.getElementById('productsubotal'+prodid).innerHTML = json.product_subtotal;
+                document.getElementById('productsubotal'+prodid).innerHTML = json.product_subtotal + '₽';
+            },
+            error: function (xhr, errmsg, err) {
+            }
+        });
+    })
+
+        $(document).on('click', '.change_shop', function (e) {
+        e.preventDefault();
+        var prodid = $(this).data('index');
+        console.log($(document.getElementById('basket-qty').val));
+        $.ajax({
+            type: 'POST',
+            url: "{{ url('basket_add') }}",
+            data: {
+                shop_product_id: $(this).val(),
+                csrfmiddlewaretoken: '{{csrf_token}}',
+                action: 'change_shop',
+            },
+            success: function (json) {
+                if (json.item_qty === 0) {
+                    $('.product-item[data-index=' + prodid + ']').remove();
+                }
+                document.getElementById('basket-qty').innerHTML = json.qty;
+                document.getElementById('h-subtotal').innerHTML = json.subtotal;
+                document.getElementById('subtotal').innerHTML = json.subtotal;
+                document.getElementById('productsubotal'+json.product_id).innerHTML = json.product_subtotal + '₽';
             },
             error: function (xhr, errmsg, err) {
             }

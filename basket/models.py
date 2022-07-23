@@ -5,6 +5,7 @@ from django.db.models import F
 
 from products.models import Product
 from accounts.models import Client
+from shops.models import Shops, ShopProduct
 
 
 class BasketQuerySet(QuerySet):
@@ -88,6 +89,12 @@ class BasketItem(models.Model):
         related_name='basket_items',
         null=True
     )
+    shop_product = models.ForeignKey(
+        ShopProduct,
+        on_delete=models.CASCADE,
+        related_name='basket_items',
+        null=True
+    )
     client = models.ForeignKey(
         Client,
         on_delete=models.CASCADE,
@@ -116,10 +123,11 @@ class BasketItem(models.Model):
         decimal_places=2,
         default=0
     )
-    seller = models.CharField(
-        max_length=100,
-        verbose_name=_('Продавец'),
-        blank=True
+    shop = models.ForeignKey(
+        Shops,
+        on_delete=models.CASCADE,
+        verbose_name=_('Магазин-продавец'),
+        related_name='basket_items', null=True
     )
     updated = models.DateTimeField(
         auto_now=True,
