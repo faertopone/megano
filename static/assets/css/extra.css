@@ -921,6 +921,17 @@
   justify-content: center;
   align-items: center;
 }
+
+.Card-change {
+  display: flex;
+  width: 41px;
+  height: 41px;
+  background-color: #ebebeb;
+  justify-content: center;
+  align-items: center;
+  margin-left: 12px;
+}
+
 .Card-btn + .Card-btn {
   margin-left: 12px;
 }

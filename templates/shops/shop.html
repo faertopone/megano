@@ -161,11 +161,8 @@
               </ul>
             </div>
           </div>
-          <header class="Section-header">
-            <h2 class="Section-title">{{ _('Популярные товары') }}</h2>
-          </header>
           {% import 'base_templates/products.html' as product_viewer %}
-          {{ product_viewer.view_product_list(products, product_viewer.view_product, promotion_service) }}
+          {{ product_viewer.view_product_list(products, product_viewer.view_product, promotion_service, 'Популярные товары', request.session.session_key) }}
         </div>
       </div>
     </div>

@@ -48,11 +48,15 @@
                                     <div class="ProductCard-priceOld">{{ product.price }}</div>
                                 </div>
                                 <div class="ProductCard-compare">
-                                    <button id="compare_id" value="{{ product.id }}+{{ request.session.session_key }}" style="border: none; background-color: transparent;">
+                                    <!--<button id="compare_id" value="{{ product.id }}+{{ request.session.session_key }}" style="border: none; background-color: transparent;">
                                         <a class="btn btn_default">
                                             <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg">
                                         </a>
-                                    </button>
+                                    </button>-->
+                                  <a class="Card-change" data-product="{{ product.id }}"
+                                     data-key="{{ request.session.session_key }}">
+                                    <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
+                                  </a>
                                 </div>
                             </div>
                         </div>
