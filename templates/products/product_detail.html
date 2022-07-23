@@ -143,12 +143,17 @@
                                         <div class="Categories-splitProps"></div>
                                         <div class="Categories-block Categories-price">
                                             <strong>{{ shop.price_in_shop }} {{ _("$") }}</strong>
+                                            <div class="Amount Amount_product">
+                                                <button class="Amount-remove" type="button"></button>
+                                                <input class="Amount-input form-input select{{ shop.id }}" name="amount" type="text" value="1">
+                                                <button class="Amount-add" type="button"></button>
+                                            </div>
                                         </div>
-                                        <div class="Categories-block Categories-button">
-                                            <a class="btn btn_primary add_button" href="#">
+                                        <div class="Categories-block Categories-button"   >
+                                            <button class="btn btn_primary add-button" value={{ shop.id }}>
                                                 <img class="img-icon" src="{{ static('assets/img/icons/card/cart_white.svg') }}" alt="cart_white.svg">
-                                                <span class="btn-content">{{ _("Купить") }}</span>
-                                            </a>
+                                                <span class="btn-content " >{{ _("Купить") }}</span>
+                                            </button>
                                         </div>
                                     </div>
                                 {% endfor %}
@@ -242,5 +247,32 @@
             }
         });
     })
+
+
+    $(document).on('click', '.add-button', function (e) {
+        e.preventDefault();
+        var prodid = $('#add-button').val();
+        var shop_prod_id = $(this).val();
+        console.log($);
+        $.ajax({
+            type: 'POST',
+            url: "{{ url('basket_add') }}",
+            data: {
+                product_id: prodid,
+                product_qty: $('.select' + $(this).val()).val(),
+                shop_product_id: shop_prod_id,
+                csrfmiddlewaretoken: '{{csrf_token}}',
+                action: 'add'
+            },
+            success: function (json) {
+                document.getElementById('basket-qty').innerHTML = json.qty;
+                document.getElementById('h-subtotal').innerHTML = json.subtotal;
+                document.getElementById('subtotal').innerHTML = json.subtotal;
+            },
+            error: function (xhr, errmsg, err) {
+            }
+        });
+    })
+
 </script>
 {% endblock %}
