@@ -41,6 +41,7 @@ def update_product_list(request):
             from_file_in_db_task.delay(file=product_list, shop_id=shop_id,
                                        category_id=category_id, email=str(request.user.email),
                                        file_name=str(request.FILES['file']))
-            context['info'] = _(f"Файл {request.FILES['file']} отправлен на обработку. "
-                                f"Отчет отправлен на {request.user.email}")
+            text_1 = _("Файл ")
+            text_2 = _(" отправлен на обработку. Отчет отправлен на ")
+            context['info'] = text_1 + str(request.FILES['file']) + text_2 + str(request.user.email)
             return render(request, 'for_import/upload_product.html', context=context)
