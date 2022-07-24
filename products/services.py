@@ -21,12 +21,12 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.utils.translation import gettext as _
 
 
-def product_detail(pk: int):
+def product_detail(product_id: int):
     """
     Возвращает детальную информацию о товаре с его характеристиками
     для передачи в КЭШ.
     """
-    product = Product.objects.get(id=pk)
+    product = Product.objects.get(id=product_id)
     context = {
         'product': {
             'id': product.id,
@@ -38,11 +38,11 @@ def product_detail(pk: int):
     }
 
     try:
-        context['product']['photo'] = ProductPhoto.objects.filter(product_id=pk)[0].photo.url
+        context['product']['photo'] = ProductPhoto.objects.filter(product_id=product_id)[0].photo.url
     except:
         context['product']['photo'] = '/media/defolt.png'
 
-    for j in PropertyProduct.objects.filter(product_id=pk):
+    for j in PropertyProduct.objects.filter(product_id=product_id):
         context['properties'][j.property.name] = j.value
 
     return context
@@ -56,11 +56,10 @@ def count_compare_add(request):
     """
 
     if request.GET:
-        info_list = [i for i in request.GET['product_info'].split('+')]
-        product_pk = int(info_list[0])
+        product_id = int(request.GET['product'])
         product_info_list = []
-        product_info = product_detail(pk=product_pk)
-        user = info_list[1] + '_compare'
+        product_info = product_detail(product_id=product_id)
+        user = request.GET['cache_key'] + '_compare'
         key_count = user + '_count'
 
         if cache.get(user) is None:

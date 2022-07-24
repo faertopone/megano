@@ -18,6 +18,29 @@ $(document).ready(function () {
         return false;
     });
 
+    $(".Card-change").click(function () {
+        var productId = $(this).data('product');
+        var cacheKey = $(this).data('key')
+        $.ajax ({
+            url: "/products/count_compare_add/",
+            type: "GET",
+            data: {'product': productId, 'cache_key': cacheKey
+            },
+            cache: false,
+            success: function (data) {
+                console.log('ok');
+                console.log(data.com_count);
+                console.log(productId, cacheKey);
+                $('#compare_count_id').text(data.com_count);
+                },
+            error: function() {
+                console.log('error');
+                console.log(productId, cacheKey);
+                }
+        });
+        return false;
+    });
+
     $(".Compare-checkDifferent input").click(function () {
         $('#full').toggle();
         return {

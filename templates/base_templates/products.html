@@ -1,16 +1,18 @@
-{% macro view_product_list(products, view_product_macro, promotion_service, header="", h_level=2) %}
+{% macro view_product_list(products, view_product_macro, promotion_service, header="", key="", h_level=2) %}
           {% if header and h_level in (1, 2, 3, 4, 5, 6) and products.count() %}
-          <h{{ h_level }}>{{ header }}</h{{ h_level }}>
+          <header class="Section-header">
+            <h{{ h_level }}>{{ header }}</h{{ h_level }}>
+          </header>
           {% endif %}
 
           <div class="Cards">
             {% for product in products %}
-              {{ view_product_macro(product, promotion_service) }}
+              {{ view_product_macro(product, promotion_service, key) }}
             {% endfor %}
           </div>
 {% endmacro %}
 
-{% macro view_product(product, promotion_service) %}
+{% macro view_product(product, promotion_service, key) %}
               <div class="Card">
                 <a class="Card-picture" href="#">
                   <img src="{{ static('assets/img/content/home/card.jpg') }}" alt="{{ product.product.name }}"/>
@@ -50,7 +52,8 @@
                       <a class="Card-btn" href="#">
                         <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
                       </a>
-                      <a class="Card-btn" href="#">
+                      <a class="Card-change" data-product="{{ product.id }}"
+                                     data-key="{{ key }}">
                         <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
                       </a>
                     </div>

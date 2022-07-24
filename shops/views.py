@@ -1,5 +1,5 @@
 from django.views import generic
-from .models import Shops, ShopProduct
+from .models import Shops, ShopProduct, ShopPhoto
 
 
 class ShopDetailVew(generic.DetailView):
@@ -31,3 +31,10 @@ class ShopDetailVew(generic.DetailView):
             self.extra_context['products'] = obj.shop_product.all()
 
         return super().get(*args, **kwargs)
+
+
+class ShopListView(generic.ListView):
+    model = Shops
+    template_name = 'shops/shops_list.html'
+    context_object_name = 'shops'
+    queryset = Shops.objects.prefetch_related("shop_photos").all()

@@ -43,10 +43,10 @@
                                 <option value="{{ category.id }}">{{ category.category_name }}</option>
                               {% endfor %}
                           </select>
-                            <button id="category_id">применить</button>
+                            <button id="category_id">{{ _('применить') }}</button>
                         </form>
                   </div>
-                  <div class="row" id="category_list">После выбора появятся обязательные для заполнения в файле .cvs поля</div>
+                  <div class="row" id="category_list">{{ _('После выбора появятся обязательные для заполнения в файле .csv поля') }}</div>
                       {% if info %}
                         <h3>{{ info }}</h3>
                       {% endif %}
