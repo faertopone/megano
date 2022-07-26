@@ -29,29 +29,15 @@ class ClientAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'is_seller', 'limit_items_views',
                     'item_in_page_views', 'get_orders_count', 'client_photo']
     list_filter = ['is_seller']
-    list_display_links = ['user']
+    list_display_links = ['user',]
     search_fields = ['^name', ]
+    readonly_fields = ('orders',)
     autocomplete_fields = ['item_view']
     list_editable = ['limit_items_views', 'item_in_page_views']
 
-    # fieldsets = (
-    #     (_('Основные параметры пользователя'), {
-    #         'fields': ('user', 'phone', 'city'),
-    #     }),
-    #     (_('Фотография'), {
-    #         'fields': (('photo',),)
-    #     }),
-    #     (_('История операций'), {
-    #         'fields': ('spent_money',)
-    #     }),
-    #     (_('Какой статус на сайте'), {
-    #         'fields': ('is_seller',)
-    #     }),
-    #
-    # )
-
+    @staticmethod
     @admin.display(description=_("Количество заказов"))
-    def get_orders_count(self, obj: Client):
+    def get_orders_count(obj: Client):
         orders = obj.orders.count()
         return orders
 
