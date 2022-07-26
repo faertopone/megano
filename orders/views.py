@@ -6,7 +6,6 @@ from accounts.models import Client
 from orders.forms import OrderForm, OrderPay
 from orders.models import Order, DeliverySetting
 from orders.services import initial_order_form, OrderService, PaymentService
-from orders.tasks import pay_order_task
 
 
 class OrderDetailView(LoginRequiredMixin, DetailView):
