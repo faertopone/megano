@@ -5,7 +5,7 @@ from django.views.generic import DetailView, FormView, ListView
 from accounts.models import Client
 from orders.forms import OrderForm, OrderPay
 from orders.models import Order, DeliverySetting
-from orders.services import initial_order_form, OrderService, PaymentService
+from orders.services import initial_order_form, OrderService
 
 
 class OrderDetailView(LoginRequiredMixin, DetailView):
@@ -96,19 +96,16 @@ class OrderPayment(LoginRequiredMixin, DetailView, FormView):
     form_class = OrderPay
     context_object_name = 'order'
     template_name = 'orders/order_payment.html'
-    payment_service = PaymentService()
 
-    def get_queryset(self):
-        return self.payment_service.get_current_order(order=Order.objects.filter(pk=self.kwargs['pk']))
+    def get_object(self, queryset=None):
+        return Order.objects.filter(pk=self.kwargs['pk'])[0]
 
     def form_valid(self, form):
         visa_number = form.cleaned_data.get('number_visa')
-        order = Order.objects.get(pk=self.kwargs['pk'])
+        order = self.get_object()
         order.number_visa = visa_number
         order.need_pay = True
         order.save()
-        # pay_order_task.delay(id_order=self.kwargs['pk'],
-        #                      visa_number=int(form.cleaned_data.get('number_visa')))
         return super().form_valid(form)
 
     def get_success_url(self):

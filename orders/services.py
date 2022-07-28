@@ -147,18 +147,3 @@ def initial_order_form(request: HttpRequest) -> dict:
         'address': client.full_address
     }
     return initial_client
-
-
-@dataclass
-class PaymentService:
-    """
-    Бизнес логика сервиса платы
-    """
-    current_order: Any = None
-
-    def get_current_order(self, order):
-        """
-        Получаем нужный заказ
-        """
-        self.current_order = order[0]
-        return order
