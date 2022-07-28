@@ -39,11 +39,11 @@ class OrderProgressView(LoginRequiredMixin, FormView):
         super().setup(request, *args, **kwargs)
         if not DeliverySetting.objects.all().exists():
             DeliverySetting.objects.create(name='Настройка  цен доставки')
-        self.order_service.check_basket(request=self.request)
-        self.order_service.check_free_delivery()
 
     def get_context_data(self, **kwargs):
         context = super(OrderProgressView, self).get_context_data(**kwargs)
+        self.order_service.check_basket(request=self.request)
+        self.order_service.check_free_delivery()
         context['client'] = self.order_service.client
         context['item_in_basket'] = self.order_service.basket
         context['total_price'] = self.order_service.total_basket_price
