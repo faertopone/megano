@@ -5,6 +5,7 @@ from shops.models import ShopProduct
 import csv
 from django.core.mail import send_mail
 from django.conf import settings
+from django.core.management import call_command
 
 
 def list_prop_category(request):
@@ -78,3 +79,7 @@ def from_file_in_db(file, shop_id, category_id, email, file_name):
         recipient_list=[email],
         fail_silently=False,
     )
+
+
+def load_fixture(apps, schema_editor, file_name):
+    call_command('loaddata', file_name, app_label='fixtures')

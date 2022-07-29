@@ -9,7 +9,6 @@
           </div>
 
           {% import 'base_templates/products.html' as products_viewer %}
-          {{ products_viewer.view_product_list(products, products_viewer.view_product, promotion_service) }}
-
+          {{ products_viewer.view_product_list(products, products_viewer.view_product, promotion_service, key=request.session.session_key) }}
           {% include 'base_templates/pagination.html' %}
         </div>

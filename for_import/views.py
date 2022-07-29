@@ -3,10 +3,14 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, HttpResponse
 from .tasks import from_file_in_db_task
 from products.models import Category
-from .forms import UploadFileForm
+from .forms import UploadFileForm, FileFieldForm
+from .models import FixtureFile
 from accounts.models import Client
 from csv import reader
 from django.utils.translation import gettext as _
+from django.views.generic.edit import View
+from django.core.management import call_command
+from django.conf import settings
 
 
 def update_product_list(request):
@@ -45,3 +49,30 @@ def update_product_list(request):
             text_2 = _(" отправлен на обработку. Отчет отправлен на ")
             context['info'] = text_1 + str(request.FILES['file']) + text_2 + str(request.user.email)
             return render(request, 'for_import/upload_product.html', context=context)
+
+
+class FileFieldView(View):
+    # данная функция в разработке
+    context = dict()
+
+    def get(self, request):
+        self.context['form'] = FileFieldForm()
+        self.context['client'] = Client.objects.select_related('user').prefetch_related('item_view').get(
+            user=request.user)
+        return render(request, 'for_import/update_fixture.html', context=self.context)
+
+    def post(self, request):
+        upload_file_form = FileFieldForm(request.POST, request.FILES)
+        if upload_file_form.is_valid():
+            files = request.FILES.getlist('file_field')
+            for f in files:
+                fixture_file = FixtureFile(file=f)
+                fixture_file.save()
+                # call_command('loaddata', fixture_file.file, app_label='media')
+
+        else:
+            return self.form_invalid(upload_file_form)
+        return HttpResponse('<h1>Файлы добавлены в базу и отправлены в обработку</h1> '
+                            '<h1>Отчет будет отправлен Вам на почту</h1>'
+                            '<p> <a href="/admin">Вернуться в административный рдел</a></p>'
+                            '<p> <a href="/">Вернуться на гланую страницу сайта</a></p>')
