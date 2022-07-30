@@ -1,11 +1,14 @@
 from django.http import JsonResponse, HttpResponse
 from django.utils.translation import gettext as _
 from products.models import Product, PropertyCategory, PropertyProduct, ProductPhoto
-from shops.models import ShopProduct
-import csv
+from shops.models import ShopProduct, ShopPhoto
+import csv, os
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.management import call_command
+from .models import FixtureFile
+from django.core.files.storage import FileSystemStorage
+from .forms import FileFieldForm
 
 
 def list_prop_category(request):
@@ -81,5 +84,33 @@ def from_file_in_db(file, shop_id, category_id, email, file_name):
     )
 
 
-def load_fixture(apps, schema_editor, file_name):
-    call_command('loaddata', file_name, app_label='fixtures')
+    # call_command('loaddata', 'products/product_my_file.json', app_label='fixtures')
+def load_all_fixture():
+    for num in range(1, 15):
+        load_data(priority=num)
+    load_data()
+    load_data(extension='jpg')
+    load_data(extension='png')
+    load_data(extension='svg')
+
+
+def load_data(priority=0, extension='json'):
+    img_extension_list = ['jpg', 'png', 'svg']
+    fixture_file_list = FixtureFile.objects.filter(priority=priority, status='n', extension=extension)
+    if len(fixture_file_list) != 0 and extension == 'json':
+        for i in fixture_file_list:
+            try:
+                call_command('loaddata', 'media/' + str(i.file))
+                i.status = 'y'
+                i.save()
+            except:
+                print('*************Лог в файле', 'media/' + str(i.file))
+                pass
+    elif len(fixture_file_list) != 0 and extension in img_extension_list:
+
+        for i in fixture_file_list:
+            file_name = str(i.file).split('/')[1]
+            i.delete()
+            os.rename('media/admin_fixtures/' + file_name, 'media/shops_photo/' + file_name)
+
+

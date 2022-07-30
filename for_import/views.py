@@ -1,7 +1,7 @@
 from django.core.cache import cache
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, HttpResponse
-from .tasks import from_file_in_db_task
+from .tasks import from_file_in_db_task, load_all_fixture_task
 from products.models import Category
 from .forms import UploadFileForm, FileFieldForm
 from .models import FixtureFile
@@ -68,11 +68,13 @@ class FileFieldView(View):
             for f in files:
                 fixture_file = FixtureFile(file=f)
                 fixture_file.save()
-                # call_command('loaddata', fixture_file.file, app_label='media')
+            load_all_fixture_task.delay()
+            return HttpResponse('<h1>Файлы добавлены в базу и отправлены в обработку</h1> '
+                                '<h1>Отчет будет отправлен Вам на почту</h1>'
+                                '<p> <a href="/admin">Вернуться в административный рдел</a></p>'
+                                '<p> <a href="/">Вернуться на гланую страницу сайта</a></p>')
+
 
         else:
             return self.form_invalid(upload_file_form)
-        return HttpResponse('<h1>Файлы добавлены в базу и отправлены в обработку</h1> '
-                            '<h1>Отчет будет отправлен Вам на почту</h1>'
-                            '<p> <a href="/admin">Вернуться в административный рдел</a></p>'
-                            '<p> <a href="/">Вернуться на гланую страницу сайта</a></p>')
+

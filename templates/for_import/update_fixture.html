@@ -25,19 +25,19 @@
               <div class="Account-column">
                 <div class="Account-column Account-column_full">
 
-                  <div class="row" id="information">{{ _('Какая-то информация') }}</div>
+                  <div class="row" id="information">{{ _('Загрузка файлов') }}</div>
                       {% if info %}
                         <h3>{{ info }}</h3>
                       {% endif %}
                   <div class="Account-column Account-column_full" id="update_files">
 
-                    <header class="Section-header" >
+                    <header class="Section-header" id="files_update">
                       <h2 class="Section-title">{{ _('Выберите файлы для загрузки:') }}</h2>
                         <form method="post" enctype="multipart/form-data">
                             {{ csrf_input }}
                             {{ form }}
-                            <input id="files_button" name="update_files" style="display:none;">
-                            <button type="submit">{{ _('Загрузить') }}</button>
+                            <input  name="update_files" style="display:none;">
+                            <button type="submit" >{{ _('Загрузить') }}</button>
                         </form>
                     </header>
                   </div>
