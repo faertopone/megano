@@ -226,7 +226,7 @@
                               <div class="Cart-block Cart-block_seller">
                                 <div>{{ _('Продавец:') }}
                                 </div>
-                                <div> ПРОДАВЕЦ
+                                <div> {{ item.shop }}
                                 </div>
                               </div>
                               <div class="Cart-block Cart-block_amount">{{  item.qty }} {{ _('шт.') }}
@@ -239,9 +239,7 @@
                     <div class="Cart-block Cart-block_total">
                       <strong class="Cart-title">{{ _('Итого:') }}
                         {% if item_in_basket %}
-                              {% for item_ in item_in_basket %}
                                         </strong><span class="Cart-price" id="total_price" data-price='{{ total_price }}'>{{ _('руб.') }}</span>
-                                {% endfor %}
                         {% endif %}
 {#                        <span class="Cart-price_old">250.99$</span>#}
 
