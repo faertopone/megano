@@ -1,8 +1,10 @@
 from django.http import JsonResponse, HttpResponse
 from django.utils.translation import gettext as _
-from products.models import Product, PropertyCategory, PropertyProduct, ProductPhoto
+from products.models import Product, PropertyCategory, PropertyProduct, ProductPhoto, Category
 from shops.models import ShopProduct, ShopPhoto
-import csv, os
+from accounts.models import Client
+import csv
+import os
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.management import call_command
@@ -84,8 +86,8 @@ def from_file_in_db(file, shop_id, category_id, email, file_name):
     )
 
 
-    # call_command('loaddata', 'products/product_my_file.json', app_label='fixtures')
 def load_all_fixture():
+    """Обрабатывает загруженные файлы фикстур в порядке очерёдности"""
     for num in range(1, 15):
         load_data(priority=num)
     load_data()
@@ -95,7 +97,8 @@ def load_all_fixture():
 
 
 def load_data(priority=0, extension='json'):
-    img_extension_list = ['jpg', 'png', 'svg']
+    """Анализирует загруженный файл фикстуры и обновляет базу данных по его данным"""
+    img_extension_list = ['jpeg', 'jpg', 'png', 'svg']
     fixture_file_list = FixtureFile.objects.filter(priority=priority, status='n', extension=extension)
     if len(fixture_file_list) != 0 and extension == 'json':
         for i in fixture_file_list:
@@ -107,10 +110,24 @@ def load_data(priority=0, extension='json'):
                 print('*************Лог в файле', 'media/' + str(i.file))
                 pass
     elif len(fixture_file_list) != 0 and extension in img_extension_list:
-
+        product_photo_list = [str(i.photo.url).split('/')[-1] for i in ProductPhoto.objects.all() if i.photo]
+        shop_photo_list = [str(i.photo.url).split('/')[-1] for i in ShopPhoto.objects.all() if i.photo]
+        client_photo_list = [str(i.photo.url).split('/')[-1] for i in Client.objects.all() if i.photo]
+        categories_photo_list = [str(i.icon_photo.url).split('/')[-1] for i in Category.objects.all() if i.icon_photo]
         for i in fixture_file_list:
-            file_name = str(i.file).split('/')[1]
-            i.delete()
-            os.rename('media/admin_fixtures/' + file_name, 'media/shops_photo/' + file_name)
+            moving_a_file(i, product_photo_list, 'media/products_photo/')
+            moving_a_file(i, shop_photo_list, 'media/shops_photo/')
+            moving_a_file(i, client_photo_list, 'media/accounts/')
+            moving_a_file(i, categories_photo_list, 'media/categories/')
 
 
+def moving_a_file(file, photo_list, new_directory):
+    """Распределяет файлы загруженных изображений по необходимым директориям"""
+    file_name = str(file.file).split('/')[1]
+    if file_name in photo_list:
+        file.delete()
+        try:
+            os.remove(new_directory + file_name)
+        except FileNotFoundError:
+            pass
+        os.rename('media/admin_fixtures/' + file_name, new_directory + file_name)

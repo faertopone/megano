@@ -1,6 +1,6 @@
 from django.core.cache import cache
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse
 from .tasks import from_file_in_db_task, load_all_fixture_task
 from products.models import Category
 from .forms import UploadFileForm, FileFieldForm
@@ -52,29 +52,39 @@ def update_product_list(request):
 
 
 class FileFieldView(View):
-    # данная функция в разработке
+    """
+    Выводит информацию на страницу для загрузки фикстур.
+    Доступна только администратору
+    """
     context = dict()
 
     def get(self, request):
-        self.context['form'] = FileFieldForm()
-        self.context['client'] = Client.objects.select_related('user').prefetch_related('item_view').get(
-            user=request.user)
-        return render(request, 'for_import/update_fixture.html', context=self.context)
+        if request.user.is_superuser:
+            self.context['form'] = FileFieldForm()
+            self.context['client'] = Client.objects.select_related('user').prefetch_related('item_view').get(
+                user=request.user)
+            return render(request, 'for_import/update_fixture.html', context=self.context)
+        else:
+            return redirect('/accounts/login/')
 
     def post(self, request):
-        upload_file_form = FileFieldForm(request.POST, request.FILES)
-        if upload_file_form.is_valid():
-            files = request.FILES.getlist('file_field')
-            for f in files:
-                fixture_file = FixtureFile(file=f)
-                fixture_file.save()
-            load_all_fixture_task.delay()
-            return HttpResponse('<h1>Файлы добавлены в базу и отправлены в обработку</h1> '
-                                '<h1>Отчет будет отправлен Вам на почту</h1>'
-                                '<p> <a href="/admin">Вернуться в административный рдел</a></p>'
-                                '<p> <a href="/">Вернуться на гланую страницу сайта</a></p>')
+        if request.user.is_superuser:
+            upload_file_form = FileFieldForm(request.POST, request.FILES)
+            if upload_file_form.is_valid():
+                files = request.FILES.getlist('file_field')
+                for f in files:
+                    fixture_file = FixtureFile(file=f)
+                    fixture_file.save()
+                load_all_fixture_task.delay()
+                self.context['form'] = FileFieldForm()
+                self.context['client'] = Client.objects.select_related('user').prefetch_related('item_view').get(
+                    user=request.user)
+                self.context['info'] = _('Файлы добавлены в базу и отправлены в '
+                                         'обработку. Отчет будет отправлен Вам на почту')
+                return render(request, 'for_import/update_fixture.html', context=self.context)
 
+            else:
+                return self.form_invalid(upload_file_form)
 
         else:
-            return self.form_invalid(upload_file_form)
-
+            return redirect('/accounts/login/')
