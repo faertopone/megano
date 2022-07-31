@@ -79,8 +79,9 @@ class FileFieldView(View):
                 self.context['form'] = FileFieldForm()
                 self.context['client'] = Client.objects.select_related('user').prefetch_related('item_view').get(
                     user=request.user)
-                self.context['info'] = _('Файлы добавлены в базу и отправлены в '
-                                         'обработку. Отчет будет отправлен Вам на почту')
+                self.context['info'] = [_('Файлы добавлены в базу и отправлены на '
+                                        'обработку.'),  _('Посмотреть файл ошибок'),
+                                        '/media/admin_fixtures/errors_file.txt']
                 return render(request, 'for_import/update_fixture.html', context=self.context)
 
             else:

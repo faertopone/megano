@@ -5,6 +5,7 @@ from shops.models import ShopProduct, ShopPhoto
 from accounts.models import Client
 import csv
 import os
+from datetime import datetime
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.management import call_command
@@ -98,6 +99,7 @@ def load_all_fixture():
 
 def load_data(priority=0, extension='json'):
     """Анализирует загруженный файл фикстуры и обновляет базу данных по его данным"""
+    message_text = 'Загрузка фикстур\n'
     img_extension_list = ['jpeg', 'jpg', 'png', 'svg']
     fixture_file_list = FixtureFile.objects.filter(priority=priority, status='n', extension=extension)
     if len(fixture_file_list) != 0 and extension == 'json':
@@ -106,8 +108,11 @@ def load_data(priority=0, extension='json'):
                 call_command('loaddata', 'media/' + str(i.file))
                 i.status = 'y'
                 i.save()
-            except:
-                print('*************Лог в файле', 'media/' + str(i.file))
+            except Exception as err:
+                text_str = f'-----{datetime.now().strftime("%d-%m-%Y %H:%M")}------Ошибка  {i.file}: {err}' + "\n"
+                message_text += text_str
+                with open("media/admin_fixtures/errors_file.txt", "a") as file:
+                    file.write(text_str)
                 pass
     elif len(fixture_file_list) != 0 and extension in img_extension_list:
         product_photo_list = [str(i.photo.url).split('/')[-1] for i in ProductPhoto.objects.all() if i.photo]

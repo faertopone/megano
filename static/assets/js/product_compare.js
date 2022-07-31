@@ -1,22 +1,22 @@
 $(document).ready(function () {
-    $("#compare_id").click(function () {
-        $.ajax ({
-            url: "/products/count_compare_add/",
-            type: "GET",
-            data: {'product_info': $("#compare_id").val()
-            },
-            cache: false,
-            success: function (data) {
-                console.log('ok');
-                console.log(data.com_count);
-                $('#compare_count_id').text(data.com_count);
-                },
-            error: function() {
-                console.log('error')
-                }
-        });
-        return false;
-    });
+//    $("#compare_id").click(function () {
+//        $.ajax ({
+//            url: "/products/count_compare_add/",
+//            type: "GET",
+//            data: {'product_info': $("#compare_id").val()
+//            },
+//            cache: false,
+//            success: function (data) {
+//                console.log('ok');
+//                console.log(data.com_count);
+//                $('#compare_count_id').text(data.com_count);
+//                },
+//            error: function() {
+//                console.log('error')
+//                }
+//        });
+//        return false;
+//    });
 
     $(".Card-change").click(function () {
         var productId = $(this).data('product');

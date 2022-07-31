@@ -27,7 +27,8 @@
 
                   <div class="row" id="information">{{ _('Загрузка файлов') }}</div>
                       {% if info %}
-                        <h3>{{ info }}</h3>
+                        <h3>{{ info.0 }}</h3>
+                        <h3><a href="{{ info.2 }}">{{ info.1 }}</a></h3>
                       {% endif %}
                   <div class="Account-column Account-column_full" id="update_files">
 
