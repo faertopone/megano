@@ -70,15 +70,25 @@ class OrderService:
 
     def check_free_delivery(self):
         """
-        Проверка на условие на бесплатную доставку True - значит бесплатно
+        Проверка на условие на бесплатную доставку True - значит бесплатно.
+        Если в корзине есть товары от разных продавцов, то доставка платная возвращает False
         """
+        basket = self.basket
+        seller = None
+        for item in basket:
+            if not seller:
+                seller = item.shop
+            else:
+                if item.shop != seller:
+                    return False
+
         if self.total_basket_price < self.get_limit_price_free():
             return False
         return True
 
     def order_copy_data(self, order: Order) -> None:
         """
-        Функция добавляет номер заказу и добавляет заказ к этому клиенту
+              Функция добавляет номер заказу и добавляет заказ к этому клиенту
         """
         client = self.client
         basket = self.basket
@@ -94,7 +104,7 @@ class OrderService:
 
                 data = {'product': order_product_copy,
                         'count': item.qty,
-                        'seller': '',
+                        'seller': item.shop,
                         'price': item.price,
                         'old_price': 0,
                         }
@@ -137,18 +147,3 @@ def initial_order_form(request: HttpRequest) -> dict:
         'address': client.full_address
     }
     return initial_client
-
-
-@dataclass
-class PaymentService:
-    """
-    Бизнес логика сервиса платы
-    """
-    current_order: Any = None
-
-    def get_current_order(self, order):
-        """
-        Получаем нужный заказ
-        """
-        self.current_order = order[0]
-        return order
