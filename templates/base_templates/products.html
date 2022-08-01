@@ -14,8 +14,12 @@
 
 {% macro view_product(product, promotion_service, key) %}
               <div class="Card">
-                <a class="Card-picture" href="#">
-                  <img src="{{ static('assets/img/content/home/card.jpg') }}" alt="{{ product.product.name }}"/>
+                <a class="Card-picture" href="{{ url('products:product-detail', kwargs={'pk': product.product.pk}) }}">
+                  {% if product.product.product_photo.all()[0] %}
+                  <img src="{{ product.product.product_photo.all()[0].photo.url }}" alt="{{ product.product.name }}"/>
+                  {% else %}
+                  <img src="{{ '/media/defolt.png' }}" alt="{{ product.product.name }}"/>
+                  {% endif %}
                 </a>
                 <div class="Card-content">
                   <strong class="Card-title">
