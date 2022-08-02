@@ -1,10 +1,7 @@
 from django.core.validators import RegexValidator, MinValueValidator
 from django.db import models
 from django.contrib.auth.models import User
-from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-
-from products.models import Product
 
 
 class Client(models.Model):
@@ -93,4 +90,3 @@ class ClientProductView(models.Model):
 
     class Meta:
         ordering = ("-created_dt",)
-

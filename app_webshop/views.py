@@ -19,4 +19,3 @@ class Index(ListView):
         ).all()
 
         return super().get(*args, **kwargs)
-

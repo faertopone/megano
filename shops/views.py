@@ -1,5 +1,5 @@
 from django.views import generic
-from .models import Shops, ShopProduct, ShopPhoto
+from .models import Shops, ShopProduct
 
 
 class ShopDetailVew(generic.DetailView):

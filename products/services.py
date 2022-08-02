@@ -1,23 +1,8 @@
-# TODO: Задача 20.4. Интеграция с сервисом добавления отзывов к товару.
-#       Сервсис и его методы реализуются в рамках
-#       "Задача 23.1. Разработка сервиса добавления отзывов"
-
-# TODO: Задача 20.5. Интеграция с сервисом добавления товара в корзину
-#       Сервис и его методы реализуются в рамках
-#       "Задача 26.1. Разработка сервиса добавления товара в корзину с реальными данными"
-
-# TODO: Задача 20.6. Интеграция с сервисом списка просмотренных товаров
-#       Сервис и его методы реализуются в рамках
-#       "Задача 29.1. Разработка сервиса добавления в список просмотренных товаров"
-
-# TODO: Задача 20.7. Интеграция с сервисом скидок на товар
-#       Сервис и его методы реализуются в рамках
-#       "Задача 34.2. Интеграция сервиса скидок с реальными данными по скидкам"
 from datetime import datetime
 
 from django.core.cache import cache
 from .models import PropertyProduct, ProductPhoto, Product, UserReviews
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import JsonResponse
 from django.utils.translation import gettext as _
 
 
@@ -39,7 +24,7 @@ def product_detail(product_id: int):
 
     try:
         context['product']['photo'] = ProductPhoto.objects.filter(product_id=product_id)[0].photo.url
-    except:
+    except IndexError:
         context['product']['photo'] = '/media/defolt.png'
 
     for j in PropertyProduct.objects.filter(product_id=product_id):
@@ -77,7 +62,7 @@ def count_compare_add(request):
         pass
 
 
-def get_full_data_product_compare(session_key):
+def get_full_data_product_compare(session_key):  # noqa: C901
     """
     Формирует списки общих свойств для сравниваемых товаров:
     context['similar_properties'] общие свойства товаров со своими значениями

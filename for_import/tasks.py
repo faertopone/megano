@@ -1,4 +1,4 @@
-from celery import shared_task, app
+from celery import shared_task
 from .services import from_file_in_db, load_all_fixture
 
 

@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
+from django.contrib.auth.forms import SetPasswordForm
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView

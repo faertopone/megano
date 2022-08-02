@@ -8,5 +8,5 @@ def basket(request):
     if request.user.is_authenticated:
         basket = BasketItem.objects.filter(client=request.user.client)
     else:
-        basket= BasketItem.objects.filter(session=request.session.session_key)
+        basket = BasketItem.objects.filter(session=request.session.session_key)
     return {'basket':  basket}

@@ -1,4 +1,3 @@
-from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -100,7 +99,9 @@ class ProfileEditView(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileEditView, self).get_context_data(**kwargs)
-        context['client'] = Client.objects.select_related('user').prefetch_related('item_view').get(user=self.request.user)
+        context['client'] = Client.objects.select_related('user').prefetch_related('item_view').get(
+            user=self.request.user
+        )
         if cache.get(self.request.user.username + '_shop'):
             context['user_shop'] = 'yes'
         return context
