@@ -1,16 +1,16 @@
 from django.core.cache import cache
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect, HttpResponse
-from .tasks import from_file_in_db_task, load_all_fixture_task
-from products.models import Category
-from .forms import UploadFileForm, FileFieldForm
-from .models import FixtureFile
-from accounts.models import Client
-from csv import reader
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic.edit import View
-from django.core.management import call_command
-from django.conf import settings
+
+from csv import reader
+from products.models import Category
+from accounts.models import Client
+
+from .tasks import from_file_in_db_task, load_all_fixture_task
+from .forms import UploadFileForm, FileFieldForm
+from .models import FixtureFile
 
 
 def update_product_list(request):
@@ -18,6 +18,8 @@ def update_product_list(request):
     Выводит информацию на страницу владельца магазина,
     помогает готовить файл для импорта данных в БД
     """
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
 
     context = dict()
     context['client'] = Client.objects.select_related('user').prefetch_related('item_view').get(user=request.user)
@@ -25,10 +27,6 @@ def update_product_list(request):
     context['form'] = UploadFileForm()
     if cache.get(request.user.username + '_shop'):
         context['user_shop'] = cache.get(request.user.username + '_shop')
-
-    if not request.user.is_authenticated:
-        response = HttpResponseRedirect('/accounts/login/')
-        return response
 
     elif request.method == 'GET':
         return render(request, 'for_import/upload_product.html', context=context)
@@ -65,7 +63,7 @@ class FileFieldView(View):
                 user=request.user)
             return render(request, 'for_import/update_fixture.html', context=self.context)
         else:
-            return redirect('/accounts/login/')
+            return redirect(reverse('login'))
 
     def post(self, request):
         if request.user.is_superuser:
@@ -88,4 +86,4 @@ class FileFieldView(View):
                 return self.form_invalid(upload_file_form)
 
         else:
-            return redirect('/accounts/login/')
+            return redirect(reverse('login'))
