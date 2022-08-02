@@ -119,27 +119,50 @@
             </div>
           </div>
         </div>
-        <div class="Section-content">
-          <div class="row row_verticalCenter row_maxHalf">
+        <div class="Section-content" style="padding: 20px 25px;">
 
-
-
-            <div class="row-block">
-              <div class="ProductCard-look">
-                <div class="ProductCard-photo">
+          <div class="Slider Slider_main">
+              <div class="Slider-box">
                   {% if len(photos) %}
-                  <img src="{{ photos[0] }}" alt="{{ photos[0] }}"/>
+                    {% for photo in photos %}
+                      <div class="Slider-item">
+                        <div class="Slider-content">
+                          <div class="row">
+                            <div class="row-block">
+                              <strong class="Slider-title"> {{ shop.name }}</strong>
+                              <div class="Slider-text">{{ shop.description }}</div>
+                            </div>
+                            <div class="row-block">
+                              <div class="Slider-img"><img src="{% if photo %}{{ photo }} {% else %} {{ static('assets/img/logo.png') }}{% endif %}" alt="{{ photo }}"/></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
                   {% else %}
-                  <img src="{{ static('assets/img/icons/advantages/quality.svg') }}" alt="quality.svg"/>
+                    <div class="Slider-item">
+                      <div class="Slider-content">
+                        <div class="row">
+                          <div class="row-block">
+                            <strong class="Slider-title"> {{ shop.name }}</strong>
+                            <div class="Slider-text">{{ shop.description }}</div>
+                          </div>
+                          <div class="row-block">
+                            <div class="Slider-img"><img src="{% if photo %}{{ photo }} {% else %} {{ static('default.png') }}{% endif %}" alt="{{ photo }}"/></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   {% endif %}
-                </div>
-                <div class="ProductCard-picts">
-                  {% for photo in photos %}
-                    <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="{{ photo }}"><img src="{{ photo }}" alt="{{ photo }}"/></a>
-                  {% endfor %}
+              </div>
+              <div class="Slider-navigateWrap">
+                <div class="Slider-navigate">
                 </div>
               </div>
             </div>
+
+
+          <div class="row row_verticalCenter row_maxHalf">
             <div class="row-block">
               <h2>{{ _('Информация о магазине') }} {{ shop.name }}
               </h2>
@@ -161,8 +184,12 @@
               </ul>
             </div>
           </div>
+          <div class="row row_verticalCenter row_maxHalf">
+            <div class="row-block">
           {% import 'base_templates/products.html' as product_viewer %}
           {{ product_viewer.view_product_list(products, product_viewer.view_product, promotion_service, 'Популярные товары', request.session.session_key) }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
