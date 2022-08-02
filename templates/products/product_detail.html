@@ -125,10 +125,10 @@
                                             <th>Характеристика</th>
                                             <th>Значение</th>
                                         </tr>
-                                        {% for property in properties %}
+                                        {% for key, value in properties.items() %}
                                             <tr>
-                                                <th>{{ property[0] }}</th>
-                                                <th>{{ property[1] }}</th>
+                                                <th>{{ key }}</th>
+                                                <th>{{ value }}</th>
                                             </tr>
                                         {% endfor %}
                                     </tbody>

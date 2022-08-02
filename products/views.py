@@ -51,13 +51,8 @@ class ProductDetailView(DetailView):
             skip=int(self.request.GET.get("skip", 0)),
         )
         context["count_reviews"] = get_count_reviews(product=self.object)
+        context["properties"] = {j.property.name: j.value for j in self.object.product_properties.all()}
 
-        context["properties"] = list(
-            zip(
-                self.object.properties.all(),
-                self.object.product_properties.all()
-            )
-        )
         if self.request.user.is_authenticated:
             add_product_in_history(user=self.request.user, product_pk=context.get('product').pk)
         else:
