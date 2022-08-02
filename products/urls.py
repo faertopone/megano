@@ -24,4 +24,5 @@ urlpatterns = [
     path('lazy_load_reviews/', views.lazy_load_reviews_views, name='lazy_load_reviews'),
     path("sale/<int:pk>/", views.PromotionProductListView.as_view(), name="product_sale"),
     path("sale_group/<int:pk>/", views.PromotionGroupProductListView.as_view(), name="product_sale_group"),
+    path("search/", views.SearchedProductListView.as_view(), name="product_search"),
 ]

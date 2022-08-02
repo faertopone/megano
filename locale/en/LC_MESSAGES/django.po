@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-24 09:44+0000\n"
+"POT-Creation-Date: 2022-08-02 15:30+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -511,6 +511,10 @@ msgstr "Price"
 #: products/jinja2/promotion_product_list.html:8
 msgid "Товары со скидкой"
 msgstr "Items on sale"
+
+#: products/jinja2/searched_product_list.html:8
+msgid "Поиск товаров"
+msgstr "Product search"
 
 #: products/models.py:17
 msgid "активность"

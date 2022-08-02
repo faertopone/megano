@@ -14,7 +14,7 @@ from promotions.models import Promotions, PromotionGroup
 from promotions.utils.promo_filter import shop_product_filter, strategy_factory
 from shops.models import ShopProduct
 from utils.paginator import DisplayedPaginatedPagesMixin
-from .filters import filterset_factory, CustomFilterSet
+from .filters import filterset_factory, CustomFilterSet, SearchProductFilter
 from .models import (Product, PropertyProduct, Category, Tag, UserReviews)
 from .services import get_full_data_product_compare, get_user_reviews, get_lazy_load_reviews, get_count_reviews
 from .widgets import CustomCheckboxSelectMultiple, CustomTextInput, CustomRangeWidget
@@ -358,6 +358,21 @@ class PromotionGroupProductListView(BaseProductListView):
         ctx["promotion"] = self.promotion_group.promotion
 
         return ctx
+
+
+class SearchedProductListView(BaseProductListView):
+    template_name = "searched_product_list.html"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        # фильтр
+        search_filter = self._get_filter()
+
+        ctx = super().get_context_data(object_list=search_filter.qs, **kwargs)
+
+        return ctx
+
+    def _get_filter(self):
+        return SearchProductFilter(self.request.GET, queryset=self.get_queryset())
 
 
 def lazy_load_reviews_views(request):
