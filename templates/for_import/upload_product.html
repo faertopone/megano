@@ -28,6 +28,12 @@
             <div class="Account-group">
               <div class="Account-column">
                 <div class="Account-column Account-column_full">
+                  <div>
+                  {% if request.user.is_superuser %}
+                    <h3 class="Section-title"><a href="/import/update/">{{ _('У Вас права администратора.') }} <br>
+                        {{ _('Можно загрузить для обработки файлы фикстур') }}</a></h3>
+                  {% endif %}
+                  </div>
                   <div class="row" >
                     <form method="get" enctype="multipart/form-data">
                             {{ csrf_input }}

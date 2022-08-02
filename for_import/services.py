@@ -1,11 +1,17 @@
 from django.http import JsonResponse, HttpResponse
 from django.utils.translation import gettext as _
-from products.models import Product, PropertyCategory, PropertyProduct, ProductPhoto
-from shops.models import ShopProduct
+from products.models import Product, PropertyCategory, PropertyProduct, ProductPhoto, Category
+from shops.models import ShopProduct, ShopPhoto
+from accounts.models import Client
 import csv
+import os
+from datetime import datetime
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.management import call_command
+from .models import FixtureFile
+from django.core.files.storage import FileSystemStorage
+from .forms import FileFieldForm
 
 
 def list_prop_category(request):
@@ -81,5 +87,52 @@ def from_file_in_db(file, shop_id, category_id, email, file_name):
     )
 
 
-def load_fixture(apps, schema_editor, file_name):
-    call_command('loaddata', file_name, app_label='fixtures')
+def load_all_fixture():
+    """Обрабатывает загруженные файлы фикстур в порядке очерёдности"""
+    for num in range(1, 15):
+        load_data(priority=num)
+    load_data()
+    load_data(extension='jpg')
+    load_data(extension='png')
+    load_data(extension='svg')
+
+
+def load_data(priority=0, extension='json'):
+    """Анализирует загруженный файл фикстуры и обновляет базу данных по его данным"""
+    message_text = 'Загрузка фикстур\n'
+    img_extension_list = ['jpeg', 'jpg', 'png', 'svg']
+    fixture_file_list = FixtureFile.objects.filter(priority=priority, status='n', extension=extension)
+    if len(fixture_file_list) != 0 and extension == 'json':
+        for i in fixture_file_list:
+            try:
+                call_command('loaddata', 'media/' + str(i.file))
+                i.status = 'y'
+                i.save()
+            except Exception as err:
+                text_str = f'-----{datetime.now().strftime("%d-%m-%Y %H:%M")}------Ошибка  {i.file}: {err}' + "\n"
+                message_text += text_str
+                with open("media/admin_fixtures/errors_file.txt", "a") as file:
+                    file.write(text_str)
+                pass
+    elif len(fixture_file_list) != 0 and extension in img_extension_list:
+        product_photo_list = [str(i.photo.url).split('/')[-1] for i in ProductPhoto.objects.all() if i.photo]
+        shop_photo_list = [str(i.photo.url).split('/')[-1] for i in ShopPhoto.objects.all() if i.photo]
+        client_photo_list = [str(i.photo.url).split('/')[-1] for i in Client.objects.all() if i.photo]
+        categories_photo_list = [str(i.icon_photo.url).split('/')[-1] for i in Category.objects.all() if i.icon_photo]
+        for i in fixture_file_list:
+            moving_a_file(i, product_photo_list, 'media/products_photo/')
+            moving_a_file(i, shop_photo_list, 'media/shops_photo/')
+            moving_a_file(i, client_photo_list, 'media/accounts/')
+            moving_a_file(i, categories_photo_list, 'media/categories/')
+
+
+def moving_a_file(file, photo_list, new_directory):
+    """Распределяет файлы загруженных изображений по необходимым директориям"""
+    file_name = str(file.file).split('/')[1]
+    if file_name in photo_list:
+        file.delete()
+        try:
+            os.remove(new_directory + file_name)
+        except FileNotFoundError:
+            pass
+        os.rename('media/admin_fixtures/' + file_name, new_directory + file_name)
