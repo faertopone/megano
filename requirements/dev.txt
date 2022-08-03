@@ -1,5 +1,6 @@
 -r base.txt
 django-extensions
 black
+isort
 flake8
 django-debug-toolbar

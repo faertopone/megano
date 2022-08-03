@@ -48,7 +48,7 @@ def initial_form_profile_new(request: HttpRequest) -> dict:
     return initial_client
 
 
-def save_dop_parametrs(request: HttpRequest, form):
+def save_dop_parametrs(request: HttpRequest, form):  # noqa: C901
     """
     Функция сохраняет данные, которые были изменены на странице редактирования профиля
     """

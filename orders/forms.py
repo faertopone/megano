@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import TextInput, EmailInput, Select, RadioSelect
+from django.forms import TextInput, EmailInput, RadioSelect
 from django.utils.translation import gettext_lazy as _
 from orders.models import Order
 

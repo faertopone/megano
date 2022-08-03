@@ -1,10 +1,6 @@
 from django.core.validators import RegexValidator
 from django.db import models
-from django.forms import RadioSelect
-from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-
-from accounts.models import Client
 
 
 class Order(models.Model):
@@ -131,9 +127,9 @@ class DeliverySetting(models.Model):
                                                                'даст клиенту на бесплатную доставку'))
     express_delivery_price = models.PositiveIntegerField(verbose_name=_('Цена экспресс доставки'), default=500)
     delivery_price = models.PositiveIntegerField(verbose_name=_('Цена обычной доставки'), default=200,
-                                           help_text=_('Если сумма товаров меньше определенной суммы или действует '
-                                                       'условие, что товары от разных продавцом')
-                                           )
+                                                 help_text=_('Если сумма товаров меньше определенной суммы '
+                                                             'или действует '
+                                                             'условие, что товары от разных продавцом'))
     is_active = models.BooleanField(verbose_name=_('Статус'), default=True)
 
     def __str__(self):

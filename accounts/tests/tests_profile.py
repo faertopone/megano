@@ -47,9 +47,9 @@ class ProfileTest(TestCase):
         user_1 = User.objects.create_user(username='TEST', password='password_TEST', email='test@mail.ru')
         user_2 = User.objects.create_user(username='TEST2', password='password_TEST2', email='test2@mail.ru')
         # Создадим Super_User
-        super_user_new = User.objects.create_superuser(username='SUPER_TEST',
-                                                       password='password_SUPER_TEST',
-                                                       email='SUPER_TEST@mail.ru')
+        User.objects.create_superuser(username='SUPER_TEST',
+                                      password='password_SUPER_TEST',
+                                      email='SUPER_TEST@mail.ru')
         # Создадим клиента (доп параметры от User)
         client = Client.objects.get(user=user_1)
         client2 = Client.objects.get(user=user_2)

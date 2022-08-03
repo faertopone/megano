@@ -1,5 +1,4 @@
 from django.http import JsonResponse, HttpResponse
-from django.utils.translation import gettext as _
 from products.models import Product, PropertyCategory, PropertyProduct, ProductPhoto, Category
 from shops.models import ShopProduct, ShopPhoto
 from accounts.models import Client
@@ -10,8 +9,6 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.core.management import call_command
 from .models import FixtureFile
-from django.core.files.storage import FileSystemStorage
-from .forms import FileFieldForm
 
 
 def list_prop_category(request):
@@ -43,7 +40,7 @@ def export_file_csv(request, *args, **kwargs):
 
 def from_file_in_db(file, shop_id, category_id, email, file_name):
     """Считывает данные файла .csv, обрабатывает и заполняет базу данных"""
-    message = f'Файл обработан\n'
+    message = 'Файл обработан\n'
     for row in file:
         try:
             if len(Product.objects.filter(article=row[1])) != 0:
