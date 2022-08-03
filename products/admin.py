@@ -114,6 +114,9 @@ class ProductAdmin(admin.ModelAdmin):
         ("Склад", {
             "fields": ("price", "flag_limit")
         }),
+        ("Прочее", {
+            "fields": ("rating",),
+        }),
     )
 
     class Media:

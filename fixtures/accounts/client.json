@@ -10,12 +10,14 @@
     "city": "Москва",
     "street": "",
     "house_number": null,
+    "full_address": null,
     "apartment_number": null,
     "spent_money": "0.00",
     "is_seller": false,
     "patronymic": "Петрушкина",
     "limit_items_views": 20,
-    "item_in_page_views": 8
+    "item_in_page_views": 8,
+    "orders": []
   }
 }
 ]

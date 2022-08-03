@@ -1,0 +1,66 @@
+[
+{
+  "model": "products.productphoto",
+  "pk": 1,
+  "fields": {
+    "photo": "products_photo/6362574321.webp",
+    "product": 6
+  }
+},
+{
+  "model": "products.productphoto",
+  "pk": 2,
+  "fields": {
+    "photo": "products_photo/6350864737.webp",
+    "product": 6
+  }
+},
+{
+  "model": "products.productphoto",
+  "pk": 3,
+  "fields": {
+    "photo": "products_photo/6350864743.webp",
+    "product": 6
+  }
+},
+{
+  "model": "products.productphoto",
+  "pk": 4,
+  "fields": {
+    "photo": "products_photo/6146926549.webp",
+    "product": 2
+  }
+},
+{
+  "model": "products.productphoto",
+  "pk": 5,
+  "fields": {
+    "photo": "products_photo/6146926579.webp",
+    "product": 2
+  }
+},
+{
+  "model": "products.productphoto",
+  "pk": 6,
+  "fields": {
+    "photo": "products_photo/6327311215.webp",
+    "product": 7
+  }
+},
+{
+  "model": "products.productphoto",
+  "pk": 7,
+  "fields": {
+    "photo": "products_photo/6135928938.webp",
+    "product": 9
+  }
+},
+{
+  "model": "products.productphoto",
+  "pk": 8,
+  "fields": {
+    "photo": "products_photo/6135928939.webp",
+    "product": 9
+  }
+}
+]
