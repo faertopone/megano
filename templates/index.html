@@ -158,7 +158,8 @@
         </div>
         <div class="Section-content">
           {% import 'base_templates/products.html' as product_viewer %}
-          {{ product_viewer.view_product_list(products, product_viewer.view_product, promotion_service, 'Популярные товары', request.session.session_key) }}
+          {{ product_viewer.view_product_list(products, product_viewer.view_product, promotion_service, _('Популярные товары'), request.session.session_key) }}
+          {{ product_viewer.view_product_list(discounts, product_viewer.view_product, promotion_service, _('Товары со скидкой'), request.session.session_key) }}
         </div>
       </div>
     </div>

@@ -94,7 +94,7 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
    ```
    3. Загрузить категории каталога и товары
    ```
-   python manage.py loaddata fixtures\products\category.json fixtures\products\product.json
+   python manage.py loaddata fixtures\products\category.json fixtures\products\product.json fixtures\products\product_photo.json
    ```
    4. Загрузить свойства товаров и их связи с товарами и категориями
    ```

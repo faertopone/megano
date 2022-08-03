@@ -28,7 +28,7 @@ load-promotions:
 	vagrant ssh -c "source ~/venv/bin/activate && cd /vagrant/ && python manage.py loaddata fixtures/promotions/promotions.json fixtures/promotions/promotion_group.json"
 
 load-products:
-	vagrant ssh -c "source ~/venv/bin/activate && cd /vagrant/ && python manage.py loaddata fixtures/products/category.json fixtures/products/product.json"
+	vagrant ssh -c "source ~/venv/bin/activate && cd /vagrant/ && python manage.py loaddata fixtures/products/category.json fixtures/products/product.json fixtures/products/product_photo.json"
 
 load-props:
 	vagrant ssh -c "source ~/venv/bin/activate && cd /vagrant/ && python manage.py loaddata fixtures/products/property.json fixtures/products/property_product.json fixtures/products/property_category.json"
@@ -61,7 +61,8 @@ dump-products:
 	vagrant ssh -c "source ~/venv/bin/activate && cd /vagrant/  \
 		python -Xtf8 manage.py dumpdata products.Product --indent 2 -o fixtures/products/product.json && \
 		python -Xtf8 manage.py dumpdata products.Property --indent 2 -o fixtures/products/property.json && \
-		python -Xtf8 manage.py dumpdata products.PropertyProduct --indent 2 -o fixtures/products/property_product.json"
+		python -Xtf8 manage.py dumpdata products.PropertyProduct --indent 2 -o fixtures/products/property_product.json && \
+		python -Xtf8 manage.py dumpdata products.ProductPhoto --indent 2 -o fixtures/products/product_photo.json"
 
 dump-banners:
 	vagrant ssh -c "source ~/venv/bin/activate && cd /vagrant/  \

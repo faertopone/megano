@@ -509,6 +509,7 @@ msgid "Цене"
 msgstr "Price"
 
 #: products/jinja2/promotion_product_list.html:8
+#: templates/index.html:162
 msgid "Товары со скидкой"
 msgstr "Items on sale"
 
@@ -1201,6 +1202,10 @@ msgstr "Download"
 msgid "Начать"
 msgstr "To begin"
 
+#: templates/index.html:161
+msgid "Популярные товары"
+msgstr "Popular goods"
+
 #: templates/orders/order_detail.html:8 templates/orders/order_detail.html:15
 msgid "Заказ №"
 msgstr "Order №"
@@ -1472,6 +1477,3 @@ msgstr "promotions"
 
 #~ msgid "Магазин"
 #~ msgstr "Shop"
-
-#~ msgid "Популярные товары"
-#~ msgstr "Popular goods"
