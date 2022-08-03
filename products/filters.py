@@ -1,6 +1,7 @@
 import django_filters
 from django.core.cache import caches
 from django.core.exceptions import ImproperlyConfigured
+from django.db import models
 
 
 class CustomFilterSet(django_filters.FilterSet):
@@ -40,6 +41,35 @@ class CustomFilterSet(django_filters.FilterSet):
         """
         for key in caches["redis"].iter_keys(key):
             caches["redis"].delete(key)
+
+
+class SearchProductFilter(django_filters.FilterSet):
+    """
+    Фильтр для поиска товаров по названию и описанию.
+    """
+    search = django_filters.CharFilter(method="search_products")
+
+    def search_products(self, queryset, name, value):
+        """
+        Поиск товаров по названию и описанию.
+        """
+        if not value:
+            return queryset.none()
+
+        phrases = value.split()
+
+        filters = None
+        for phrase in phrases:
+            filter_ = models.Q(product__name__icontains=phrase) | models.Q(product__description__icontains=phrase)
+            if not filters:
+                filters = filter_
+            else:
+                filters = filters | filter_
+
+        if not filters:
+            return queryset.none()
+
+        return queryset.filter(filters).distinct()
 
 
 def filterset_factory(model, filterset=django_filters.FilterSet, model_fields="__all__", fields=None, exclude=None,

@@ -145,9 +145,9 @@
         </div>
         <div class="Header-search">
           <div class="search">
-            <form class="form form_search" action="#" method="post">
-              <input class="search-input" id="query" name="query" type="text" placeholder="{{ _('Что вы хотите найти') }} ..."/>
-              <button class="search-button" type="submit" name="search" id="search"><img src="{{ static('assets/img/icons/search.svg') }}" alt="search.svg"/>{{ _('Поиск') }}
+            <form class="form form_search" action="{{ url('products:product_search') }}" method="get">
+              <input class="search-input" id="search" name="search" type="text" placeholder="{{ _('Что вы хотите найти') }} ..."/>
+              <button class="search-button" type="submit" id="search-btn"><img src="{{ static('assets/img/icons/search.svg') }}" alt="search.svg"/>{{ _('Поиск') }}
               </button>
             </form>
           </div>
