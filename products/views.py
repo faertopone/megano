@@ -387,3 +387,7 @@ def lazy_load_reviews_views(request):
         content_type="application/json",
         safe=False
     )
+
+
+def empty(request):
+    return render(request, 'emptys/empty.html', {})
