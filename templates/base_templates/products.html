@@ -13,6 +13,7 @@
 {% endmacro %}
 
 {% macro view_product(product, promotion_service, key) %}
+               <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
               <div class="Card">
                 <a class="Card-picture" href="{{ url('products:product-detail', kwargs={'pk': product.product.pk}) }}">
                   {% if product.product.product_photo.count() %}
@@ -53,9 +54,11 @@
                       <a class="Card-btn" href="#">
                         <img src="{{ static('assets/img/icons/card/bookmark.svg') }}" alt="bookmark.svg"/>
                       </a>
-                      <a class="Card-btn" href="#">
+
+                      <a class="Card-btn add-button" data-value={{product.product.id}} data-shop="{{ product.shop.pk }}">
                         <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
                       </a>
+
                       <a class="Card-change" data-product="{{ product.product.id }}"
                                      data-key="{{ key }}">
                         <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
