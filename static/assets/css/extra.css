@@ -932,6 +932,39 @@
   margin-left: 12px;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+.tip-click {
+  position: relative;
+  z-index: 100;
+  display: block;
+  text-align: left;
+  color: Gray;
+  cursor: pointer;
+}
+
+.tip {
+/*   display: inline-block; */
+  position: absolute;
+  /*width: 400px;*/
+  font-size: 15px;
+  padding: 10px 10px 10px;
+  background: MediumSeaGreen;
+  /*top: 0;
+  left: 0;*/
+  display: none;
+}
+
+.Card-change:focus .tip {
+  display: block;
+}
+
+.Card-change:focus .tip-click{
+  background: MediumSeaGreen;
+}
+
 .Card-btn + .Card-btn {
   margin-left: 12px;
 }

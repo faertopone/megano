@@ -18,7 +18,7 @@
                   {% if product.product.product_photo.count() %}
                   <img src="{{ product.product.product_photo.all()[0].photo.url }}" alt="{{ product.product.name }}"/>
                   {% else %}
-                  <img src="{{ static('assets/img/content/home/card.jpg') }}" alt="{{ product.product.name }}"/>
+                  <img src="{{ static('default.png') }}" alt="{{ product.product.name }}"/>
                   {% endif %}
                 </a>
                 <div class="Card-content">
@@ -57,8 +57,9 @@
                         <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
                       </a>
                       <a class="Card-change" data-product="{{ product.product.id }}"
-                                     data-key="{{ key }}">
-                        <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
+                                     data-key="{{ key }}" tabindex="{{ product.product.id }}">
+                          <span class="tip-click"><img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/></span>
+                          <span class="tip"><-</span>
                       </a>
                     </div>
                   </div>

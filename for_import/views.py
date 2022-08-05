@@ -28,7 +28,7 @@ def update_product_list(request):
     if cache.get(request.user.username + '_shop'):
         context['user_shop'] = cache.get(request.user.username + '_shop')
 
-    elif request.method == 'GET':
+    if request.method == 'GET':
         return render(request, 'for_import/upload_product.html', context=context)
 
     elif request.method == 'POST':
