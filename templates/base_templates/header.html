@@ -132,7 +132,12 @@
               <div class="CategoriesButton-link">
                   <a href="{{ url('products:product_list', kwargs={'pk': category.pk}) }}">
                     <div class="CategoriesButton-icon">
-                        <img src="{{ category.icon_photo.url }}" alt="{{ category.category_name }}"/>
+                        {% if category.icon_photo %}
+                          {% set img_src = category.icon_photo.url %}
+                        {% else %}
+                          {% set img_src = static('assets/img/icons/cart.svg') %}
+                        {% endif %}
+                        <img src="{{ img_src }}" alt="{{ category.category_name }}"/>
                     </div>
                     <span class="CategoriesButton-text">{{ category.category_name }}</span>
                   </a>
