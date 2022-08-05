@@ -8,6 +8,13 @@ from shops.models import Shops, ShopProduct
 from ..services import PromotionService
 
 
+settings.DEBUG = False
+try:
+    settings.MIDDLEWARE.remove("debug_toolbar.middleware.DebugToolbarMiddleware")
+except ValueError:
+    pass
+
+
 class TestPromoService(TestCase):
     """
     Тестирование сервиса скидок.
@@ -15,8 +22,6 @@ class TestPromoService(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        settings.DEBUG_TOOLBAR_PANELS.remove("debug_toolbar.panels.sql.SQLPanel")
-
         cls.promo_service = PromotionService()
 
         # магазин
