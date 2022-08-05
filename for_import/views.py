@@ -8,9 +8,9 @@ from csv import reader
 from products.models import Category
 from accounts.models import Client
 
-from .tasks import from_file_in_db_task, load_all_fixture_task
-from .forms import UploadFileForm, FileFieldForm
-from .models import FixtureFile
+from for_import.tasks import from_file_in_db_task, load_all_fixture_task
+from for_import.forms import UploadFileForm, FileFieldForm
+from for_import.models import FixtureFile
 
 
 def update_product_list(request):

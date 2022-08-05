@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import FixtureFile
+
+from for_import.models import FixtureFile
 
 
 @admin.register(FixtureFile)

@@ -1,16 +1,15 @@
+import csv
+import os
 from django.http import JsonResponse, HttpResponse
+from django.core.mail import send_mail
+from django.conf import settings
+
 from products.models import Product, PropertyCategory, PropertyProduct, ProductPhoto, Category
 from shops.models import ShopProduct, ShopPhoto
 from accounts.models import Client
-import csv
-import os
-from datetime import datetime
-from django.core.mail import send_mail
-from django.conf import settings
-from django.core.management import call_command
-from .models import FixtureFile
-from .load_fixtur_logic import my_load_data
 
+from for_import.models import FixtureFile
+from for_import.load_fixtur_logic import my_load_data
 
 def list_prop_category(request):
     """Возвращает словарь со списком полей,
