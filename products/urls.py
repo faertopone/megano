@@ -25,4 +25,5 @@ urlpatterns = [
     path("sale/<int:pk>/", views.PromotionProductListView.as_view(), name="product_sale"),
     path("sale_group/<int:pk>/", views.PromotionGroupProductListView.as_view(), name="product_sale_group"),
     path("search/", views.SearchedProductListView.as_view(), name="product_search"),
+    path('empty/', views.empty, name='empty'),
 ]
