@@ -22,8 +22,6 @@ def update_product_list(request):
     if (not request.user.is_authenticated
             or (not cache.get(request.user.username + '_shop')
                 and not request.user.is_superuser)):
-            # or len(ShopUser.objects.filter(user=request.user)) == 0
-            # or not request.user.is_superuser):
         return redirect(reverse('login'))
     else:
 
@@ -37,15 +35,9 @@ def update_product_list(request):
         if request.method == 'GET':
             if not context['user_shop']:
                 context['user_shop'] = [i for i in Shops.objects.all()]
-            # if (len(ShopUser.objects.filter(user=request.user)) == 0
-            #         and not request.user.is_superuser):
-            #     return redirect(reverse('login'))
             return render(request, 'for_import/upload_product.html', context=context)
 
         elif request.method == 'POST':
-            # if (len(ShopUser.objects.filter(user=request.user)) == 0
-            #         and not request.user.is_superuser):
-            #     return redirect(reverse('login'))
             shop_category = request.POST['shop_category'].split('|')
             shop_id = int(shop_category[0])
             category_id = int(shop_category[1])
