@@ -11,6 +11,7 @@ from accounts.models import Client
 from for_import.models import FixtureFile
 from for_import.load_fixtur_logic import my_load_data
 
+
 def list_prop_category(request):
     """Возвращает словарь со списком полей,
     необходимых для заполнения в файле свойств

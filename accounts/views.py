@@ -78,7 +78,7 @@ class ProfileView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if cache.get(self.request.user.username + '_shop'):
+        if cache.get(self.request.user.username + '_shop') or self.request.user.is_superuser:
             context['user_shop'] = 'yes'
         context['list_item_views'] = self.get_queryset().item_view.all().order_by('-client_products_views__id')[:3]
         context['order_last'] = self.get_queryset().orders.first()
@@ -102,7 +102,7 @@ class ProfileEditView(LoginRequiredMixin, SuccessMessageMixin, FormView):
         context['client'] = Client.objects.select_related('user').prefetch_related('item_view').get(
             user=self.request.user
         )
-        if cache.get(self.request.user.username + '_shop'):
+        if cache.get(self.request.user.username + '_shop') or self.request.user.is_superuser:
             context['user_shop'] = 'yes'
         return context
 
@@ -135,7 +135,7 @@ class HistoryUserView(LoginRequiredMixin, DetailView):
         data = get_context_data(user=self.request.user)
         context['list_item_views'] = data[0]
         context['all_items_complete'] = data[1]
-        if cache.get(self.request.user.username + '_shop'):
+        if cache.get(self.request.user.username + '_shop') or self.request.user.is_superuser:
             context['user_shop'] = 'yes'
         return context
 
