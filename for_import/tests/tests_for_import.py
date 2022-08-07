@@ -20,7 +20,8 @@ except ValueError:
 
 class TestForImport(TestCase):
     """
-
+    Тестирование доступности импорта файлов в базу
+    в зависимости от ролей пользователей
     """
 
     @classmethod
@@ -63,7 +64,7 @@ class TestForImport(TestCase):
 
     def test_profile_data_in_page(self):
         """
-        Проверка вывода доступных ссылок
+        Проверка на наличие статуса продавца
         """
         self.client.force_login(User.objects.get(username='UserShop'))
         response = self.client.get(reverse('profile'))
@@ -82,7 +83,7 @@ class TestForImport(TestCase):
 
     def test_text_in_contains_user_shop(self):
         """
-        Проверка вывода ссылок
+        Проверка вывода ссылок продавцу
         """
         self.client.force_login(User.objects.get(username='UserShop'))
         response = self.client.get(reverse('profile'))
@@ -93,7 +94,7 @@ class TestForImport(TestCase):
 
     def test_text_in_contains_user(self):
         """
-        Проверка вывода ссылок
+        Проверка вывода ссылок пользователю (не являющимся продавцом)
         """
         self.client.force_login(User.objects.get(username='NotShop'))
         response = self.client.get(reverse('profile'))
@@ -102,7 +103,7 @@ class TestForImport(TestCase):
 
     def test_text_in_contains_super_user(self):
         """
-        Проверка вывода ссылок
+        Проверка вывода ссылок супер-пользователю
         """
         self.client.force_login(User.objects.get(username='SuperUser'))
         response = self.client.get(reverse('profile'))
