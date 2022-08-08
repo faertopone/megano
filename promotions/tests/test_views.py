@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from promotions.models import Promotions, PromotionGroup
 from shops.models import Shops, ShopProduct
-from products.models import Category, Product, Property, PropertyProduct, PropertyCategory
+from products.models import Category, Product
 from ..views import PromotionListView, PromotionDetailView
 
 
