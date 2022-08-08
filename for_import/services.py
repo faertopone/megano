@@ -1,14 +1,15 @@
+import csv
+import os
 from django.http import JsonResponse, HttpResponse
+from django.core.mail import send_mail
+from django.conf import settings
+
 from products.models import Product, PropertyCategory, PropertyProduct, ProductPhoto, Category
 from shops.models import ShopProduct, ShopPhoto
 from accounts.models import Client
-import csv
-import os
-from datetime import datetime
-from django.core.mail import send_mail
-from django.conf import settings
-from django.core.management import call_command
-from .models import FixtureFile
+
+from for_import.models import FixtureFile
+from for_import.load_fixtur_logic import my_load_data
 
 
 def list_prop_category(request):
@@ -101,16 +102,9 @@ def load_data(priority=0, extension='json'):
     fixture_file_list = FixtureFile.objects.filter(priority=priority, status='n', extension=extension)
     if len(fixture_file_list) != 0 and extension == 'json':
         for i in fixture_file_list:
-            try:
-                call_command('loaddata', 'media/' + str(i.file))
-                i.status = 'y'
-                i.save()
-            except Exception as err:
-                text_str = f'-----{datetime.now().strftime("%d-%m-%Y %H:%M")}------Ошибка  {i.file}: {err}' + "\n"
-                message_text += text_str
-                with open("media/admin_fixtures/errors_file.txt", "a") as file:
-                    file.write(text_str)
-                pass
+            my_load_data(str(i.file))
+            i.status = 'y'
+            i.save()
     elif len(fixture_file_list) != 0 and extension in img_extension_list:
         product_photo_list = [str(i.photo.url).split('/')[-1] for i in ProductPhoto.objects.all() if i.photo]
         shop_photo_list = [str(i.photo.url).split('/')[-1] for i in ShopPhoto.objects.all() if i.photo]

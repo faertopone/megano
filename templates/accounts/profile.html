@@ -135,8 +135,9 @@
                           <div class="Card-hover">
                               <a class="Card-btn" data-history_item_pk='{{ item.pk }}' href="#"><img src="{{ static('assets/img/icons/card/bookmark.svg')}}" alt="bookmark.svg"/></a>
                               <a class="Card-btn" href="#"><img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/></a>
-                              <a class="Card-change" data-product="{{ item.id }}" data-key="{{ request.session.session_key }}">
-                                <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
+                              <a class="Card-change" data-product="{{ item.id }}" data-key="{{ request.session.session_key }}" tabindex="{{ item.id }}">
+                                <span class="tip-click"><img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/></span>
+                                <span class="tip"><---</span>
                               </a>
 
 

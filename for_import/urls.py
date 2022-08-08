@@ -1,4 +1,5 @@
 from django.urls import path
+
 from for_import.views import update_product_list, FileFieldView
 from for_import.services import list_prop_category, export_file_csv
 
