@@ -12,10 +12,16 @@ def my_load_data(file_path):
     priority_data = {i: [] for i in range(1, 16)}
     with open('media/' + file_path) as f:
         for elem in json.load(f):
-            if elem['model'] in name_dict:
-                priority_data[name_dict[elem['model']]].append(elem)
+            if 'model' in elem:
+                if elem['model'] in name_dict:
+                    priority_data[name_dict[elem['model']]].append(elem)
+                else:
+                    priority_data[15].append(elem)
             else:
-                priority_data[15].append(elem)
+                text_str = f'-|{datetime.now().strftime("%d-%m-%Y %H:%M")}|-Ошибка  ' \
+                           f'{elem}: не определена модель' + "\n"
+                with open("media/admin_fixtures/errors_file.txt", "a") as file:
+                    file.write(text_str)
 
         for value in priority_data.values():
             if len(value) != 0:
