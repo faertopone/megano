@@ -56,6 +56,54 @@
     <div class="Section Section_column Section_columnLeft Section_columnWide">
       <div class="wrap">
         <div class="Section-column">
+          {% if promotion %}
+          <div class="Section-columnSection Section-columnSection_mark">
+            <header class="Section-columnHeader">
+              <strong class="Section-columnTitle">{{ _('Товар дня') }}
+              </strong>
+            </header>
+
+            <div class="Card"><a class="Card-picture" href="{{ url('products:product-detail', args=[promotion.product_show.pk]) }}"><img src="{{ url('products:product-detail', args=[promotion.product_show.pk]) }}" alt="{{ promotion.product_show.name }}"/></a>
+              <div class="Card-content">
+                <strong class="Card-title"><a href="{{ url('products:product-detail', args=[promotion.product_show.pk]) }}">{{ promotion.product_show.description }}</a>
+                </strong>
+                <div class="Card-description">
+                  <div class="Card-cost"><span class="Card-priceOld">{{ promotion.product_show.price }}</span><span class="Card-price"></span>
+                  </div>
+                  <div class="Card-category">{{ promotion.product_show.name }}
+                  </div>
+                </div>
+                <div class="CountDown" data-date="{{ data.day }}.{{ data.month }}.{{ data.year }} 00:00">
+                  <div class="CountDown-block">
+                    <div class="CountDown-wrap">
+                      <div class="CountDown-days">
+                      </div><span class="CountDown-label">{{ _('ДНЕЙ') }}</span>
+                    </div>
+                  </div>
+                  <div class="CountDown-block">
+                    <div class="CountDown-wrap">
+                      <div class="CountDown-hours">
+                      </div><span class="CountDown-label">{{ _('ЧАСОВ') }}</span>
+                    </div>
+                  </div>
+                  <div class="CountDown-block">
+                    <div class="CountDown-wrap">
+                      <div class="CountDown-minutes">
+                      </div><span class="CountDown-label">{{ _('МИН') }}</span>
+                    </div>
+                  </div>
+                  <div class="CountDown-block">
+                    <div class="CountDown-wrap">
+                      <div class="CountDown-secs">
+                      </div><span class="CountDown-label">{{ _('СЕК') }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
           <div class="Section-columnSection Section-columnSection_mark">
             <div class="media media_advantage">
               <div class="media-image"><img src="{{ static ('assets/img/icons/advantages/shipping.svg') }}" alt="shipping.svg"/>

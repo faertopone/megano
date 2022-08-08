@@ -1,7 +1,10 @@
+import datetime
+
 from django.db import models
 from django.views.generic import ListView
 from banners.models import Banners
 from banners.services import get_banners
+from promotions.models import Promotions
 from shops.models import ShopProduct
 
 
@@ -12,6 +15,15 @@ class Index(ListView):
 
     def get_queryset(self):
         return get_banners()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # товар дня
+        if Promotions.objects.filter(product_show_id__isnull=False).exists():
+            promo = Promotions.objects.filter(product_show_id__isnull=False).first()
+            context['promotion'] = promo
+            context['data'] = datetime.datetime.now() + datetime.timedelta(days=promo.limit_day_show_product)
+        return context
 
     def get(self, *args, **kwargs):
         self.extra_context = dict()

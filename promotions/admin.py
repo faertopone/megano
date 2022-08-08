@@ -5,15 +5,17 @@ from .models import Promotions, PromotionGroup
 
 
 class PromotionsAdmin(admin.ModelAdmin):
-    list_display = ['name', 'description', 'discount']
+    list_display = ['name', 'description', 'discount', 'limit_day_show_product', 'product_show']
     search_fields = ['name']
+    autocomplete_fields = ['product_show']
+
 
     def __str__(self):
         return _('name')
 
 
 class PromotionGroupAdmin(admin.ModelAdmin):
-    list_display = ("name", "promotion")
+    list_display = ("name", "promotion", )
     list_display_links = ("name",)
 
     search_fields = ("name",)
