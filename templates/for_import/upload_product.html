@@ -39,9 +39,11 @@
                             {{ csrf_input }}
                         <strong class="Section-title">{{ _('Выберите магазин:') }}</strong>
                           <select name="shop" id="selshop">
+                            {% if user_shop %}
                               {% for shop in user_shop %}
                                 <option value="{{ shop.id }}">{{ shop.name }}</option>
                               {% endfor %}
+                            {% endif %}
                           </select>
                         <strong class="Section-title">{{ _('Выберите категорию загружаемых товаров:') }}</strong>
                           <select name="category" id="selcategory">

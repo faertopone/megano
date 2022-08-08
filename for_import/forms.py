@@ -4,14 +4,13 @@ from django.utils.translation import gettext_lazy as _
 
 class UploadFileForm(forms.Form):
     """
-    File upload form
+    Загрузка файла
     """
     file = forms.FileField(label=_('file'))
 
 
 class FileFieldForm(forms.Form):
-    # class Meta:
-    #     model = FixtureFile
-    #     fields = '__all__'
-    #     file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    """
+    Загрузка нескольких файлов
+    """
     file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
