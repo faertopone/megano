@@ -1,3 +1,4 @@
+from django.core.validators import MaxLengthValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -26,7 +27,11 @@ class PromotionsShowProduct(models.Model):
     """
 
     limit_day_show_product = models.PositiveSmallIntegerField(verbose_name=_('Сколько дней показывать товар дня'),
-                                                              default=1, blank=True)
+                                                              default=1, blank=True,
+                                                              validators=[MaxValueValidator(20)],
+                                                              error_messages={
+                                                                  'max_value': 'Значение не больше 20'},
+                                                              )
     product_show = models.ForeignKey("products.Product", on_delete=models.CASCADE,
                                      verbose_name=_("товар дня"),
                                      help_text=_('выберите товар, который будет показан как товар дня'), null=True,
