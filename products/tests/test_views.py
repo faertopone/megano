@@ -164,7 +164,7 @@ class TestFilterProductsInCategory(SetupTestDataMixin, TestCase):
         Проверка фильтрации одного товара по цене.
         """
         response = self.client.get(
-            reverse("products:product_list", kwargs={"pk": self.category.pk}) + \
+            reverse("products:product_list", kwargs={"pk": self.category.pk}) +
             "?product_price_min=1000&product_price_max=1000"
         )
 
@@ -176,7 +176,7 @@ class TestFilterProductsInCategory(SetupTestDataMixin, TestCase):
         Проверка фильтрации нескольких товаров по цене.
         """
         response = self.client.get(
-            reverse("products:product_list", kwargs={"pk": self.category.pk}) + \
+            reverse("products:product_list", kwargs={"pk": self.category.pk}) +
             "?product_price_min=1000"
         )
 
