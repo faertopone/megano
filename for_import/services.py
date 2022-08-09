@@ -97,7 +97,6 @@ def load_all_fixture():
 
 def load_data(priority=0, extension='json'):
     """Анализирует загруженный файл фикстуры и обновляет базу данных по его данным"""
-    message_text = 'Загрузка фикстур\n'
     img_extension_list = ['jpeg', 'jpg', 'png', 'svg']
     fixture_file_list = FixtureFile.objects.filter(priority=priority, status='n', extension=extension)
     if len(fixture_file_list) != 0 and extension == 'json':
