@@ -8,6 +8,13 @@ $(document).ready(function () {
       btn_card_text.text('Товар добавлен')
       $(this).css('background-color', '#1f7eff')
     })
+  };
+
+  let btn_compare = $('#add-compare, .add-compare')
+  if (btn_compare){
+    btn_compare.click(function (){
+      $(this).css('background-color', '#1f7eff')
+    })
   }
 
 })
