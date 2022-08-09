@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from random import sample
 from celery import shared_task
 from celery.schedules import crontab
@@ -32,13 +33,15 @@ def setting_product_show():
         promo = PromotionsShowProduct.objects.create(product_show=Product.objects.first())
     else:
         promo = PromotionsShowProduct.objects.first()
+    dt_now = datetime.now()
+    last_day = dt_now + timedelta(days=promo.limit_day_show_product)
     app.conf.beat_schedule = {
         'Товар дня - настройка периодичности отображения': {
             # Если в @shared_task(name='Автономно смена товара') - есть имя, то 'task' имя пишем, иначе путь полный
             # 'app_webshop.tasks.show_promo_product'
             'task': 'Автономно смена товара',
-            # 'schedule': crontab(hour=0, minute=0, day_of_week=f'1-{promo.limit_day_show_product}'),
-            'schedule': crontab(minute=f'*/{promo.limit_day_show_product}'),
+            'schedule': crontab(hour=0, minute=0, day_of_week=f'{dt_now.day}-{last_day.day}'),
+            # 'schedule': crontab(minute=f'*/{promo.limit_day_show_product}'),
         },
     }
 
