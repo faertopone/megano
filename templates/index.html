@@ -38,21 +38,7 @@
 {% endblock %}
 
  {% block content %}
-  <div class="Middle Middle_top">
-    <div class="Middle-top">
-      <div class="wrap">
-        <div class="Middle-header">
-          <h1 class="Middle-title">{{ _('О компании Megano') }}
-          </h1>
-          <ul class="breadcrumbs Middle-breadcrumbs">
-            <li class="breadcrumbs-item"><a href="/">{{ _('домой') }}</a>
-            </li>
-            <li class="breadcrumbs-item breadcrumbs-item_current"><span>{{ _('о нас') }}</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
+  <div class="Middle">
     <div class="Section Section_column Section_columnLeft Section_columnWide">
       <div class="wrap">
         <div class="Section-column">
@@ -63,17 +49,23 @@
               </strong>
             </header>
 
-            <div class="Card"><a class="Card-picture" href="{{ url('products:product-detail', args=[promotion.product_show.pk]) }}"><img src="{{ url('products:product-detail', args=[promotion.product_show.pk]) }}" alt="{{ promotion.product_show.name }}"/></a>
+            <div class="Card"><a class="Card-picture" href="{{ url('products:product-detail', args=[promotion.product_show.pk]) }}">
+              {% if promotion.product_show.product_photo.first().photo %}
+              <img src="{{ promotion.product_show.product_photo.first().photo.url }} " alt="{{ promotion.product_show.name }}"/>
+                {% else %}
+                    <img src=" {{ static ('default.png') }}" alt="Ремень БГ">
+                {% endif %}
+            </a>
               <div class="Card-content">
                 <strong class="Card-title"><a href="{{ url('products:product-detail', args=[promotion.product_show.pk]) }}">{{ promotion.product_show.description }}</a>
                 </strong>
                 <div class="Card-description">
-                  <div class="Card-cost"><span class="Card-priceOld">{{ promotion.product_show.price }}</span><span class="Card-price"></span>
+                  <div class="Card-cost"><span class="Card-priceOld"></span><span class="Card-price">{{ promotion.product_show.price }} {{ _('₽') }}</span>
                   </div>
                   <div class="Card-category">{{ promotion.product_show.name }}
                   </div>
                 </div>
-                <div class="CountDown" data-date="{{ data.day }}.{{ data.month }}.{{ data.year }} 00:00">
+                <div class="CountDown" data-date="{{ data.day + 2}}.{{ data.month }}.{{ data.year }} 00:00">
                   <div class="CountDown-block">
                     <div class="CountDown-wrap">
                       <div class="CountDown-days">
@@ -212,4 +204,5 @@
       </div>
     </div>
   </div>
+
 {% endblock %}

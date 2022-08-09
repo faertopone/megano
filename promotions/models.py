@@ -12,6 +12,19 @@ class Promotions(models.Model):
     description = models.TextField(max_length=500, blank=True, default="", verbose_name=_('описание'))
     discount = models.FloatField(verbose_name=_('скидка, %'), default=0)
 
+    class Meta:
+        verbose_name = _('скидка')
+        verbose_name_plural = _('скидки')
+
+    def __str__(self):
+        return self.name
+
+
+class PromotionsShowProduct(models.Model):
+    """
+    Модель товара дня на главной странице, и сколько дней он там будет.
+    """
+
     limit_day_show_product = models.PositiveSmallIntegerField(verbose_name=_('Сколько дней показывать товар дня'),
                                                               default=1, blank=True)
     product_show = models.ForeignKey("products.Product", on_delete=models.CASCADE,
@@ -19,12 +32,12 @@ class Promotions(models.Model):
                                      help_text=_('выберите товар, который будет показан как товар дня'), null=True,
                                      blank=True)
 
-    class Meta:
-        verbose_name = _('скидка')
-        verbose_name_plural = _('скидки')
-
     def __str__(self):
-        return self.name
+        return 'Товар дня - настройка'
+
+    class Meta:
+        verbose_name = _("Товар дня - настройка")
+        verbose_name_plural = _("Товары дня - настройка")
 
 
 class PromotionGroup(models.Model):
