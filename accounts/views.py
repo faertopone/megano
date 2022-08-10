@@ -17,8 +17,8 @@ from basket.models import BasketItem
 from shops.models import ShopUser
 from .forms import RegistrationForm, ProfileEditForm
 from .models import Client
-from .services import get_context_data, get_context_data_ajax, \
-    initial_form_profile_new, save_dop_parametrs
+from .services import get_context_data_ajax, \
+    initial_form_profile_new, save_dop_parametrs, get_context_data_item
 from .tasks import send_client_email_task
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login
@@ -132,7 +132,7 @@ class HistoryUserView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Функция сбора данных для первого вывода страницы
-        data = get_context_data(user=self.request.user)
+        data = get_context_data_item(user=self.request.user)
         context['list_item_views'] = data[0]
         context['all_items_complete'] = data[1]
         if cache.get(self.request.user.username + '_shop') or self.request.user.is_superuser:
