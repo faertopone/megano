@@ -99,11 +99,25 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
 
 ## Загрузка фикстур при разработке
 Если в ветке ``develop`` появились новые фикстуры, то перед выполнением очередной задачи может потребоваться их загрузить в локальную БД.
-1. Выполнить миграции
+
+1. Установить базу данных PostgreSQL
+   (Если PostgreSQL установлен, шаг пропускается. 
+    Ниже приведены команды для ОП Linux)
    ```
-   python manage.py makemigrations
-   python manage.py migrate
+   sudo apt update
+   sudo apt install postgresql postgresql-contrib
    ```
+
+   1.2. Создать новую базу данных
+   ```
+   sudo -u postgres createdb meganodb 
+   ```
+
+   1.3 Выполнить миграции
+      ```
+      python manage.py makemigrations
+      python manage.py migrate
+      ```
 2. Загрузить фикстуры.
 
    :warning: Порядок загружки фикстур имеет значение, потому что таблицы имеют связи.

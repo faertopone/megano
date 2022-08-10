@@ -100,6 +100,18 @@ class ProductCompareView(View):
         """ Показывает список товаров по get запросу """
         session_key = request.session.session_key
         context = get_full_data_product_compare(session_key)
+        for i in context['products']:
+            rating = i['product']['rating']
+            if rating < 100:
+                i['product']['rating'] = 1
+            elif rating < 300:
+                i['product']['rating'] = 2
+            elif rating < 600:
+                i['product']['rating'] = 3
+            elif rating < 900:
+                i['product']['rating'] = 4
+            else:
+                i['product']['rating'] = 5
         context['count_compare'] = cache.get(str(session_key) + '_compare_count')
         context['session_key'] = session_key
 
