@@ -12,14 +12,11 @@ def new_setting_period_task(sender, instance, created, **kwargs):
     После изменения модели товара дня, обновляем настройки период таск
     """
     task_period = PeriodicTask.objects.get(task='Автономно смена товара')
-    dt_now = datetime.now()
-    last_day = dt_now + timedelta(days=instance.limit_day_show_product)
     schedule = CrontabSchedule.objects.create(
-
         minute=0,
         hour=0,
-        day_of_week=f'{dt_now.day}-{last_day.day}',
-        day_of_month='*',
+        day_of_week='*',
+        day_of_month=f'*/{instance.limit_day_show_product}',
         month_of_year='*',
     )
     task_period.crontab = schedule
