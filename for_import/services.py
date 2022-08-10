@@ -18,7 +18,7 @@ def list_prop_category(request):
     загружаемых в базу товаров"""
     new_list = PropertyCategory.objects.select_related('property').filter(category_id=int(request.GET['category']))
     text = '<ul><li><h2>Заполните в файле .csv вот эти поля в таком же порядке:</h2></li>' \
-           '<li>Наименание, Артикул, Описание, Цена, Рейтинг, Количество, Ссылка на фото,</li><li>'
+           '<li>Наименание, Артикул, Описание, Цена, Рейтинг, Количество, Ссылка на фото, Цена магазина</li><li>'
     for i in new_list:
         text += str(i.property.name) + ', '
     text += '</li></ul>'
@@ -31,7 +31,8 @@ def export_file_csv(request, *args, **kwargs):
     (шапка с нужными полями)"""
     response = HttpResponse(content_type='text/csv')
     response['Content-Dispositions'] = 'attachment; filename="users.csv"'
-    parameter_list = ['Наименание', 'Артикул', 'Описание', 'Цена', 'Рейтинг', 'Количество', 'Ссылка на фото']
+    parameter_list = ['Наименание', 'Артикул', 'Описание', 'Цена', 'Рейтинг',
+                      'Количество', 'Ссылка на фото', 'Цена магазина']
     parameter_list += [i.property.name for i in
                        PropertyCategory.objects.select_related('property').filter(category_id=kwargs['pk'])]
     writer = csv.writer(response)
@@ -44,33 +45,44 @@ def from_file_in_db(file, shop_id, category_id, email, file_name):
     message = 'Файл обработан\n'
     for row in file:
         try:
+            new_product = Product()
+            new_shop_product = ShopProduct()
             if len(Product.objects.filter(article=row[1])) != 0:
-                new_product = Product.objects.filter(article=row[1]).update(
-                    name=row[0], description=row[2], price=float(row[3]),
-                    rating=int(row[4]))
+                new_product = Product.objects.get(article=row[1])
                 if len(ShopProduct.objects.filter(shop_id=shop_id, product=new_product)) != 0:
-                    ShopProduct.objects.filter(shop_id=shop_id, product=new_product).update(
-                        amount=int(row[5])
-                    )
+                    new_shop_product = ShopProduct.objects.get(shop_id=shop_id, product=new_product)
 
-            else:
-                new_product = Product(article=row[1],
-                                      category_id=category_id,
-                                      name=row[0], description=row[2],
-                                      price=float(row[3]), rating=int(row[4]))
-                new_product.save()
-                new_shop_product = ShopProduct(product=new_product, shop_id=shop_id, amount=int(row[5]))
-                new_shop_product.save()
-                new_product_photo = ProductPhoto(product=new_product)
-                new_product_photo.photo = 'products_photo/' + row[6]
-                new_product_photo.save()
-                product_properties_list = PropertyCategory.objects.select_related('property').filter(
-                    category_id=category_id)
-                for i in range(len(product_properties_list)):
+            new_product.name = row[0]
+            new_product.description = row[2]
+            new_product.price = float(row[3])
+            new_product.rating = int(row[4])
+            new_product.category_id = category_id
+            new_product.save()
+
+            new_shop_product.product = new_product
+            new_shop_product.shop_id = shop_id
+            new_shop_product.amount = int(row[5])
+            new_shop_product.price_in_shop = float(row[7])
+            new_shop_product.save()
+
+            new_product_photo = ProductPhoto(product=new_product)
+            new_product_photo.photo = 'products_photo/' + row[6]
+            new_product_photo.save()
+
+            product_properties_list = PropertyCategory.objects.select_related('property').filter(
+                category_id=category_id)
+            for i in range(len(product_properties_list)):
+                if len(PropertyProduct.objects.filter(product=new_product,
+                                                      property=product_properties_list[i].property)) == 0:
                     product_property_value = PropertyProduct(product=new_product,
                                                              property=product_properties_list[i].property,
-                                                             value=row[7 + i])
-                    product_property_value.save()
+                                                             value=row[8 + i])
+                else:
+                    product_property_value = PropertyProduct.objects.get(product=new_product,
+                                                                         property=product_properties_list[i].property)
+                    product_property_value.value = row[8 + i]
+
+                product_property_value.save()
 
         except Exception as err:
             message += f'Ошибка в строке {row}: {err} \n'
@@ -91,6 +103,7 @@ def load_all_fixture():
         load_data(priority=num)
     load_data()
     load_data(extension='jpg')
+    load_data(extension='jpeg')
     load_data(extension='png')
     load_data(extension='svg')
 
