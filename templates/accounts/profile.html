@@ -127,17 +127,19 @@
                     <strong class="Card-title"><a href="{{ url('products:product-detail', kwargs = {'pk': item.pk}) }}">{{ item.name }}</a>
                     </strong>
                         <div class="Card-description">
-                              <div class="Card-cost"><span class="Card-priceOld">{{ item.price }}</span><span class="Card-price">$85.00</span>
+                              <div class="Card-cost"><span class="Card-priceOld"></span><span class="Card-price">{{ item.price }}</span>
                               </div>
                             <div class="Card-category">{{ item.category }}
                             </div>
 
                           <div class="Card-hover">
                               <a class="Card-btn" data-history_item_pk='{{ item.pk }}' href="#"><img src="{{ static('assets/img/icons/card/bookmark.svg')}}" alt="bookmark.svg"/></a>
-                              <a class="Card-btn" href="#"><img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/></a>
-                              <a class="Card-change" data-product="{{ item.id }}" data-key="{{ request.session.session_key }}" tabindex="{{ item.id }}">
-                                <span class="tip-click"><img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/></span>
-                                <span class="tip"><---</span>
+
+                              <a class="Card-btn add-button" data-value="{{ item.id}}" data-shop="{{ item.shops.all()[0].pk }}" >
+                                <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
+                              </a>
+                              <a class="Card-change add-compare" data-product="{{ item.id }}" data-key="{{ request.session.session_key }}">
+                                    <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
                               </a>
 
 
@@ -162,4 +164,7 @@
       </div>
     </div>
   </div>
+
+  {# Jinja2 токен csrf_token #}
+             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 {% endblock %}
