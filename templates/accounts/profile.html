@@ -127,26 +127,36 @@
                     <strong class="Card-title"><a href="{{ url('products:product-detail', kwargs = {'pk': item.pk}) }}">{{ item.name }}</a>
                     </strong>
                         <div class="Card-description">
-                              <div class="Card-cost"><span class="Card-priceOld"></span><span class="Card-price">{{ item.price }}</span>
-                              </div>
-                            <div class="Card-category">{{ item.category }}
-                            </div>
+                                    {% for min_price_in_shop in item.shop_product.all()|sort(attribute='price_in_shop', reverse=False)  %}
+                                          {% if loop.first %}
+                                            <div class="Card-cost">
+                                              {% if item.promotion_group.promotion %}
+                                              {% set price_float = min_price_in_shop.price_in_shop|float %}
+                                              <div class="ProductCard-price">{{ price_float - (price_float * (item.promotion_group.promotion.discount/100.00)) }} </div>
+                                              <div class="ProductCard-priceOld">{{ min_price_in_shop.price_in_shop }}</div>
+                                              {% else %}
+                                              <div class="ProductCard-price">{{ min_price_in_shop.price_in_shop }}</div>
+                                            {% endif %}
+                                            </div>
+                                          <div class="Card-category">{{ item.category }}
+                                          </div>
 
-                          <div class="Card-hover">
-                              <a class="Card-btn" data-history_item_pk='{{ item.pk }}' href="#"><img src="{{ static('assets/img/icons/card/bookmark.svg')}}" alt="bookmark.svg"/></a>
-
-                              <a class="Card-btn add-button" data-value="{{ item.id}}" data-shop="{{ item.shops.all()[0].pk }}" >
-                                <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
-                              </a>
-                              <a class="Card-change add-compare" data-product="{{ item.id }}" data-key="{{ request.session.session_key }}">
-                                    <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
-                              </a>
-
-
-                          </div>
-                        </div>
+                                          <div class="Card-hover"><a class="Card-btn"  data-history_item_pk = {{ item.pk }} href="#">
+                                            <img src="{{ static('assets/img/icons/card/bookmark.svg')}}" alt="bookmark.svg"/></a>
+                                                   <a class="Card-btn add-button" data-value="{{ item.id}}" data-shop="{{ min_price_in_shop.pk }}" >
+                                          {% endif %}
+                                    {% endfor %}
+                                      <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
+                                    </a>
+                                    <a class="Card-change add-compare" data-product="{{ item.id }}" data-key="{{ request.session.session_key }}">
+                                          <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
+                                    </a>
+                                  </div>
+                                </div>
                   </div>
-                  <div class="Card-sale">-60%</div>
+                  {% if item.promotion_group.promotion %}
+                          <div class="Card-sale">-{{item.promotion_group.promotion.discount }}%</div>
+                        {% endif %}
                 </div>
                     {% endfor %}
                 </div>

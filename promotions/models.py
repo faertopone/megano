@@ -7,7 +7,6 @@ class Promotions(models.Model):
     """
     Модель акций, которые определяют скидки на группы товаров, на общие покупки в магазинах.
     discount определяет процентную скидку 80% = 0.80
-    Настройка параметров на товар дня
     """
     name = models.CharField(max_length=39, verbose_name=_('название'))
     description = models.TextField(max_length=500, blank=True, default="", verbose_name=_('описание'))
