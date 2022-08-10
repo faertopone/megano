@@ -4,11 +4,7 @@ from django.test import TestCase
 from django.core.cache import cache
 from django.contrib.auth.models import User
 
-from products.models import Product, Category
-from promotions.models import Promotions, PromotionGroup
-from promotions.services import PromotionService
-
-from shops.models import Shops, ShopProduct, ShopUser
+from shops.models import Shops, ShopUser
 
 
 settings.DEBUG = False

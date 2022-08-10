@@ -50,7 +50,9 @@
               <div class="Compare-product" >
                 <div class="Compare-nameProduct">{{ product.product.name }}
                 </div>
-                <div class="Compare-feature"><a class="Compare-btn" href="{{ product.href }}"><img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/></a>
+                <div class="Compare-feature"><a class="Card-btn add-button" data-value={{product.product.id}}>
+                        <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
+                      </a>
                   <form method="post" action="/products/comparison/" enctype="multipart/form-data">
                     {{ csrf_input }}
                     <input name="product_delete" type="hidden"
