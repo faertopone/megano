@@ -110,16 +110,10 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
 
    1.2. Создать новую базу данных
    ```
-   sudo -u postgres createdb meganodb
+   sudo -u postgres createdb meganodb 
    ```
-	
-   1.3. В виртульном окружении проекта установить psycopg2
-      ```
-      pip install psycopg2
-      ```
-   (возможно потребуется pip install psycopg2-binary)
 
-   1.4 Выполнить миграции
+   1.3 Выполнить миграции
       ```
       python manage.py makemigrations
       python manage.py migrate
