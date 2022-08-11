@@ -53,6 +53,7 @@ def from_file_in_db(file, shop_id, category_id, email, file_name):
                     new_shop_product = ShopProduct.objects.get(shop_id=shop_id, product=new_product)
 
             new_product.name = row[0]
+            new_product.article = row[1]
             new_product.description = row[2]
             new_product.price = float(row[3])
             new_product.rating = int(row[4])
@@ -65,9 +66,10 @@ def from_file_in_db(file, shop_id, category_id, email, file_name):
             new_shop_product.price_in_shop = float(row[7])
             new_shop_product.save()
 
-            new_product_photo = ProductPhoto(product=new_product)
-            new_product_photo.photo = 'products_photo/' + row[6]
-            new_product_photo.save()
+            if len(ProductPhoto.objects.filter(product=new_product, photo='products_photo/' + row[6])) == 0:
+                new_product_photo = ProductPhoto(product=new_product)
+                new_product_photo.photo = 'products_photo/' + row[6]
+                new_product_photo.save()
 
             product_properties_list = PropertyCategory.objects.select_related('property').filter(
                 category_id=category_id)
