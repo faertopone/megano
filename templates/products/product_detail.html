@@ -22,9 +22,11 @@
             <div class="Product">
                 <div class="ProductCard">
                     <div class="ProductCard-look">
-                        {% if product.product_photo.first().photo %}
+                        {% if product.product_photo.all() %}
                             <div class="ProductCard-photo">
-                                <div class="ProductCard-sale">-15%</div>
+                            {% if product.promotion_group.promotion %}
+                                <div class="ProductCard-sale"> -{{product.promotion_group.promotion.discount }}% </div>
+                              {% endif %}
                                 <img src="{{ product.product_photo.first().photo.url }}" alt="{{ product.product_photo.first().photo }}">
                             </div>
                             <div class="ProductCard-picts">
@@ -41,18 +43,28 @@
                     </div>
                     <div class="ProductCard-desc">
                         <div class="ProductCard-header">
+                          {% for min_price_in_shop in product.shop_product.all()|sort(attribute='price_in_shop', reverse=False)  %}
+                                  {% if loop.first %}
                             <h2 class="ProductCard-title">{{ product.name }}</h2>
                             <div class="ProductCard-info">
-                                <div class="ProductCard-cost">
-                                    <div class="ProductCard-price">{{ product.price }}</div>
-                                    <div class="ProductCard-priceOld">{{ product.price }}</div>
-                                </div>
-                                <div class="ProductCard-compare">
-                                  <a class="Card-change add-compare" data-product="{{ product.id }}"
-                                     data-key="{{ request.session.session_key }}">
-                                    <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
-                                  </a>
-                                </div>
+
+                                          <div class="ProductCard-cost">
+                                            {% if product.promotion_group.promotion %}
+                                              {% set price_float = min_price_in_shop.price_in_shop|float %}
+                                              <div class="ProductCard-price">{{ price_float - (price_float * (product.promotion_group.promotion.discount/100.00)) }} </div>
+                                              <div class="ProductCard-priceOld">{{ min_price_in_shop.price_in_shop }}</div>
+                                              {% else %}
+                                              <div class="ProductCard-price">{{ min_price_in_shop.price_in_shop }}</div>
+                                            {% endif %}
+
+                                          </div>
+                                        <div class="ProductCard-compare">
+                                          <a class="Card-change add-compare" data-product="{{ product.id }} "
+                                             data-key="{{ request.session.session_key }}">
+                                            <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
+                                          </a>
+                                        </div>
+
                             </div>
                         </div>
                         {% if product.description %}
@@ -60,20 +72,23 @@
                         {% else %}
                             <div class="ProductCard-text">{{ _("У товара нет описания") }}</div>
                         {% endif %}
-                        <div class="ProductCard-cart">
-                            <div class="ProductCard-cartElement ProductCard-cartElement_amount">
-                                <div class="Amount Amount_product">
-                                    <button class="Amount-remove" type="button"></button>
-                                    <input class="Amount-input form-input" name="amount" type="text" id="select" value="1">
-                                    <button class="Amount-add" type="button"></button>
+                            <div class="ProductCard-cart">
+                                <div class="ProductCard-cartElement ProductCard-cartElement_amount">
+                                    <div class="Amount Amount_product">
+                                        <button class="Amount-remove" type="button"></button>
+                                        <input class="Amount-input form-input" name="amount" type="text" id="select" value="1">
+                                        <button class="Amount-add" type="button"></button>
+                                    </div>
+                                </div>
+                                <div class="ProductCard-cartElement"><button id="add-button" class="btn btn_primary" type="button" value={{product.id}} data-csrf="{{ csrf_token }}" data-shop="{{ min_price_in_shop.pk }}">
+                                    <img class="btn-icon" src="{{ static ('assets/img/icons/card/cart_white.svg') }}" alt="cart_white.svg"/>
+                                    <span class="btn-content">{{ _('Добавить в корзину') }}</span>
+                                </button>
                                 </div>
                             </div>
-                            <div class="ProductCard-cartElement"><button id="add-button" class="btn btn_primary" type="button" value={{product.id}} data-csrf="{{ csrf_token }}">
-                                <img class="btn-icon" src="{{ static ('assets/img/icons/card/cart_white.svg') }}" alt="cart_white.svg"/>
-                                <span class="btn-content">{{ _('Добавить в корзину') }}</span>
-                            </button>
-                            </div>
-                        </div>
+
+                          {% endif %}
+                        {% endfor %}
                         <div class="ProductCard-footer">
                             <div class="ProductCard-tags">
                                 <strong class="ProductCard-tagsTitle">{{ _("Теги") }}:</strong>

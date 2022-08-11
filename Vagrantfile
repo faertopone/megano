@@ -26,6 +26,8 @@ Vagrant.configure("2") do |config|
         develop.vm.network "forwarded_port", guest: 8000, host: 8000
         # redis
         develop.vm.network "forwarded_port", guest: 6379, host: 6379
+        # postgres
+        develop.vm.network "forwarded_port", guest: 5432, host: 5432
 
         develop.vm.provider "virtualbox" do |vb|
             vb.name = "develop"

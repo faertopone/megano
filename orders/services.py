@@ -99,8 +99,10 @@ class OrderService:
                     name=item.product.name,
                     description=item.product.description,
                     price=item.product.price,
-                    photo=item.product.product_photo.first().photo
                 )
+                if item.product.product_photo.first():
+                    order_product_copy.photo = item.product.product_photo.first().photo
+                    order_product_copy.save()
 
                 data = {'product': order_product_copy,
                         'count': item.qty,
