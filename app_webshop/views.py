@@ -3,6 +3,7 @@ from django.db import models
 from django.views.generic import ListView
 from banners.models import Banners
 from banners.services import get_banners
+from products.models import Product
 from promotions.models import PromotionsShowProduct
 from shops.models import ShopProduct
 
