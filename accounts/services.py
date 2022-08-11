@@ -123,7 +123,7 @@ def add_product_in_history_session(request: HttpRequest, product_pk: int):
             request.session['products_session'] = product_list
 
 
-def get_context_data(user) -> list:
+def get_context_data_item(user) -> list:
     """
     Функция для вычисления context['list_item_views'] - Вывод товаров для просмотра и
     context['all_items_complete'] - флаг, что все допустимы товары вывели
