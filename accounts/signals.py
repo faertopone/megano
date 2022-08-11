@@ -29,10 +29,10 @@ def clone_history_items_after_login(request, user, **kwargs):
         request.session['products_session'].clear()
 
 
-@receiver(post_save, sender=User)
-def created_client(sender, instance, created, **kwargs):
-    """
-    После сохранения модели User или SuperUser, создаем ему сразу в БД модель Client.
-    """
-    if created:
-        Client.objects.get_or_create(user=instance)
+# @receiver(post_save, sender=User)
+# def created_client(sender, instance, created, **kwargs):
+#     """
+#     После сохранения модели User или SuperUser, создаем ему сразу в БД модель Client.
+#     """
+#     if created:
+#         Client.objects.get_or_create(user=instance)

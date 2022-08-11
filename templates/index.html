@@ -38,24 +38,64 @@
 {% endblock %}
 
  {% block content %}
-  <div class="Middle Middle_top">
-    <div class="Middle-top">
-      <div class="wrap">
-        <div class="Middle-header">
-          <h1 class="Middle-title">{{ _('О компании Megano') }}
-          </h1>
-          <ul class="breadcrumbs Middle-breadcrumbs">
-            <li class="breadcrumbs-item"><a href="/">{{ _('домой') }}</a>
-            </li>
-            <li class="breadcrumbs-item breadcrumbs-item_current"><span>{{ _('о нас') }}</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
+  <div class="Middle">
     <div class="Section Section_column Section_columnLeft Section_columnWide">
       <div class="wrap">
         <div class="Section-column">
+          {% if promotion %}
+          <div class="Section-columnSection Section-columnSection_mark">
+            <header class="Section-columnHeader">
+              <strong class="Section-columnTitle">{{ _('Товар дня') }}
+              </strong>
+            </header>
+
+            <div class="Card"><a class="Card-picture" href="{{ url('products:product-detail', args=[promotion.product_show.pk]) }}">
+              {% if promotion.product_show.product_photo.first().photo %}
+              <img src="{{ promotion.product_show.product_photo.first().photo.url }} " alt="{{ promotion.product_show.name }}"/>
+                {% else %}
+                    <img src=" {{ static ('default.png') }}" alt="Ремень БГ">
+                {% endif %}
+            </a>
+              <div class="Card-content">
+                <strong class="Card-title"><a href="{{ url('products:product-detail', args=[promotion.product_show.pk]) }}">{{ promotion.product_show.description }}</a>
+                </strong>
+                <div class="Card-description">
+                  <div class="Card-cost"><span class="Card-priceOld"></span><span class="Card-price">{{ promotion.product_show.price }} {{ _('₽') }}</span>
+                  </div>
+                  <div class="Card-category">{{ promotion.product_show.name }}
+                  </div>
+                </div>
+                <div class="CountDown" data-date="{{ data.day + 2}}.{{ data.month }}.{{ data.year }} 00:00">
+                  <div class="CountDown-block">
+                    <div class="CountDown-wrap">
+                      <div class="CountDown-days">
+                      </div><span class="CountDown-label">{{ _('ДНЕЙ') }}</span>
+                    </div>
+                  </div>
+                  <div class="CountDown-block">
+                    <div class="CountDown-wrap">
+                      <div class="CountDown-hours">
+                      </div><span class="CountDown-label">{{ _('ЧАСОВ') }}</span>
+                    </div>
+                  </div>
+                  <div class="CountDown-block">
+                    <div class="CountDown-wrap">
+                      <div class="CountDown-minutes">
+                      </div><span class="CountDown-label">{{ _('МИН') }}</span>
+                    </div>
+                  </div>
+                  <div class="CountDown-block">
+                    <div class="CountDown-wrap">
+                      <div class="CountDown-secs">
+                      </div><span class="CountDown-label">{{ _('СЕК') }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
           <div class="Section-columnSection Section-columnSection_mark">
             <div class="media media_advantage">
               <div class="media-image"><img src="{{ static ('assets/img/icons/advantages/shipping.svg') }}" alt="shipping.svg"/>
@@ -164,4 +204,5 @@
       </div>
     </div>
   </div>
+
 {% endblock %}
