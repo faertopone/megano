@@ -120,12 +120,12 @@
   </div>
 
 <script>
-    function show_empty_basket() {
+    function showEmptyBasket() {
       $('form.form.Cart').remove()
       $('.Section > .wrap').text('В корзине нет товаров.')
     }
 
-    function show_subtotal(json) {
+    function showSubtotal(json) {
       document.getElementById('h-subtotal').innerHTML = json.subtotal;
       document.getElementById('subtotal').innerHTML = json.subtotal;
       document.getElementById('basket-qty').innerHTML = json.qty
@@ -138,7 +138,7 @@
       }
     }
 
-    function show_product_subtotal(json, prodid) {
+    function showProductSubtotal(json, prodid) {
       productSubotal = document.getElementById('productsubotal'+prodid)
       if (productSubotal !== null && productSubotal !== undefined) {
         productSubotal.innerHTML = json.product_subtotal + '₽';
@@ -154,9 +154,9 @@
       }
     }
 
-    function show_basket_subtotal(json, prodid) {
-      show_product_subtotal(json, prodid)
-      show_subtotal(json)
+    function showBasketSubtotal(json, prodid) {
+      showProductSubtotal(json, prodid)
+      showSubtotal(json)
     }
 
     $(document).on('click', '#delete-button', function (e) {
@@ -174,11 +174,11 @@
                 $('.product-item[data-index=' + prodid + ']').remove();
 
                 if (json.subtotal <= 0) {
-                    show_empty_basket()
+                    showEmptyBasket()
                     return
                 }
 
-                show_subtotal(json)
+                showSubtotal(json)
             },
             error: function (xhr, errmsg, err){}
         });
@@ -205,11 +205,11 @@
                 }
 
                 if (json.subtotal <= 0) {
-                    show_empty_basket()
+                    showEmptyBasket()
                     return
                 }
 
-                show_basket_subtotal(json, prodid)
+                showBasketSubtotal(json, prodid)
             },
             error: function (xhr, errmsg, err) {
             }
@@ -233,7 +233,7 @@
                     $('.product-item[data-index=' + prodid + ']').remove();
                 }
 
-                show_basket_subtotal(json, prodid)
+                showBasketSubtotal(json, prodid)
             },
             error: function (xhr, errmsg, err) {
             }
