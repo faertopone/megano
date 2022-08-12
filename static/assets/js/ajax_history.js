@@ -81,7 +81,7 @@ $(document).ready(function (){
             let shop_product_pk = item.shop_product_pk
             let discount = item.discount
             let div_price = `<div class="ProductCard-price">${old_price}</div>`
-            let div_discount = null
+            let div_discount = ''
             if (discount) {
                div_price =
                  `
