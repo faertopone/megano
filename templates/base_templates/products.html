@@ -51,7 +51,11 @@
                       / {{ product.product.category.category_name }}
                     </div>
                     <div class="Card-hover">
-                      <a class="Card-btn" href="#">
+                      {% if product.product.product_photo.count() %}
+                        <a class="Card-btn expand" href="{{ product.product.product_photo.all()[0].photo.url }}">
+                      {% else %}
+                        <a class="Card-btn" href="#">
+                      {% endif %}
                         <img src="{{ static('assets/img/icons/card/bookmark.svg') }}" alt="bookmark.svg"/>
                       </a>
 

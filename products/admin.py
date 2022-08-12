@@ -190,3 +190,11 @@ class PropertyAdmin(autocomplete_all.ModelAdmin):
                 if key.startswith("id_product_properties-") and key.endswith("-property"):
                     queryset = queryset.prefetch_related("categories").filter(category=urlparams["category"][0])
         return queryset
+
+
+@admin.register(ProductPhoto)
+class ProductPhotoAdmin(admin.ModelAdmin):
+    list_display = ['id', 'product', 'photo']
+
+    def __str__(self):
+        return _('Фото товаров')
