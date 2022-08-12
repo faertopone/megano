@@ -127,6 +127,10 @@
                 <a class="Card-picture" href="{{ shop.id }}">
                   <img src="{{ shop.shop_photos.all().0.photo.url }}" alt="{{ shop.name }}"/>
                 </a>
+            {% else %}
+                <a class="Card-picture" href="{{ shop.id }}">
+                  <img src="{{ static('default.png') }}" alt="{{ shop.name }}"/>
+                </a>
             {% endif %}
                 <div class="Card-content">
                   <strong class="Card-title">
