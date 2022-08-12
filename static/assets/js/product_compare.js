@@ -61,6 +61,10 @@ $(document).ready(function () {
         return false;
     });
 
+    $(".expand").magnificPopup({
+      type: "image"
+    });
+
     $("#category_id").click(function () {
     var sh_id = document.getElementById("selshop").value;
     var cat_id = document.getElementById("selcategory").value;
