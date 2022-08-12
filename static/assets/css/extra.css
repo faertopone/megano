@@ -5229,3 +5229,19 @@ a.Cart-title {
     display: flex;
     justify-content: center;
 }
+
+/* Анимация при нажатии на кнопку добавления в корзину */
+.add-button-pulse-anim {
+  animation-duration: 3s;
+  animation-name: add-button-pulse-anim;
+}
+
+@keyframes add-button-pulse-anim {
+  from {
+    background-color: #1f7eff;
+  }
+
+  to {
+    background-color: #ebebeb;
+  }
+}

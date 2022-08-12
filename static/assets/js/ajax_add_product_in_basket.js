@@ -39,7 +39,7 @@ $(document).ready(function (){
                 product_id: prodid,
                 product_qty: 1,
                 shop_product_id: shop_prod_id,
-                csrfmiddlewaretoken: crsf,
+                csrfmiddlewaretoken: crsf !== null && crsf !== undefined ? crsf : $(this).attr('data-csrf'),
                 action: 'add'
             },
             success: function (json) {
