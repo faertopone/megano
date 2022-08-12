@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.utils.translation import gettext_lazy as _
 from promotions.models import PromotionsShowProduct
 
 
@@ -13,4 +12,3 @@ class PromotionsShowProductAdmin(admin.ModelAdmin):
 
     def name_product(self, obj: PromotionsShowProduct):
         return obj.product_show.name
-

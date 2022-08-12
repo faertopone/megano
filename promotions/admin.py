@@ -5,7 +5,7 @@ from .models import Promotions, PromotionGroup
 
 
 class PromotionsAdmin(admin.ModelAdmin):
-    list_display = ['name', 'description', 'discount',]
+    list_display = ['name', 'description', 'discount']
     search_fields = ['name']
 
     def __str__(self):
