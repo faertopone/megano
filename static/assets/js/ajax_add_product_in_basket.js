@@ -37,7 +37,7 @@ $(document).ready(function (){
             url: url_path,
             data: {
                 product_id: prodid,
-                product_qty: 1,
+                product_qty: $('.select' + shop_prod_id).val(),
                 shop_product_id: shop_prod_id,
                 csrfmiddlewaretoken: crsf,
                 action: 'add'

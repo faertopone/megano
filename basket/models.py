@@ -21,6 +21,23 @@ class BasketQuerySet(QuerySet):
         return r if r is not None else 0
 
     @property
+    def total_old_price(self):
+        """
+        Сумма всех объектов корзины пользователя
+        """
+        r1 = self.filter(old_price=0).annotate(
+            total_price=Sum('price') * F('qty')
+        ).aggregate(Sum('total_price'))['total_price__sum']
+        r2 = self.annotate(
+            total_price=Sum('old_price') * F('qty')
+        ).aggregate(Sum('total_price'))['total_price__sum']
+
+        r1 = r1 if r1 is not None else 0
+        r2 = r2 if r2 is not None else 0
+
+        return r1 + r2
+
+    @property
     def total_count(self):
         """
         Суммарное количество товаров всех объектов корзины
@@ -66,6 +83,10 @@ class BasketManager(Manager):
     @property
     def total_price(self):
         return self.get_queryset().total_price
+
+    @property
+    def total_old_price(self):
+        return self.get_queryset().total_old_price
 
     @property
     def total_count(self):
@@ -143,8 +164,13 @@ class BasketItem(models.Model):
     def total_price(self):
         return self.price * self.qty
 
+    @property
+    def total_old_price(self):
+        return self.old_price * self.qty
+
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
+        item = super(BasketItem, self).save()
         if self.qty == 0:
             return super(BasketItem, self).delete()
-        return super(BasketItem, self).save()
+        return item

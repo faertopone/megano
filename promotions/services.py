@@ -119,7 +119,7 @@ class PromotionService:
             корзины, чтобы получить итоговую стоимость.
         """
         promotions = self.get_priority_promotions(products)
-        products = ShopProduct.objects.filter(product__pk__in=list(promotions.keys()))
+        products = ShopProduct.objects.filter(pk__in=list(promotions.keys()))
         products = {p.pk: float(p.price_in_shop) for p in products}
 
         discount: float = 0

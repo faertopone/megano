@@ -119,7 +119,7 @@ class TestViews(SetupTestDataMixin, TestCase):
         self._test_response_with_products(response, PromotionGroupProductListView.template_name)
         self.assertEquals(
             response.context_data["products"].count(),
-            ShopProduct.objects.filter(~models.Q(product__promotion_group=True)).count()
+            ShopProduct.objects.filter(~models.Q(product__promotion_group__isnull=True)).count()
         )
 
     def test_products_that_searched_page(self):
