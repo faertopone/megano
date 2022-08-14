@@ -166,6 +166,13 @@ def get_context_data_ajax(user, items_in_page) -> list:
     list_in_page = []
     photo = '#'
     for item in list_item_views:
+        show_product_min_data = item.shop_product.order_by('price_in_shop').all()[:1]
+        if item.promotion_group:
+            discount = item.promotion_group.promotion.discount
+            old_price = float(show_product_min_data[0].price_in_shop)
+            new_price = old_price - (old_price * (discount / 100))
+        else:
+            discount = None
         for i in item.product_photo.all():
             photo = i.photo.url
         list_in_page.append({'name': item.name,
@@ -173,6 +180,10 @@ def get_context_data_ajax(user, items_in_page) -> list:
                              'category': item.category.category_name,
                              'item_pk': item.pk,
                              'photo': photo,
+                             'old_price': show_product_min_data[0].price_in_shop,
+                             'new_price': new_price,
+                             'shop_product_pk': show_product_min_data[0].pk,
+                             'discount': discount
                              })
         # обнулим переменную с адресом фотки
         photo = '#'
