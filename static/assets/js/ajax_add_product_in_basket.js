@@ -34,7 +34,16 @@ $(document).ready(function (){
 
     if (btn_compare){
       btn_compare.click(function (){
-        $(this).css('background-color', '#1f7eff')
+        // $(this).css('background-color', '#1f7eff')
+        $(this).addClass("add-button-pulse-anim")
+        // анимация на js
+        $(this).animate({
+          backgroundColor: "#ebebeb",
+        }, 3000, function() {
+          // анимация завершена.
+          // удалить класс анимации
+          $(this).removeClass("add-button-pulse-anim")
+        });
       })
     }
   }
