@@ -50,9 +50,15 @@
               <div class="Compare-product" >
                 <div class="Compare-nameProduct">{{ product.product.name }}
                 </div>
-                <div class="Compare-feature"><a class="Card-btn add-button" data-value={{product.product.id}}>
+                <div class="Compare-feature">
+                  <!--<a class="Card-btn add-button add-button-pulse" data-value={{product.product.id}} data-shop="{{ product.pk }}" data-csrf="{{ csrf_token }}">
+                        <input class="Amount-input form-input select{{ product.pk }}" name="amount" type="hidden">
                         <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
                       </a>
+
+                  <a class="Card-btn add-button" data-value={{product.product.id}}>
+                        <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
+                      </a>-->
                   <form method="post" action="/products/comparison/" enctype="multipart/form-data">
                     {{ csrf_input }}
                     <input name="product_delete" type="hidden"
@@ -148,19 +154,47 @@
           {% endfor %}
           </div>
           <div class="Compare-row">
-            <div class="Compare-title">{{ _('Цена') }}
+            <div class="Compare-title">{{ _('Цена в магазинах') }}
             </div>
             <div class="Compare-products">
               {% for product in products %}
               <div class="Compare-product">
                 <div class="Compare-nameProduct">{{ product.product.name }}
                 </div>
+                {% for shop in product.shops %}
                 <div class="Compare-feature">
-                  <strong class="Compare-priceOld">${{ product.product.price }}
-                  </strong>
-                  <strong class="Compare-price">${{ product.product.price }}
-                  </strong>
+                  <ul>
+                  <li>
+                    <a href="{{ url('shop-detail', kwargs={'pk': shop.shop.pk}) }}" style="color: #999;">{{ shop.shop.name }}</a>
+                  </li>
+                    <li>
+                      <div class="Categories-block Categories-price">
+                          {% set prices = shop.get_prices_with_promotion(promotion_service) %}
+                          <strong>
+                            {% if prices.new_price %}
+                              <span class="ProductCard-priceOld-mini">{{ prices.old_price }} &#8381;</span>
+                              {{ prices.new_price }} &#8381;
+                            {% else %}
+                              {{ prices.old_price }} &#8381;
+                            {% endif %}
+                          </strong>
+                          <div class="Amount Amount_product">
+                              <button class="Amount-remove" type="button"></button>
+                              <input class="Amount-input form-input select{{ shop.id }}" name="amount" type="text">
+                              <button class="Amount-add" type="button"></button>
+                          </div>
+                      </div>
+                      <div class="Card-hover">
+                        <a class="Card-btn add-button add-button-pulse" data-value="{{ shop.product.pk }}" data-shop="{{ shop.pk }}" data-csrf="{{ csrf_token }}">
+                        <input class="Amount-input form-input select{{ shop.pk }}" name="amount" type="hidden">
+                        <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
+                        </a>
+                      </div>
+
+                    </li>
+                  </ul>
                 </div>
+                {% endfor %}
               </div>
               {% endfor %}
             </div>
