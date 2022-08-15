@@ -153,6 +153,7 @@ class HistoryUserView(LoginRequiredMixin, DetailView):
                 flag_items_complete = data[1]
                 return JsonResponse({'products': list_in_page,
                                      'flag_items_complete': flag_items_complete,
+                                     'request_ajax': request.session.session_key
                                      }, safe=False)
 
         return super().dispatch(request, *args, **kwargs)

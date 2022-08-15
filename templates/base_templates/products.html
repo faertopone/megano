@@ -59,7 +59,8 @@
                         <img src="{{ static('assets/img/icons/card/bookmark.svg') }}" alt="bookmark.svg"/>
                       </a>
 
-                      <a class="Card-btn add-button" data-value={{product.product.id}} data-shop="{{ product.shop.pk }}">
+                      <a class="Card-btn add-button add-button-pulse" data-value={{product.product.id}} data-shop="{{ product.pk }}" data-csrf="{{ csrf_token }}">
+                        <input class="Amount-input form-input select{{ product.pk }}" name="amount" type="hidden">
                         <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
                       </a>
 

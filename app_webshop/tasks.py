@@ -9,15 +9,11 @@ def show_promo_product():
     """
     Выбирает 1 рандомный товар из всего списка
     """
-    if Product.objects.all().exists():
-        if not PromotionsShowProduct.objects.all().exists():
-            promo = PromotionsShowProduct.objects.create(product_show=Product.objects.first())
-        else:
-            promo = PromotionsShowProduct.objects.first()
-        products = Product.objects.all()
-        list_products = []
-        for i in products:
-            list_products.append(i)
-        product_day_show = sample(list_products, 1)
-        promo.product_show = product_day_show[0]
-        promo.save()
+    promo = PromotionsShowProduct.objects.first()
+    products = Product.objects.all()
+    list_products = []
+    for i in products:
+        list_products.append(i)
+    product_day_show = sample(list_products, 1)
+    promo.product_show = product_day_show[0]
+    promo.save()

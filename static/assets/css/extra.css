@@ -3668,7 +3668,7 @@ a.Cart-title {
   display: inline-block;
   line-height: 1em;
 }
-.ProductCard-priceOld {
+.ProductCard-priceOld, .ProductCard-priceOld-mini {
   line-height: 1em;
   font-size: 23px;
   color: #999;
@@ -3677,6 +3677,10 @@ a.Cart-title {
   display: inline-block;
   padding-bottom: 3px;
   margin-left: 10px;
+}
+.ProductCard-priceOld-mini {
+    font-size: inherit;
+    font-weight: inherit;
 }
 .ProductCard-text {
   visibility: visible;
@@ -5228,4 +5232,20 @@ a.Cart-title {
   margin-top: 20px;
     display: flex;
     justify-content: center;
+}
+
+/* Анимация при нажатии на кнопку добавления в корзину */
+.add-button-pulse-anim {
+  animation-duration: 3s;
+  animation-name: add-button-pulse-anim;
+}
+
+@keyframes add-button-pulse-anim {
+  from {
+    background-color: #1f7eff;
+  }
+
+  to {
+    background-color: #ebebeb;
+  }
 }
