@@ -55,7 +55,7 @@
                         <a class="Card-btn expand" href="{{ product.product.product_photo.all()[0].photo.url }}">
                         <img src="{{ static('assets/img/icons/card/bookmark.svg')}}" alt="bookmark.svg"/></a>
                       {% else %}
-                        <a class="Card-btn" href="#">
+                        <a class="Card-btn">
                         <img src="{{ static('assets/img/icons/card/bookmark.svg')}}" alt="bookmark.svg"/></a>
                       {% endif %}
 
@@ -66,8 +66,7 @@
 
                       <a class="Card-change add-compare" data-product="{{ product.product.id }}"
                                      data-key="{{ key }}" tabindex="{{ product.product.id }}">
-                          <span class="tip-click"><img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/></span>
-                          <span class="tip"></span>
+                          <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
                       </a>
                     </div>
                   </div>
