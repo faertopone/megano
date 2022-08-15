@@ -89,30 +89,32 @@ $(document).ready(function (){
         });
     })
 
-        all_add_button.click(function (e) {
+    all_add_button.click(function (e) {
         e.preventDefault();
         var prodid = $(this).attr('data-value');
         var shop_prod_id = $(this).attr('data-shop');
-          $.ajax({
-              type: 'POST',
-              url: url_path,
-              data: {
-                  product_id: prodid,
-                  product_qty: 1,
-                  shop_product_id: shop_prod_id,
-                  csrfmiddlewaretoken: crsf,
-                  action: 'add'
-              },
-              success: function (json) {
-                  document.getElementById('basket-qty').innerHTML = json.qty;
-                  document.getElementById('h-subtotal').innerHTML = json.subtotal;
-                  // document.getElementById('subtotal').innerHTML = json.subtotal;
+        console.log(shop_prod_id)
+        console.log(crsf)
 
-              },
-              error: function (xhr, errmsg, err) {
-              }
-          });
-        })
+        $.ajax({
+            type: 'POST',
+            url: url_path,
+            data: {
+                product_id: prodid,
+                product_qty: $('.select' + shop_prod_id).val(),
+                shop_product_id: shop_prod_id,
+                csrfmiddlewaretoken: crsf,
+                action: 'add'
+            },
+            success: function (json) {
+                document.getElementById('basket-qty').innerHTML = json.qty;
+                document.getElementById('h-subtotal').innerHTML = json.subtotal;
+                // document.getElementById('subtotal').innerHTML = json.subtotal;
+            },
+            error: function (xhr, errmsg, err) {
+            }
+        });
+    })
 
    function compare(){
     $(".Card-change").click(function () {

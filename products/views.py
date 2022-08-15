@@ -53,6 +53,11 @@ class ProductDetailView(DetailView):
         context["count_reviews"] = get_count_reviews(product=self.object)
         context["properties"] = {j.property.name: j.value for j in self.object.product_properties.all()}
 
+        qs = ShopProduct.objects.filter(product=self.object)
+        context["product_with_min_price"] = qs.filter(
+            price_in_shop=qs.aggregate(min_price=models.Min("price_in_shop"))["min_price"]
+        ).first()
+
         if self.request.user.is_authenticated:
             add_product_in_history(user=self.request.user, product_pk=context.get('product').pk)
         else:

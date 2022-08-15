@@ -20,8 +20,11 @@ class Index(ListView):
         context = super().get_context_data(**kwargs)
         # товар дня
         promo = PromotionsShowProduct.objects.first()
+
         context['promotion'] = promo
-        context['data'] = datetime.datetime.now() + datetime.timedelta(days=promo.limit_day_show_product)
+        if promo:
+            context['data'] = datetime.datetime.now() + datetime.timedelta(days=promo.limit_day_show_product)
+
         return context
 
     def get(self, *args, **kwargs):
