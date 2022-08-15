@@ -144,7 +144,7 @@
                                           <div class="Card-hover">
                                             <a class="Card-btn expand" data-history_item_pk = "{{ item.pk }}" href="{{ item.product_photo.all()[0].photo.url }}">
                                             <img src="{{ static('assets/img/icons/card/bookmark.svg')}}" alt="bookmark.svg"/></a>
-                                                   <a class="Card-btn add-button" data-value="{{ item.id}}" data-shop="{{ min_price_in_shop.pk }}" >
+                                                   <a class="Card-btn add-button add-button-pulse" data-value="{{ item.id}}" data-shop="{{ min_price_in_shop.pk }}" >
                                           {% endif %}
                                     {% endfor %}
                                       <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>

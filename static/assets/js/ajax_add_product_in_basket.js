@@ -34,7 +34,16 @@ $(document).ready(function (){
 
     if (btn_compare){
       btn_compare.click(function (){
-        $(this).css('background-color', '#1f7eff')
+        // $(this).css('background-color', '#1f7eff')
+        $(this).addClass("add-button-pulse-anim")
+        // анимация на js
+        $(this).animate({
+          backgroundColor: "#ebebeb",
+        }, 3000, function() {
+          // анимация завершена.
+          // удалить класс анимации
+          $(this).removeClass("add-button-pulse-anim")
+        });
       })
     }
   }
@@ -49,6 +58,7 @@ $(document).ready(function (){
         btn_card = $('#add-button, .add-button')
         btn_compare = $('#add-compare, .add-compare')
         all_add_button = $('.add-button')
+        btn_card_pulse = $('.add-button.add-button-pulse')
 
         color_button()
         compare()
@@ -57,12 +67,16 @@ $(document).ready(function (){
         e.preventDefault();
         var prodid = $(this).attr('data-value');
         var shop_prod_id = $(this).attr('data-shop');
+        var product_qty_value =  $('.select' + shop_prod_id).val()
+        if (product_qty_value === 'undefined' || product_qty_value == null){
+          product_qty_value = 1
+        }
           $.ajax({
               type: 'POST',
               url: url_path,
               data: {
                   product_id: prodid,
-                  product_qty: 1,
+                  product_qty: product_qty_value,
                   shop_product_id: shop_prod_id,
                   csrfmiddlewaretoken: crsf,
                   action: 'add'
@@ -107,15 +121,19 @@ $(document).ready(function (){
         e.preventDefault();
         var prodid = $(this).attr('data-value');
         var shop_prod_id = $(this).attr('data-shop');
-        console.log(shop_prod_id)
-        console.log(crsf)
+        var product_qty_value =  $('.select' + shop_prod_id).val()
+        if (product_qty_value === 'undefined' || product_qty_value == null){
+          product_qty_value = 1
+        }
+      console.log(product_qty_value)
 
         $.ajax({
             type: 'POST',
             url: url_path,
             data: {
                 product_id: prodid,
-                product_qty: $('.select' + shop_prod_id).val(),
+                // product_qty: product_qty_value === null || product_qty_value === undefined ? 1: product_qty_value.val(),
+                product_qty: product_qty_value,
                 shop_product_id: shop_prod_id,
                 csrfmiddlewaretoken: crsf !== null && crsf !== undefined ? crsf : $(this).attr('data-csrf'),
                 action: 'add'
