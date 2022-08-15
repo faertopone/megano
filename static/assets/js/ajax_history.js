@@ -46,12 +46,12 @@ $(document).ready(function (){
               cache: false,
                 success: function (response) {
                     let products = (response.products)
-                    add_product(products);
+                    let request_ajax = response.request_ajax
+                    add_product(products, request_ajax);
                             // Обновляем кнопки после добавления элементов
                             $('.Card-btn[data-history_item_pk]').click(function (e){
                                 e.preventDefault()
                                 item_pk_new = $(this).data('history_item_pk')
-                                console.log(item_pk_new)
                             })
                     if (response.flag_items_complete){
                         // флаг, что все загрузили и кнопка больше ненужна
@@ -68,7 +68,7 @@ $(document).ready(function (){
     })
 
         // функция добавляет еще товары на страницу
-    function add_product(element){
+    function add_product(element, request_ajax){
         for (let i=0; i<element.length; i++){
             let item = element[i]
             let name = item.name
@@ -76,6 +76,23 @@ $(document).ready(function (){
             let category = item.category
             let photo = item.photo
             let item_pk = item.item_pk
+            let old_price = item.old_price
+            let new_price = item.new_price
+            let shop_product_pk = item.shop_product_pk
+            let discount = item.discount
+            let div_price = `<div class="ProductCard-price">${old_price}</div>`
+            let div_discount = ''
+            if (discount) {
+               div_price =
+                 `
+                  <div class="ProductCard-price">${new_price}</div>
+                  <div class="ProductCard-priceOld">${old_price}</div>
+                `
+               div_discount =
+                 `
+                  <div class="Card-sale">-${discount}%</div>
+                 `
+            }
 
                 list_cards.append(`
                      <div class="Card">
@@ -84,16 +101,22 @@ $(document).ready(function (){
                             <strong class="Card-title"><a href="http://127.0.0.1:8000/products/product_detail/${item_pk}/">${name}</a>
                             </strong>
                                 <div class="Card-description">
-                                       <div class="Card-cost"><span class="Card-priceOld">${price}</span><span class="Card-price">$85.00</span>
+                                       <div class="Card-cost">
+                                       ${div_price}
                                       </div>
                                     <div class="Card-category">${category}
                                     </div>
         
-                                  <div class="Card-hover"><a class="Card-btn" data-history_item_pk = ${item_pk} href="#"><img src="/static/assets/img/icons/card/bookmark.svg" alt="bookmark.svg"/></a><a class="Card-btn" href="#"><img src="/static/assets/img/icons/card/cart.svg" alt="cart.svg"/></a><a class="Card-btn" href="#"><img src="/static/assets/img/icons/card/change.svg" alt="change.svg"/></a>
+                                  <div class="Card-hover">
+                                    <a class="Card-btn" data-history_item_pk = ${item_pk} href="#"><img src="/static/assets/img/icons/card/bookmark.svg" alt="bookmark.svg"/></a>
+                                    <a class="Card-btn add-button" data-value=${item_pk} data-shop=${shop_product_pk} >
+                                    <img src="/static/assets/img/icons/card/cart.svg" alt="cart.svg"/></a>
+                                    <a class="Card-change add-compare" data-product=${item_pk} data-key=${request_ajax}>
+                                    <img src="/static/assets/img/icons/card/change.svg" alt="change.svg"/></a>
                                   </div>
                                 </div>
                           </div>
-                          <div class="Card-sale">-60%</div>
+                          ${div_discount}
                         </div>
                 `);
             }
@@ -107,7 +130,7 @@ $(document).ready(function (){
             e.preventDefault()
             let item_pk = $(this).data('history_item_pk')
             console.log(item_pk)
-            // ТУТ ajax ФУНКЦИЯ на добавление в история просмотра пользователя
+
             first_btn= false
         })
     }

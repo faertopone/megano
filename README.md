@@ -156,5 +156,11 @@ python -Xutf8 manage.py dumpdata <app>.<model> --indent 2 -o fixtures\<app>\<low
    ```
    python manage.py loaddata fixtures\basket\interval.json fixtures\basket\clearing_basket_every_60_min.json
    ```
+   9. Загрузить модель "Товар дня"
+   ```
+   python manage.py loaddata fixtures/promotions/promo_product.json
+   ```
    
    :warning: Не забываем добавлять здесь, как загружать новые фикстуры!
+=
+3. *
