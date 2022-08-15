@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.core.cache import cache
 from .models import PropertyProduct, ProductPhoto, Product, UserReviews
+from shops.models import ShopProduct
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
 
@@ -11,8 +12,11 @@ def product_detail(product_id: int):
     Возвращает детальную информацию о товаре с его характеристиками
     для передачи в КЭШ.
     """
-    product = Product.objects.get(id=product_id)
+    # product = Product.objects.get(id=product_id)
+    product_shop = ShopProduct.objects.select_related("product").filter(product_id=product_id)
+    product = product_shop[0].product
     context = {
+        'shops': [i for i in product_shop],
         'product': {
             'id': product.id,
             'name': product.name,
