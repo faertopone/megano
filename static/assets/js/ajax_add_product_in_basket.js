@@ -7,16 +7,30 @@ $(document).ready(function (){
   let btn_card = $('#add-button, .add-button')
   let btn_card_text = $('#add-button .btn-content')
   let btn_compare = $('#add-compare, .add-compare')
+  let btn_card_pulse = $('.add-button.add-button-pulse')
 
   function color_button(){
      // если эта кнопка есть на странице
     if (btn_card){
       btn_card.click(function (){
         btn_card_text.text('Товар добавлен')
-        $(this).css('background-color', '#1f7eff')
       })
     }
 
+    if (btn_card_pulse) {
+      btn_card_pulse.click(function (){
+        // добавить класс анимации
+        $(this).addClass("add-button-pulse-anim")
+        // анимация на js
+        $(this).animate({
+          backgroundColor: "#ebebeb",
+        }, 3000, function() {
+          // анимация завершена.
+          // удалить класс анимации
+          $(this).removeClass("add-button-pulse-anim")
+        });
+      })
+    }
 
     if (btn_compare){
       btn_compare.click(function (){
@@ -103,7 +117,7 @@ $(document).ready(function (){
                 product_id: prodid,
                 product_qty: $('.select' + shop_prod_id).val(),
                 shop_product_id: shop_prod_id,
-                csrfmiddlewaretoken: crsf,
+                csrfmiddlewaretoken: crsf !== null && crsf !== undefined ? crsf : $(this).attr('data-csrf'),
                 action: 'add'
             },
             success: function (json) {
