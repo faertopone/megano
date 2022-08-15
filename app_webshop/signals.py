@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
@@ -21,4 +19,3 @@ def new_setting_period_task(sender, instance, created, **kwargs):
     )
     task_period.crontab = schedule
     task_period.save()
-

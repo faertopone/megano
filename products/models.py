@@ -200,7 +200,8 @@ class ProductPhoto(models.Model):
     """
     Модель с фотографиями магазинов
     """
-    photo = models.ImageField(upload_to='products_photo/', default='products_photo/default.png', verbose_name=_('фото товара'))
+    photo = models.ImageField(upload_to='products_photo/', default='products_photo/default.png',
+                              verbose_name=_('фото товара'))
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,

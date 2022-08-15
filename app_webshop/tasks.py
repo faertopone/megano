@@ -17,5 +17,3 @@ def show_promo_product():
     product_day_show = sample(list_products, 1)
     promo.product_show = product_day_show[0]
     promo.save()
-
-
