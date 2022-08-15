@@ -109,7 +109,7 @@ $(document).ready(function (){
         
                                   <div class="Card-hover">
                                     <a class="Card-btn" data-history_item_pk = ${item_pk} href="#"><img src="/static/assets/img/icons/card/bookmark.svg" alt="bookmark.svg"/></a>
-                                    <a class="Card-btn add-button" data-value=${item_pk} data-shop=${shop_product_pk} >
+                                    <a class="Card-btn add-button add-button-pulse" data-value=${item_pk} data-shop=${shop_product_pk} >
                                     <img src="/static/assets/img/icons/card/cart.svg" alt="cart.svg"/></a>
                                     <a class="Card-change add-compare" data-product=${item_pk} data-key=${request_ajax}>
                                     <img src="/static/assets/img/icons/card/change.svg" alt="change.svg"/></a>
