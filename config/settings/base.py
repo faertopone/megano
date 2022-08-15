@@ -109,14 +109,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': dj_database_url.parse(os.environ.get(
         'DATABASE_URL', 'postgres://postgres:postgres@127.0.0.1:5432/meganodb'
-    # 'default': {
-    #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #         'NAME': 'meganodb',
-    #         'USER': 'postgres',
-    #         'PASSWORD': 'postgres',
-    #         'HOST': '127.0.0.1',
-    #         'PORT': '5432',
-    #     }
     )),
 }
 

@@ -42,8 +42,7 @@
                             <strong class="Card-title"><a href="{{ url('products:product-detail', kwargs = {'pk': item.pk}) }}">{{ item.name }}</a>
                             </strong>
                                 <div class="Card-description">
-                                    {% for min_price_in_shop in item.shop_product.all()|sort(attribute='price_in_shop', reverse=False)  %}
-                                          {% if loop.first %}
+                                    {% for min_price_in_shop in item.shop_product.all()[:1]|sort(attribute='price_in_shop', reverse=False)  %}
                                             <div class="Card-cost">
                                               {% if item.promotion_group.promotion %}
                                               {% set price_float = min_price_in_shop.price_in_shop|float %}
@@ -55,22 +54,21 @@
                                             </div>
                                           <div class="Card-category">{{ item.category }}
                                           </div>
-
-                                          <div class="Card-hover"><a class="Card-btn"  data-history_item_pk = {{ item.pk }} href="#">
+                                          <div class="Card-hover">
+                                          <a class="Card-btn"  data-history_item_pk = {{ item.pk }} href="#">
                                             <img src="{{ static('assets/img/icons/card/bookmark.svg')}}" alt="bookmark.svg"/></a>
-                                                   <a class="Card-btn add-button" data-value="{{ item.id}}" data-shop="{{ min_price_in_shop.pk }}" >
-                                          {% endif %}
+                                            <a class="Card-btn add-button" data-value="{{ item.id}}" data-shop="{{ min_price_in_shop.pk }}" >
+                                            <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
+                                            </a>
+                                            <a class="Card-change add-compare" data-product="{{ item.id }}" data-key="{{ request.session.session_key }}">
+                                              <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
+                                             </a>
                                     {% endfor %}
-                                      <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
-                                    </a>
-                                    <a class="Card-change add-compare" data-product="{{ item.id }}" data-key="{{ request.session.session_key }}">
-                                          <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
-                                    </a>
                                   </div>
                                 </div>
                           </div>
                         {% if item.promotion_group.promotion %}
-                          <div class="Card-sale">-{{item.promotion_group.promotion.discount }}%</div>
+                          <div class="Card-sale">-{{ item.promotion_group.promotion.discount }}%</div>
                         {% endif %}
                         </div>
                      {% endfor %}

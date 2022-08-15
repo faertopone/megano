@@ -679,6 +679,9 @@ var Amount = function(){
     var $amount = $('.Amount');
     var $add = $('.Amount-add');
     var $input = $('.Amount-input');
+    if ($input.val() === '') {
+      $input.val(1)
+    }
     var $remove = $('.Amount-remove');
     return {
         init: function(){
