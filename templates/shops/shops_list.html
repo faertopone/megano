@@ -139,10 +139,11 @@
                     </a>
                   </strong>
                   <div class="Card-description">
-                    <div class="Card-cost">
-                      <span class="Card-category">
-                        {{ shop.description }}
-                      </span>
+                    <div>
+                        <br>{{ _('Город') }}: {{ shop.city }}
+                        <br>{{ _('Адрес') }}: {{ shop.street }}, {{ shop.house_number }}
+                        <br>{{ _('Телефон') }}: {{ shop.phone }}
+                        <br>{{ _('email') }}: {{ shop.email }}
                     </div>
                   </div>
                 </div>

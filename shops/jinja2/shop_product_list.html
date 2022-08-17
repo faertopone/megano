@@ -21,7 +21,13 @@
                           <div class="row">
                             <div class="row-block">
                               <strong class="Slider-title"> {{ shop.name }}</strong>
-                              <div class="Slider-text">{{ shop.description }}</div>
+                              <div class="Slider-text">
+                                <br>{{ _('Город') }}: {{ shop.city }}
+                                <br>{{ _('Адрес') }}: {{ shop.street }}, {{ shop.house_number }}
+                                <br>{{ _('Телефон') }}: {{ shop.phone }}
+                                <br>{{ _('email') }}: {{ shop.email }}
+                                <br>{{ _('Описание') }}: {{ shop.description }}
+                              </div>
                             </div>
                             <div class="row-block">
                               <div class="Slider-img"><img src="{% if photo %}{{ photo }} {% else %} {{ static('assets/img/logo.png') }}{% endif %}" alt="{{ photo }}"/></div>
