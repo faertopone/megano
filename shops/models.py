@@ -6,11 +6,13 @@ from typing import Optional, Tuple
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from timestamps.models import models, SoftDeletes
+
 from products.models import Product, ProductPhoto
 from promotions.models import Promotions
 
 
-class Shops(models.Model):
+class Shops(SoftDeletes):
     """
     Модель профиля магазина. Содержит подробную информацию о продавце
     (название, описание, адрес, рейтинг, участие в акциях).
@@ -55,7 +57,7 @@ class ShopPhoto(models.Model):
         verbose_name_plural = _('фото магазина')
 
 
-class ShopUser(models.Model):
+class ShopUser(SoftDeletes):
     """
     Модель, связывающая пользователя с магазином.
     У пользователя открыты права для редактирования профиля магазина,
@@ -67,7 +69,7 @@ class ShopUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('пользователь'))
 
 
-class ShopProduct(models.Model):
+class ShopProduct(SoftDeletes):
     """
     Модель, связывающая товар с магазином,
     определяет количество товара в магазине, цену в конкретном магазине
