@@ -2,9 +2,10 @@ from django.core.validators import RegexValidator, MinValueValidator
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from timestamps.models import models, SoftDeletes
 
 
-class Client(models.Model):
+class Client(SoftDeletes):
     """Основная модель пользователя"""
     user = models.OneToOneField(
         User,

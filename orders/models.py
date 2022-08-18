@@ -1,9 +1,10 @@
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from timestamps.models import models, SoftDeletes
 
 
-class Order(models.Model):
+class Order(SoftDeletes):
     """
     Модель заказа товаров
     """
@@ -69,7 +70,7 @@ def order_copy_product_directory_path(instance, filename):
     return 'orders_photo/{name}_photo_+{filename}'.format(name=instance.name, filename=filename)
 
 
-class OrderCopyProduct(models.Model):
+class OrderCopyProduct(SoftDeletes):
     """
     Копия модели продукта
     """

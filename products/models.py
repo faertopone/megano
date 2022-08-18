@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator, MinValueValidator, RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from timestamps.models import models, SoftDeletes
 
 from promotions.models import PromotionGroup
 
@@ -36,7 +37,7 @@ class Category(models.Model):
         return self.category_name
 
 
-class Product(models.Model):
+class Product(SoftDeletes):
     """
     Товар.
     """
@@ -214,7 +215,7 @@ class ProductPhoto(models.Model):
         verbose_name_plural = _('фото товаров')
 
 
-class UserReviews(models.Model):
+class UserReviews(SoftDeletes):
     """
     Модель добавления комментария к товару
     """
