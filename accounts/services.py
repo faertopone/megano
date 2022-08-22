@@ -165,6 +165,7 @@ def get_context_data_ajax(user, items_in_page) -> list:
     list_item_views = list_item_views[items_in_page:end_element]
     list_in_page = []
     photo = '#'
+    new_price = None
     for item in list_item_views:
         show_product_min_data = item.shop_product.order_by('price_in_shop').all()[:1]
         if item.promotion_group:

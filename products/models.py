@@ -210,6 +210,7 @@ class ProductPhoto(models.Model):
         related_name="product_photo"
     )
 
+
     class Meta:
         verbose_name = _('фото товара')
         verbose_name_plural = _('фото товаров')

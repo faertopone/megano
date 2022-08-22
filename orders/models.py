@@ -121,7 +121,7 @@ class DeliverySetting(models.Model):
     """
     Модель управлением ценами и условиями на доставку товаров
     """
-    name = models.CharField(verbose_name=_('Настройка доставки'), max_length=20)
+    name = models.CharField(verbose_name=_('Настройка доставки'), max_length=100)
     limit_price_free = models.PositiveIntegerField(verbose_name=_('Минимальная цена для бесплатной доставки'),
                                                    default=2000,
                                                    help_text=_('Установите цену, при которой сумма товаров в корзине '

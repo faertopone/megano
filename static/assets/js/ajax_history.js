@@ -96,9 +96,9 @@ $(document).ready(function (){
 
                 list_cards.append(`
                      <div class="Card">
-                            <a class="Card-picture" href="http://127.0.0.1:8000/products/product_detail/${item_pk}/"><img src="${photo}"/></a>
+                            <a class="Card-picture" href="/products/product_detail/${item_pk}/"><img src="${photo}"/></a>
                           <div class="Card-content">
-                            <strong class="Card-title"><a href="http://127.0.0.1:8000/products/product_detail/${item_pk}/">${name}</a>
+                            <strong class="Card-title"><a href="/products/product_detail/${item_pk}/">${name}</a>
                             </strong>
                                 <div class="Card-description">
                                        <div class="Card-cost">

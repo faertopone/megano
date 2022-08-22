@@ -31,6 +31,7 @@ class ClientAdmin(admin.ModelAdmin):
                     'item_in_page_views', 'get_orders_count', 'client_photo']
     list_filter = ['is_seller']
     list_display_links = ['user']
+    exclude = ("deleted_at",)
     search_fields = ['^name', ]
     readonly_fields = ('orders',)
     autocomplete_fields = ['item_view']
