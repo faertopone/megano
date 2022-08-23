@@ -1,0 +1,84 @@
+{% macro view_product_list(products, view_product_macro, promotion_service, header="", key="", h_level=2) %}
+          {% if header and h_level in (1, 2, 3, 4, 5, 6) and products.count() %}
+          <header class="Section-header">
+            <h{{ h_level }}>{{ header }}</h{{ h_level }}>
+          </header>
+          {% endif %}
+
+          <div class="Cards">
+            {% for product in products %}
+              {{ view_product_macro(product, promotion_service, key) }}
+            {% endfor %}
+          </div>
+{% endmacro %}
+
+{% macro view_product(product, promotion_service, key) %}
+               <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+              <div class="Card">
+                <a class="Card-picture" href="{{ url('products:product-detail', kwargs={'pk': product.product.pk}) }}">
+                  {% if product.product.product_photo.count() %}
+                  <img src="{{ product.product.product_photo.all()[0].photo.url }}" alt="{{ product.product.name }}"/>
+                  {% else %}
+                  <img src="{{ static('default.png') }}" alt="{{ product.product.name }}"/>
+                  {% endif %}
+                </a>
+                <div class="Card-content">
+                  <strong class="Card-title">
+                    <a href="{{ url('products:product-detail', kwargs={'pk': product.product.pk}) }}" title="{{ product.name }}">
+                      {{ product.product.name|truncate(100) }}
+                    </a>
+                  </strong>
+                  <div class="Card-description">
+                    <div class="Card-cost">
+                      {% set prices = product.get_prices_with_promotion(promotion_service) %}
+                      {% if prices.new_price %}
+                      <span class="Card-priceOld">
+                        {{ prices.old_price }} &#8381;
+                      </span>
+                      <span class="Card-price">
+                        {{ prices.new_price }} &#8381;
+                      </span>
+                      {% else %}
+                      <span class="Card-price">
+                        {{ prices.old_price }} &#8381;
+                      </span>
+                      {% endif %}
+                    </div>
+                    <div class="Card-category">
+                      <a href="{{ url('shop-detail', kwargs={'pk': product.shop.pk}) }}" style="color: #999;">
+                        {{ product.shop.name }}
+                      </a>
+                      / {{ product.product.category.category_name }}
+                    </div>
+                    <div class="Card-hover">
+                      {% if product.product.product_photo.count() %}
+                        <a class="Card-btn expand" href="{{ product.product.product_photo.all()[0].photo.url }}">
+                        <img src="{{ static('assets/img/icons/card/bookmark.svg')}}" alt="bookmark.svg"/></a>
+                      {% else %}
+                        <a class="Card-btn">
+                        <img src="{{ static('assets/img/icons/card/bookmark.svg')}}" alt="bookmark.svg"/></a>
+                      {% endif %}
+
+                      <a class="Card-btn add-button add-button-pulse" data-value={{product.product.id}} data-shop="{{ product.pk }}" data-csrf="{{ csrf_token }}">
+                        <input class="Amount-input form-input select{{ product.pk }}" name="amount" type="hidden">
+                        <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
+                      </a>
+
+                      <a class="Card-change add-compare" data-product="{{ product.product.id }}"
+                                     data-key="{{ key }}" tabindex="{{ product.product.id }}">
+                          <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {% set discount = product.get_promotion_discount(promotion_service) %}
+                {% if discount %}
+                  {{ view_discount(discount) }}
+                {% endif %}
+              </div>
+{% endmacro %}
+
+{% macro view_discount(discount) %}
+  <div class="Card-sale">{{ (-1) * int(discount // 1) if discount % 1 == 0 else discount }}%</div>
+{% endmacro %}

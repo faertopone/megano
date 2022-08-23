@@ -1,0 +1,170 @@
+[
+{
+  "model": "shops.shopproduct",
+  "pk": 1,
+  "fields": {
+    "shop": 4,
+    "product": 2,
+    "amount": 10,
+    "price_in_shop": "3300.00",
+    "promotion": null,
+    "special_price": "3300.00",
+    "photo_url": "",
+    "sale": 0
+  }
+},
+{
+  "model": "shops.shopproduct",
+  "pk": 2,
+  "fields": {
+    "shop": 4,
+    "product": 2,
+    "amount": 20,
+    "price_in_shop": "3500.00",
+    "promotion": 7,
+    "special_price": "3500.00",
+    "photo_url": "",
+    "sale": 0
+  }
+},
+{
+  "model": "shops.shopproduct",
+  "pk": 3,
+  "fields": {
+    "shop": 4,
+    "product": 3,
+    "amount": 10,
+    "price_in_shop": "1500.00",
+    "promotion": null,
+    "special_price": "1500.00",
+    "photo_url": "",
+    "sale": 0
+  }
+},
+{
+  "model": "shops.shopproduct",
+  "pk": 4,
+  "fields": {
+    "shop": 4,
+    "product": 4,
+    "amount": 10,
+    "price_in_shop": "1500.00",
+    "promotion": null,
+    "special_price": "1500.00",
+    "photo_url": "",
+    "sale": 0
+  }
+},
+{
+  "model": "shops.shopproduct",
+  "pk": 5,
+  "fields": {
+    "shop": 4,
+    "product": 5,
+    "amount": 10,
+    "price_in_shop": "610.00",
+    "promotion": null,
+    "special_price": "610.00",
+    "photo_url": "",
+    "sale": 0
+  }
+},
+{
+  "model": "shops.shopproduct",
+  "pk": 6,
+  "fields": {
+    "shop": 4,
+    "product": 6,
+    "amount": 10,
+    "price_in_shop": "1399.00",
+    "promotion": 6,
+    "special_price": "1399.00",
+    "photo_url": "",
+    "sale": 0
+  }
+},
+{
+  "model": "shops.shopproduct",
+  "pk": 7,
+  "fields": {
+    "shop": 5,
+    "product": 6,
+    "amount": 10,
+    "price_in_shop": "1500.00",
+    "promotion": 5,
+    "special_price": "1500.00",
+    "photo_url": "",
+    "sale": 0
+  }
+},
+{
+  "model": "shops.shopproduct",
+  "pk": 8,
+  "fields": {
+    "shop": 5,
+    "product": 7,
+    "amount": 10,
+    "price_in_shop": "1299.00",
+    "promotion": null,
+    "special_price": "1299.00",
+    "photo_url": "",
+    "sale": 0
+  }
+},
+{
+  "model": "shops.shopproduct",
+  "pk": 9,
+  "fields": {
+    "shop": 5,
+    "product": 8,
+    "amount": 10,
+    "price_in_shop": "67880.00",
+    "promotion": null,
+    "special_price": "67880.00",
+    "photo_url": "",
+    "sale": 0
+  }
+},
+{
+  "model": "shops.shopproduct",
+  "pk": 10,
+  "fields": {
+    "shop": 5,
+    "product": 9,
+    "amount": 10,
+    "price_in_shop": "16980.00",
+    "promotion": 5,
+    "special_price": "16980.00",
+    "photo_url": "",
+    "sale": 0
+  }
+},
+{
+  "model": "shops.shopproduct",
+  "pk": 11,
+  "fields": {
+    "shop": 5,
+    "product": 10,
+    "amount": 10,
+    "price_in_shop": "3300.00",
+    "promotion": null,
+    "special_price": "3300.00",
+    "photo_url": "",
+    "sale": 0
+  }
+},
+{
+  "model": "shops.shopproduct",
+  "pk": 12,
+  "fields": {
+    "shop": 5,
+    "product": 10,
+    "amount": 15,
+    "price_in_shop": "4000.00",
+    "promotion": null,
+    "special_price": "4000.00",
+    "photo_url": "",
+    "sale": 0
+  }
+}
+]

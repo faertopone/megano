@@ -1,0 +1,38 @@
+{% extends 'base_templates/base.html' %}
+
+{% block content %}
+<div class="Middle Middle_top">
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h1 class="Middle-title">{{ category.category_name }}</h1>
+          <ul class="breadcrumbs Middle-breadcrumbs">
+            <li class="breadcrumbs-item"><a href="/">{{ _('Главная') }}</a></li>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>{{ _('Каталог') }}</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="Section Section_column Section_columnLeft">
+      <div class="wrap">
+        <div class="Section-column">
+          <div class="Section-columnSection">
+            <header class="Section-header">
+              <strong class="Section-title">{{ _('Фильтр') }}</strong>
+            </header>
+            <div class="Section-columnContent">
+              <form method="get">
+                {{ filter.cache('category_filter:' + category.pk.__str__() + ':' + request.get_full_path(), 24 * 60 * 60) }}
+                <div class="buttons">
+                  <input class="btn btn_square btn_dark btn_narrow" type="submit" value="{{ _('Фильтр') }}">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        {% include 'product_section.html' %}
+      </div>
+    </div>
+</div>
+{% endblock content %}

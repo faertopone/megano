@@ -1,0 +1,58 @@
+[
+{
+  "model": "shops.shopphoto",
+  "pk": 1,
+  "fields": {
+    "photo": "shops_photo/2_mYx68je.jpg",
+    "shop": 2
+  }
+},
+{
+  "model": "shops.shopphoto",
+  "pk": 2,
+  "fields": {
+    "photo": "shops_photo/1_GnXN1dm.jpg",
+    "shop": 2
+  }
+},
+{
+  "model": "shops.shopphoto",
+  "pk": 3,
+  "fields": {
+    "photo": "shops_photo/file_1612164491_i16y0lq.jpg",
+    "shop": 1
+  }
+},
+{
+  "model": "shops.shopphoto",
+  "pk": 4,
+  "fields": {
+    "photo": "shops_photo/file_1612164475_NU6A5h6.jpg",
+    "shop": 1
+  }
+},
+{
+  "model": "shops.shopphoto",
+  "pk": 5,
+  "fields": {
+    "photo": "shops_photo/5e5d72af10ea9_2nqJdV5.jpg",
+    "shop": 1
+  }
+},
+{
+  "model": "shops.shopphoto",
+  "pk": 6,
+  "fields": {
+    "photo": "shops_photo/Снимок_экрана_от_2022-06-01_13-57-01.png",
+    "shop": 3
+  }
+},
+{
+  "model": "shops.shopphoto",
+  "pk": 7,
+  "fields": {
+    "photo": "shops_photo/1_a9gT1wR.jpg",
+    "shop": 3
+  }
+}
+]

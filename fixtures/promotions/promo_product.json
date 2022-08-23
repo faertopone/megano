@@ -1,0 +1,10 @@
+[
+{
+  "model": "promotions.promotionsshowproduct",
+  "pk": 1,
+  "fields": {
+    "limit_day_show_product": 3,
+    "product_show": 2
+  }
+}
+]

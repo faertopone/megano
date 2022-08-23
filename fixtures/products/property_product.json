@@ -1,0 +1,569 @@
+[
+{
+  "model": "products.propertyproduct",
+  "pk": 4,
+  "fields": {
+    "product": 2,
+    "property": 3,
+    "value": "Наручные часы"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 5,
+  "fields": {
+    "product": 2,
+    "property": 4,
+    "value": "Мужской"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 6,
+  "fields": {
+    "product": 2,
+    "property": 5,
+    "value": "Весна-лето 2022"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 7,
+  "fields": {
+    "product": 2,
+    "property": 6,
+    "value": "Черный"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 8,
+  "fields": {
+    "product": 3,
+    "property": 7,
+    "value": "На любой сезон"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 9,
+  "fields": {
+    "product": 3,
+    "property": 8,
+    "value": "3.5"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 10,
+  "fields": {
+    "product": 3,
+    "property": 5,
+    "value": "Базовая коллекция"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 11,
+  "fields": {
+    "product": 3,
+    "property": 3,
+    "value": "Ремень"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 12,
+  "fields": {
+    "product": 3,
+    "property": 9,
+    "value": "100"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 13,
+  "fields": {
+    "product": 3,
+    "property": 4,
+    "value": "Женский"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 14,
+  "fields": {
+    "product": 3,
+    "property": 10,
+    "value": "100"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 15,
+  "fields": {
+    "product": 3,
+    "property": 12,
+    "value": "100"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 16,
+  "fields": {
+    "product": 3,
+    "property": 6,
+    "value": "Черный"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 17,
+  "fields": {
+    "product": 4,
+    "property": 7,
+    "value": "На любой сезон"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 18,
+  "fields": {
+    "product": 4,
+    "property": 8,
+    "value": "3.5"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 19,
+  "fields": {
+    "product": 4,
+    "property": 5,
+    "value": "Базовая коллекция"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 20,
+  "fields": {
+    "product": 4,
+    "property": 3,
+    "value": "Ремень"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 21,
+  "fields": {
+    "product": 4,
+    "property": 9,
+    "value": "100"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 22,
+  "fields": {
+    "product": 4,
+    "property": 4,
+    "value": "Женский"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 23,
+  "fields": {
+    "product": 4,
+    "property": 11,
+    "value": "Китай"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 24,
+  "fields": {
+    "product": 4,
+    "property": 10,
+    "value": "100"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 25,
+  "fields": {
+    "product": 4,
+    "property": 12,
+    "value": "100"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 26,
+  "fields": {
+    "product": 4,
+    "property": 6,
+    "value": "Белый"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 27,
+  "fields": {
+    "product": 5,
+    "property": 11,
+    "value": "Китай"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 28,
+  "fields": {
+    "product": 5,
+    "property": 13,
+    "value": "Латунь"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 29,
+  "fields": {
+    "product": 5,
+    "property": 14,
+    "value": "115х35"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 30,
+  "fields": {
+    "product": 5,
+    "property": 3,
+    "value": "Заколка-краб"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 31,
+  "fields": {
+    "product": 5,
+    "property": 4,
+    "value": "Женский"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 32,
+  "fields": {
+    "product": 5,
+    "property": 5,
+    "value": "Базовая коллекция"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 33,
+  "fields": {
+    "product": 5,
+    "property": 6,
+    "value": "Серебристый"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 34,
+  "fields": {
+    "product": 5,
+    "property": 15,
+    "value": "25"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 35,
+  "fields": {
+    "product": 5,
+    "property": 12,
+    "value": "11,5"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 36,
+  "fields": {
+    "product": 5,
+    "property": 8,
+    "value": "3.5"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 37,
+  "fields": {
+    "product": 5,
+    "property": 16,
+    "value": "1 день"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 38,
+  "fields": {
+    "product": 6,
+    "property": 7,
+    "value": "На любой сезон"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 39,
+  "fields": {
+    "product": 6,
+    "property": 13,
+    "value": "Хлопок, Эластан"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 40,
+  "fields": {
+    "product": 6,
+    "property": 19,
+    "value": "92"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 41,
+  "fields": {
+    "product": 6,
+    "property": 3,
+    "value": "Пижама"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 42,
+  "fields": {
+    "product": 6,
+    "property": 4,
+    "value": "Девочки"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 43,
+  "fields": {
+    "product": 6,
+    "property": 11,
+    "value": "Китай"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 44,
+  "fields": {
+    "product": 6,
+    "property": 6,
+    "value": "Розовый"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 45,
+  "fields": {
+    "product": 7,
+    "property": 7,
+    "value": "На любой сезон"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 46,
+  "fields": {
+    "product": 7,
+    "property": 13,
+    "value": "Хлопок 100%"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 47,
+  "fields": {
+    "product": 7,
+    "property": 3,
+    "value": "Домашний комплект"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 48,
+  "fields": {
+    "product": 7,
+    "property": 6,
+    "value": "Серый"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 49,
+  "fields": {
+    "product": 7,
+    "property": 4,
+    "value": "Женский"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 50,
+  "fields": {
+    "product": 7,
+    "property": 11,
+    "value": "Россия"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 51,
+  "fields": {
+    "product": 8,
+    "property": 13,
+    "value": "Металл, Пластик"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 52,
+  "fields": {
+    "product": 8,
+    "property": 15,
+    "value": "162"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 53,
+  "fields": {
+    "product": 8,
+    "property": 16,
+    "value": "12 месяцев"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 54,
+  "fields": {
+    "product": 8,
+    "property": 14,
+    "value": "146,7х71,5х7,4"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 55,
+  "fields": {
+    "product": 9,
+    "property": 13,
+    "value": "Пластик"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 56,
+  "fields": {
+    "product": 9,
+    "property": 16,
+    "value": "13 месяцев"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 57,
+  "fields": {
+    "product": 9,
+    "property": 14,
+    "value": "173.32 х 78.78 х 9.62"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 58,
+  "fields": {
+    "product": 9,
+    "property": 15,
+    "value": "213"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 59,
+  "fields": {
+    "product": 10,
+    "property": 3,
+    "value": "Детский фотоаппарат"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 60,
+  "fields": {
+    "product": 10,
+    "property": 29,
+    "value": "Нет"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 61,
+  "fields": {
+    "product": 10,
+    "property": 16,
+    "value": "30 дней"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 62,
+  "fields": {
+    "product": 10,
+    "property": 6,
+    "value": "Розовый"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 63,
+  "fields": {
+    "product": 8,
+    "property": 6,
+    "value": "Черный"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 64,
+  "fields": {
+    "product": 8,
+    "property": 11,
+    "value": "Китай"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 65,
+  "fields": {
+    "product": 9,
+    "property": 6,
+    "value": "Черный"
+  }
+},
+{
+  "model": "products.propertyproduct",
+  "pk": 66,
+  "fields": {
+    "product": 9,
+    "property": 11,
+    "value": "Китай"
+  }
+}
+]

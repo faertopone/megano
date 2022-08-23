@@ -1,0 +1,44 @@
+{%  extends 'base_templates/base.html'  %}
+{% block title %}{{ _('Оплата заказа') }}{% endblock title %}
+{% block content %}
+  <div class="Middle Middle_top">
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h1 class="Middle-title">{{ _('Оплата') }}
+          </h1>
+          <ul class="breadcrumbs Middle-breadcrumbs">
+            <li class="breadcrumbs-item"><a href="{{ url('index') }}"> {{ _('Домой') }}</a>
+            </li>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>{{ _('Оплата') }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="Section">
+      <div class="wrap">
+
+        <form class="form Payment"  method="post">
+                         {# Jinja2 токен csrf_token #}
+             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+          <div class="Payment-card">
+            <div class="form-group">
+              <label class="form-label">{{ _('Номер карты') }}
+              </label>
+                {{ form.number_visa }}
+                {{ form.number_visa.errors }}
+            </div>
+              {% if order.payment == 'Онлайн со случайного чужого счета' %}
+                <div class="form-group"><a class="btn btn_success Payment-generate" href="#">{{ _('Сгенирировать случайный счет') }}</a>
+                </div>
+              {% endif %}
+          </div>
+          <div class="Payment-pay"><button type="submit" class="btn btn_primary">{{ _('Оплатить') }}</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

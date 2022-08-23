@@ -1,0 +1,82 @@
+{%  extends 'base_templates/base.html'  %}
+
+{% block title %}{{ _('Загрузить файл') }}{% endblock %}
+
+{% block content %}
+
+<div class="Middle Middle_top">
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h1 class="Middle-title"> {{ _('Импорт данных') }}</h1>
+            <ul class="breadcrumbs Middle-breadcrumbs">
+              <li class="breadcrumbs-item"><a href="{{ url('index') }}"> {{ _('Домой') }}</a>
+              </li>
+              <li class="breadcrumbs-item breadcrumbs-item_current"><span>{{ _('Импорт данных') }}</span>
+              </li>
+            </ul>
+        </div>
+      </div>
+    </div>
+    <div class="Section Section_column Section_columnLeft">
+      <div class="wrap">
+        {# НАВИГАЦИЯ #}
+        {% include 'base_templates/navigation.html' %}
+        {# ============ #}
+        <div class="Section-content">
+          <div class="Account">
+            <div class="Account-group">
+              <div class="Account-column">
+                <div class="Account-column Account-column_full">
+                  <div>
+                  {% if request.user.is_superuser %}
+                    <h3 class="Section-title"><a href="/import/update/">{{ _('У Вас права администратора.') }} <br>
+                        {{ _('Можно загрузить для обработки файлы фикстур') }}</a></h3>
+                  {% endif %}
+                  </div>
+                  <div class="row" >
+                    <form method="get" enctype="multipart/form-data">
+                            {{ csrf_input }}
+                        <strong class="Section-title">{{ _('Выберите магазин:') }}</strong>
+                          <select name="shop" id="selshop">
+                            {% if user_shop %}
+                              {% for shop in user_shop %}
+                                <option value="{{ shop.id }}">{{ shop.name }}</option>
+                              {% endfor %}
+                            {% endif %}
+                          </select>
+                        <strong class="Section-title">{{ _('Выберите категорию загружаемых товаров:') }}</strong>
+                          <select name="category" id="selcategory">
+                              {% for category in categories %}
+                                <option value="{{ category.id }}">{{ category.category_name }}</option>
+                              {% endfor %}
+                          </select>
+                            <button id="category_id">{{ _('применить') }}</button>
+                        </form>
+                  </div>
+                  <div class="row" id="category_list">{{ _('После выбора появятся обязательные для заполнения в файле .csv поля') }}</div>
+                      {% if info %}
+                        <h3>{{ info }}</h3>
+                      {% endif %}
+                  <div class="Account-column Account-column_full" id="update" style="display:none;">
+                    <div ><a id="file" href="#">{{ _('Скачать шаблон для выбранной категории') }}</a></div>
+                    <header class="Section-header" >
+                      <h2 class="Section-title">{{ _('Загрузить файл') }}
+                      </h2>
+                        <form method="post" enctype="multipart/form-data">
+                            {{ csrf_input }}
+                            {{ form.file }}
+                            <input id="file_button" name="shop_category" style="display:none;">
+                            <button type="submit">{{ _('Загрузить') }}</button>
+                        </form>
+                    </header>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{%  extends 'base_templates/base.html'  %}
+{% block title %}{{ _('История просмотров') }}{% endblock title %}
+{% block content %}
+
+  <div class="Middle Middle_top">
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h1 class="Middle-title">{{ _('История просмотра') }}
+          </h1>
+          <ul class="breadcrumbs Middle-breadcrumbs">
+            <li class="breadcrumbs-item"><a href="{{ url('index') }}">{{ _('Домой') }}</a>
+            </li>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>{{ _('История просмотра') }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="Section Section_column Section_columnLeft">
+
+      <div class="wrap">
+          {# НАВИГАЦИЯ #}
+          {% include 'base_templates/navigation.html' %}
+          {# ============ #}
+        <div class="Section-content">
+            {% if list_item_views %}
+                  <div class="Cards">
+
+                      {% for item in list_item_views %}
+                        <div class="Card">
+
+                            <a class="Card-picture" href="{{ url('products:product-detail', kwargs = {'pk': item.pk}) }}">
+                                {# Тут выводим первую фотографию товара #}
+                                {% for photos in  item.product_photo.all() %}
+                                    {% if loop.first %}
+                                        <img src=" {{ photos.photo.url }}" alt="{{ photos.photo }} "/>
+                                    {% endif %}
+                                {% endfor %}
+                            </a>
+                          <div class="Card-content">
+                            <strong class="Card-title"><a href="{{ url('products:product-detail', kwargs = {'pk': item.pk}) }}">{{ item.name }}</a>
+                            </strong>
+                                <div class="Card-description">
+                                    {% for min_price_in_shop in item.shop_product.all()[:1]|sort(attribute='price_in_shop', reverse=False)  %}
+                                            <div class="Card-cost">
+                                              {% if item.promotion_group.promotion %}
+                                              {% set price_float = min_price_in_shop.price_in_shop|float %}
+                                              <div class="ProductCard-price">{{ price_float - (price_float * (item.promotion_group.promotion.discount/100.00)) }} </div>
+                                              <div class="ProductCard-priceOld">{{ min_price_in_shop.price_in_shop }}</div>
+                                              {% else %}
+                                              <div class="ProductCard-price">{{ min_price_in_shop.price_in_shop }}</div>
+                                            {% endif %}
+                                            </div>
+                                          <div class="Card-category">{{ item.category }}
+                                          </div>
+                                          <div class="Card-hover">
+                                          <a class="Card-btn"  data-history_item_pk = {{ item.pk }} >
+                                            <img src="{{ static('assets/img/icons/card/bookmark.svg')}}" alt="bookmark.svg"/></a>
+                                            <a class="Card-btn add-button add-button-pulse" data-value="{{ item.id}}" data-shop="{{ min_price_in_shop.pk }}" >
+                                            <img src="{{ static('assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
+                                            </a>
+                                            <a class="Card-change add-compare" data-product="{{ item.id }}" data-key="{{ request.session.session_key }}">
+                                              <img src="{{ static('assets/img/icons/card/change.svg') }}" alt="change.svg"/>
+                                             </a>
+                                    {% endfor %}
+                                  </div>
+                                </div>
+                          </div>
+                        {% if item.promotion_group.promotion %}
+                          <div class="Card-sale">-{{ item.promotion_group.promotion.discount }}%</div>
+                        {% endif %}
+                        </div>
+                     {% endfor %}
+
+                  </div>
+                    {% if all_items_complete %}
+                        <div class ='next_product_more'>
+                            <button id="test_button" class="btn btn_primary" value="{{ csrf_token }}"> {{ _('Показать еще') }}</button>
+                    {% endif %}
+                {% else %}
+                <div class="Cards">
+                    <h3 class="Middle-title">{{ _('Просмотренныех товаров еще нет!') }}</h3>
+                </div>
+            {% endif %}
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+{%  endblock %}

@@ -1,0 +1,38 @@
+   <div class="Section-column">
+          <div class="Section-columnSection">
+            <header class="Section-header">
+              <strong class="Section-title">{{ _('Навигация') }}
+              </strong>
+            </header>
+            <div class="Section-columnContent">
+              <div class="NavigateProfile">
+                <ul class="menu menu_vt">
+                  <li class="menu-item"><a class="menu-link" href="{{ url('profile') }}">{{ _('Личный кабинет') }}</a>
+                  </li>
+                  <li class="menu-item"><a class="menu-link" href="{{ url('profile-edit', kwargs={'pk': client.pk })  }}">{{ _('Профиль') }}</a>
+                  </li>
+                  <li class="menu-item"><a class="menu-link" href="{{ url('orders') }}">{{ _('История заказов') }}</a>
+                  </li>
+                  <li class="menu-item"><a class="menu-link" href="{{ url('history_user', kwargs={'pk': client.pk }) }}">{{ _('История просмотра') }}</a>
+                  </li>
+                  {% if user_shop %}
+                  <div class="Section-columnSection">
+                    <header class="Section-header">
+                      <strong class="Section-title">{{ _('Для продавца') }}
+                      </strong>
+                    </header>
+                    <ul class="menu menu_vt">
+                      <li class="menu-item">
+                        <a class="menu-link" href="/admin/">{{ _('В раздел администрирования') }}</a>
+                      </li>
+                      <li class="menu-item">
+                        <a class="menu-link" href="{{ url('import-product') }}">{{ _('Импортировать данные') }}</a>
+                      </li>
+                    </ul>
+                  </div>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          </div>
+   </div>

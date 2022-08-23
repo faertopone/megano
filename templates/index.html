@@ -1,0 +1,208 @@
+{%  extends 'base_templates/base.html'  %}
+{% block banners %}
+    <div class="Header-slider">
+                  <div class="Slider Slider_main">
+                    <div class="Slider-box">
+
+                        {% if banners %}
+                                {% for item_banner in banners %}
+                                     <div class="Slider-item">
+                        <div class="Slider-content">
+                          <div class="row">
+                            <div class="row-block">
+                              <strong class="Slider-title"> {{ item_banner.get_name_not_digital() }}
+                                 {% if item_banner.get_version() %} <span class="text_primary"> {{ item_banner.get_version() }}</span>{% endif %}
+                              </strong>
+                              <div class="Slider-text">{{ item_banner.description }}
+                              </div>
+                              <div class="Slider-footer"><a class="btn btn_primary" href="{{ url('products:product-detail', args=[item_banner.product_banner.pk]) }}">{{ _('Начать') }}</a>
+                              </div>
+                            </div>
+                            <div class="row-block">
+                              <div class="Slider-img"><img src="{% if item_banner.photo %}{{ item_banner.photo.url }} {% else %} {{ static('assets/img/logo.png') }}{% endif %}" alt="{{ item_banner.name }}"/>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                                {% endfor %}
+                        {% endif %}
+
+                    </div>
+                    <div class="Slider-navigateWrap">
+                      <div class="Slider-navigate">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+{% endblock %}
+
+ {% block content %}
+  <div class="Middle">
+    <div class="Section Section_column Section_columnLeft Section_columnWide">
+      <div class="wrap">
+        <div class="Section-column">
+          {% if promotion %}
+          <div class="Section-columnSection Section-columnSection_mark">
+            <header class="Section-columnHeader">
+              <strong class="Section-columnTitle">{{ _('Товар дня') }}
+              </strong>
+            </header>
+
+            <div class="Card"><a class="Card-picture" href="{{ url('products:product-detail', args=[promotion.product_show.pk]) }}">
+              {% if promotion.product_show.product_photo.first().photo %}
+              <img src="{{ promotion.product_show.product_photo.first().photo.url }} " alt="{{ promotion.product_show.name }}"/>
+                {% else %}
+                    <img src=" {{ static ('default.png') }}" alt="Ремень БГ">
+                {% endif %}
+            </a>
+              <div class="Card-content">
+                <strong class="Card-title"><a href="{{ url('products:product-detail', args=[promotion.product_show.pk]) }}">{{ promotion.product_show.description }}</a>
+                </strong>
+                <div class="Card-description">
+                  <div class="Card-cost"><span class="Card-priceOld"></span><span class="Card-price">{{ promotion.product_show.price }} {{ _('₽') }}</span>
+                  </div>
+                  <div class="Card-category">{{ promotion.product_show.name }}
+                  </div>
+                </div>
+                <div class="CountDown" data-date="{{ data.day + 2}}.{{ data.month }}.{{ data.year }} 00:00">
+                  <div class="CountDown-block">
+                    <div class="CountDown-wrap">
+                      <div class="CountDown-days">
+                      </div><span class="CountDown-label">{{ _('ДНЕЙ') }}</span>
+                    </div>
+                  </div>
+                  <div class="CountDown-block">
+                    <div class="CountDown-wrap">
+                      <div class="CountDown-hours">
+                      </div><span class="CountDown-label">{{ _('ЧАСОВ') }}</span>
+                    </div>
+                  </div>
+                  <div class="CountDown-block">
+                    <div class="CountDown-wrap">
+                      <div class="CountDown-minutes">
+                      </div><span class="CountDown-label">{{ _('МИН') }}</span>
+                    </div>
+                  </div>
+                  <div class="CountDown-block">
+                    <div class="CountDown-wrap">
+                      <div class="CountDown-secs">
+                      </div><span class="CountDown-label">{{ _('СЕК') }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="Section-columnSection Section-columnSection_mark">
+            <div class="media media_advantage">
+              <div class="media-image"><img src="{{ static ('assets/img/icons/advantages/shipping.svg') }}" alt="shipping.svg"/>
+              </div>
+              <div class="media-content">
+                <strong class="media-title">{{ _('Доставка и возврат') }}
+                </strong>
+                <p class="media-text">{{ _('Доставка по всему миру') }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="Section-columnSection Section-columnSection_mark">
+            <div class="media media_advantage">
+              <div class="media-image"><img src="{{ static ('assets/img/icons/advantages/moneyBack.svg') }}" alt="moneyBack.svg"/>
+              </div>
+              <div class="media-content">
+                <strong class="media-title">{{ _('Возврат денег') }}
+                </strong>
+                <p class="media-text">{{ _('Гарантированные платежи') }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="Section-columnSection Section-columnSection_mark">
+            <div class="media media_advantage">
+              <div class="media-image"><img src="{{ static ('assets/img/icons/advantages/support.svg') }}" alt="support.svg"/>
+              </div>
+              <div class="media-content">
+                <strong class="media-title">{{ _('Политика поддержки') }}
+                </strong>
+                <p class="media-text">{{ _('Быстрая команда поддержки') }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="Section-columnSection Section-columnSection_mark">
+            <div class="media media_advantage">
+              <div class="media-image"><img src="{{ static ('assets/img/icons/advantages/quality.svg') }}" alt="quality.svg"/>
+              </div>
+              <div class="media-content">
+                <strong class="media-title">{{ _('Гарантия качества') }}
+                </strong>
+                <p class="media-text">{{ _('Лучшие товары с гарантией') }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="Section-columnSection Section-columnSection_mark">
+            <div class="media media_middle">
+              <div class="media-image"><img src="{{ static ('assets/img/icons/contacts/phone.svg') }}" alt="phone.svg"/>
+              </div>
+              <div class="media-content">Phone:&#32;
+                <nobr>+8 (200) 800-2000-600</nobr><br>Mobile:&#32;
+                <nobr>+8 (200) 800-2000-650</nobr>
+              </div>
+            </div>
+          </div>
+          <div class="Section-columnSection Section-columnSection_mark">
+            <div class="media media_middle">
+              <div class="media-image"><img src="{{ static ('assets/img/icons/contacts/address.svg') }}" alt="address.svg"/>
+              </div>
+              <div class="media-content">
+                Megano Business Center,
+                0012 United States, Los Angeles
+                Creative Street 15/4
+              </div>
+            </div>
+          </div>
+          <div class="Section-columnSection Section-columnSection_mark">
+            <div class="media media_middle">
+              <div class="media-image"><img src="{{ static ('assets/img/icons/contacts/mail.svg') }}" alt="mail.svg"/>
+              </div>
+              <div class="media-content">General: hello@ninzio.com<br>Editor: editor@ninzio.com
+              </div>
+            </div>
+          </div>
+          <div class="Section-columnSection">
+            <header class="Section-header">
+              <strong class="Section-title">Follow Us
+              </strong>
+            </header>
+            <div class="Section-columnContent">
+              <div class="Footer-payments Footer-payments_column">
+                <div><img src="{{ static ('assets/img/icons/socialContent/fb.png') }}" alt="fb.png"/>
+                </div>
+                <div><img src="{{ static ('assets/img/icons/socialContent/tw.png') }}" alt="tw.png"/>
+                </div>
+                <div><img src="{{ static ('assets/img/icons/socialContent/gg.png') }}" alt="gg.png"/>
+                </div>
+                <div><img src="{{ static ('assets/img/icons/socialContent/in.png') }}" alt="in.png"/>
+                </div>
+                <div><img src="{{ static ('assets/img/icons/socialContent/pt.png') }}" alt="pt.png"/>
+                </div>
+                <div><img src="{{ static ('assets/img/icons/socialContent/ml.png') }}" alt="ml.png"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="Section-content">
+          {% import 'base_templates/products.html' as product_viewer %}
+          {{ product_viewer.view_product_list(products, product_viewer.view_product, promotion_service, _('Популярные товары'), request.session.session_key) }}
+          {{ product_viewer.view_product_list(discounts, product_viewer.view_product, promotion_service, _('Товары со скидкой'), request.session.session_key) }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

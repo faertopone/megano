@@ -1,0 +1,54 @@
+{%  extends 'base_templates/base.html'  %}
+{% block content %}
+<div class="Middle Middle_top">
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h1 class="Middle-title"> {{ _('Импорт данных') }}</h1>
+            <ul class="breadcrumbs Middle-breadcrumbs">
+              <li class="breadcrumbs-item"><a href="{{ url('index') }}"> {{ _('Домой') }}</a>
+              </li>
+              <li class="breadcrumbs-item breadcrumbs-item_current"><span>{{ _('Импорт данных') }}</span>
+              </li>
+            </ul>
+        </div>
+      </div>
+    </div>
+    <div class="Section Section_column Section_columnLeft">
+      <div class="wrap">
+        {# НАВИГАЦИЯ #}
+        {% include 'base_templates/navigation.html' %}
+        {# ============ #}
+        <div class="Section-content">
+          <div class="Account">
+            <div class="Account-group">
+              <div class="Account-column">
+                <div class="Account-column Account-column_full">
+
+                  <div class="row" id="information">{{ _('Загрузка файлов') }}</div>
+                      {% if info %}
+                        <h3>{{ info.0 }}</h3>
+                        <h3><a href="{{ info.2 }}">{{ info.1 }}</a></h3>
+                      {% endif %}
+                  <div class="Account-column Account-column_full" id="update_files">
+
+                    <header class="Section-header" id="files_update">
+                      <h2 class="Section-title">{{ _('Выберите файлы для загрузки:') }}</h2>
+                        <form method="post" enctype="multipart/form-data">
+                            {{ csrf_input }}
+                            {{ form }}
+                            <input  name="update_files" style="display:none;">
+                            <button type="submit" >{{ _('Загрузить') }}</button>
+                        </form>
+                    </header>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% endblock content %}

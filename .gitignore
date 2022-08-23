@@ -25,6 +25,7 @@ wheels/
 pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
+.vagrant/
 .installed.cfg
 *.egg
 MANIFEST
@@ -39,7 +40,7 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# Unit tests / coverage reports
 htmlcov/
 .tox/
 .nox/
@@ -137,3 +138,8 @@ dmypy.json
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
+/Инструкция.txt
+/my_setting.txt
+
+# Media
+media/*

@@ -1,0 +1,382 @@
+[
+{
+  "model": "products.propertycategory",
+  "pk": 1,
+  "fields": {
+    "category": 1,
+    "property": 15,
+    "filtered": false,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 2,
+  "fields": {
+    "category": 1,
+    "property": 14,
+    "filtered": false,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 3,
+  "fields": {
+    "category": 1,
+    "property": 11,
+    "filtered": true,
+    "filter_position": 2
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 4,
+  "fields": {
+    "category": 1,
+    "property": 3,
+    "filtered": true,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 5,
+  "fields": {
+    "category": 1,
+    "property": 6,
+    "filtered": true,
+    "filter_position": 3
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 6,
+  "fields": {
+    "category": 1,
+    "property": 16,
+    "filtered": true,
+    "filter_position": 4
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 7,
+  "fields": {
+    "category": 1,
+    "property": 13,
+    "filtered": false,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 8,
+  "fields": {
+    "category": 2,
+    "property": 29,
+    "filtered": true,
+    "filter_position": 3
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 9,
+  "fields": {
+    "category": 2,
+    "property": 3,
+    "filtered": true,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 10,
+  "fields": {
+    "category": 2,
+    "property": 16,
+    "filtered": true,
+    "filter_position": 4
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 11,
+  "fields": {
+    "category": 2,
+    "property": 6,
+    "filtered": true,
+    "filter_position": 3
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 12,
+  "fields": {
+    "category": 2,
+    "property": 15,
+    "filtered": false,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 13,
+  "fields": {
+    "category": 2,
+    "property": 11,
+    "filtered": true,
+    "filter_position": 2
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 14,
+  "fields": {
+    "category": 2,
+    "property": 14,
+    "filtered": false,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 15,
+  "fields": {
+    "category": 3,
+    "property": 7,
+    "filtered": true,
+    "filter_position": 3
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 16,
+  "fields": {
+    "category": 3,
+    "property": 4,
+    "filtered": true,
+    "filter_position": 2
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 17,
+  "fields": {
+    "category": 3,
+    "property": 13,
+    "filtered": true,
+    "filter_position": 2
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 18,
+  "fields": {
+    "category": 3,
+    "property": 19,
+    "filtered": true,
+    "filter_position": 2
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 19,
+  "fields": {
+    "category": 3,
+    "property": 3,
+    "filtered": true,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 20,
+  "fields": {
+    "category": 3,
+    "property": 11,
+    "filtered": true,
+    "filter_position": 4
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 21,
+  "fields": {
+    "category": 3,
+    "property": 6,
+    "filtered": true,
+    "filter_position": 4
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 22,
+  "fields": {
+    "category": 3,
+    "property": 5,
+    "filtered": true,
+    "filter_position": 3
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 23,
+  "fields": {
+    "category": 3,
+    "property": 10,
+    "filtered": false,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 24,
+  "fields": {
+    "category": 3,
+    "property": 9,
+    "filtered": false,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 25,
+  "fields": {
+    "category": 4,
+    "property": 3,
+    "filtered": true,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 26,
+  "fields": {
+    "category": 4,
+    "property": 4,
+    "filtered": true,
+    "filter_position": 2
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 27,
+  "fields": {
+    "category": 4,
+    "property": 5,
+    "filtered": true,
+    "filter_position": 3
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 28,
+  "fields": {
+    "category": 4,
+    "property": 6,
+    "filtered": true,
+    "filter_position": 3
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 29,
+  "fields": {
+    "category": 4,
+    "property": 7,
+    "filtered": true,
+    "filter_position": 2
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 30,
+  "fields": {
+    "category": 4,
+    "property": 8,
+    "filtered": false,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 31,
+  "fields": {
+    "category": 4,
+    "property": 9,
+    "filtered": false,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 32,
+  "fields": {
+    "category": 4,
+    "property": 10,
+    "filtered": false,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 33,
+  "fields": {
+    "category": 4,
+    "property": 12,
+    "filtered": false,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 34,
+  "fields": {
+    "category": 4,
+    "property": 11,
+    "filtered": true,
+    "filter_position": 3
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 35,
+  "fields": {
+    "category": 4,
+    "property": 13,
+    "filtered": true,
+    "filter_position": 2
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 36,
+  "fields": {
+    "category": 4,
+    "property": 14,
+    "filtered": false,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 37,
+  "fields": {
+    "category": 4,
+    "property": 15,
+    "filtered": false,
+    "filter_position": 1
+  }
+},
+{
+  "model": "products.propertycategory",
+  "pk": 38,
+  "fields": {
+    "category": 4,
+    "property": 16,
+    "filtered": true,
+    "filter_position": 5
+  }
+}
+]

@@ -1,0 +1,97 @@
+{%  extends 'base_templates/base.html'  %}
+{% block title %}{{ _('Список заказов') }}{% endblock title %}
+{% block content %}
+  <div class="Middle Middle_top">
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h1 class="Middle-title"> {{ _('Список заказов') }}
+          </h1>
+          <ul class="breadcrumbs Middle-breadcrumbs">
+            <li class="breadcrumbs-item"><a href="{{ url('index') }}"> {{ _('Домой') }}</a>
+            </li>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>{{ _('Личный кабинет') }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="Section Section_column Section_columnLeft">
+      <div class="wrap">
+         {# НАВИГАЦИЯ #}
+          {% include 'base_templates/navigation.html' %}
+          {# ============ #}
+        <div class="Section-content">
+                    <div class="Orders">
+
+                        {%  if order_list %}
+                                {% for order in order_list %}
+                                    <div class="Order Order_anons">
+                          <div class="Order-personal">
+                            <div class="row">
+                                <div class="row-block">
+                                  <a class="Order-title" href="{{ url('order-detail', kwargs={'pk': order.pk }) }}">{{ _('Заказ') }}&#32;<span class="Order-numberOrder">№{{ order.number_order }}</span>&#32;{{ _('от') }}&#32;<span class="Order-dateOrder">{{ order.created_dt }}</span></a>
+                                </div>
+
+                                <div class="row-block">
+                                <div class="Order-info Order-info_delivery">
+                                    {# Тут тоже когда будет доп инфа #}
+                                  <div class="Order-infoType">{{ _('Тип доставки:') }}
+                                  </div>
+                                  <div class="Order-infoContent">{{ order.delivery }}
+                                  </div>
+                                </div>
+                                <div class="Order-info Order-info_pay">
+                                  <div class="Order-infoType">{{ _('Оплата:')}}
+                                  </div>
+                                  <div class="Order-infoContent">{{ order.payment }}
+                                  </div>
+                                </div>
+                                <div class="Order-info">
+                                  <div class="Order-infoType">{{ _('Общая стоимость:') }}
+                                  </div>
+                                  <div class="Order-infoContent"> {{ order.total_price }} {{ _('руб.') }}
+                                  </div>
+                                </div>
+                                <div class="Order-info Order-info_status">
+                                  <div class="Order-infoType">{{ _('Статус:') }}
+                                  </div>
+                                  <div class="Order-infoContent">
+                                      {% if order.status_pay %} {{ _('ОПЛАЧЕН') }}
+                                      {% else %} {{ _('НЕ ОПЛАЧЕН') }}
+                                      {% endif %}
+                                  </div>
+
+                                </div>
+
+                                {% if order.error_pay %}
+                                         <div class="Order-info Order-info_error">
+                                              <div class="Order-infoType">{{ _('Оплата не прошла:') }}
+                                              </div>
+                                              <div class="Order-infoContent">
+                                                  {{ order.error_pay }}
+                                              </div>
+                                        </div>
+                                    {% endif %}
+                              </div>
+                                </div>
+                            </div>
+                          </div>
+                                {% endfor %}
+                        {% else %}
+                            <div class="Order Order_anons">
+                                <div class="Order-personal">
+                                    <div class="row">
+                                        {{ _('ЗАКАЗОВ НЕТ') }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
