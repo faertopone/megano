@@ -109,7 +109,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.parse(os.environ.get(
-        'DATABASE_URL', 'postgres://postgres:postgres@127.0.0.1:5432/meganodb'
+        'DATABASE_URL', 'postgres://postgres:postgres@127.0.0.1:5432/my_db_megano'
     )),
 }
 
