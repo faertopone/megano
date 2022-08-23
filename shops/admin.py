@@ -40,5 +40,13 @@ class ProductShopAdmin(admin.ModelAdmin):
         return _('Товар в магазине')
 
 
+class ShopPhotoAdmin(admin.ModelAdmin):
+    list_display = ['id', 'shop', 'photo']
+
+    def __str__(self):
+        return _('Фото магазинов')
+
+
 admin.site.register(Shops, ShopsAdmin)
 admin.site.register(ShopProduct, ProductShopAdmin)
+admin.site.register(ShopPhoto, ShopPhotoAdmin)

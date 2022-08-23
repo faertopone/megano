@@ -28,7 +28,7 @@ class FixtureFile(models.Model):
                      'promotions': 1, 'promotion_group': 2, 'banners': 8, 'client': 9, 'shop': 10, 'shop_photo': 11,
                      'shop_product': 12, 'interval': 13, 'clearing_basket': 14}
         for key, value in name_dict.items():
-            if key in str(self.file).split('.')[0]:
+            if key == str(self.file).split('.')[0]:
                 self.name = key
                 self.priority = value
         super().save(*args, **kwargs)

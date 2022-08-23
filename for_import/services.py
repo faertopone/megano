@@ -11,6 +11,8 @@ from accounts.models import Client
 from for_import.models import FixtureFile
 from for_import.load_fixtur_logic import my_load_data
 
+img_extension_list = ['jpeg', 'jpg', 'png', 'svg', 'webp', 'bmp']
+
 
 def list_prop_category(request):
     """Возвращает словарь со списком полей,
@@ -104,15 +106,13 @@ def load_all_fixture():
     for num in range(1, 15):
         load_data(priority=num)
     load_data()
-    load_data(extension='jpg')
-    load_data(extension='jpeg')
-    load_data(extension='png')
-    load_data(extension='svg')
+    for extension in img_extension_list:
+        load_data(extension=extension)
 
 
 def load_data(priority=0, extension='json'):
     """Анализирует загруженный файл фикстуры и обновляет базу данных по его данным"""
-    img_extension_list = ['jpeg', 'jpg', 'png', 'svg']
+    # img_extension_list = ['jpeg', 'jpg', 'png', 'svg', 'WebP']
     fixture_file_list = FixtureFile.objects.filter(priority=priority, status='n', extension=extension)
     if len(fixture_file_list) != 0 and extension == 'json':
         for i in fixture_file_list:
