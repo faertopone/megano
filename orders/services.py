@@ -114,7 +114,8 @@ class OrderService:
                 order.order_products.add(order_item)
 
         if client.orders.all():
-            order.number_order = len(client.orders.all())
+            # +1 потому что если первый заказ то по умолчанию 1, значит след будут считаться с 1 уже
+            order.number_order = len(client.orders.all()) + 1
         client.full_address = order.address
         client.city = order.city
         if self.check_free_delivery():
