@@ -12,9 +12,17 @@ import shutil
 from django.test import TestCase, override_settings
 
 
+settings.DEBUG = False
+try:
+    settings.MIDDLEWARE.remove("debug_toolbar.middleware.DebugToolbarMiddleware")
+except ValueError:
+    pass
+
+
 # Создаем временную папку для хранения файлов во время тестов
 @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
 class ProfileTest(TestCase):
+
 
     @classmethod
     def tearDownClass(cls):
@@ -29,8 +37,6 @@ class ProfileTest(TestCase):
         """
         Начальная настройка для тестов
         """
-        settings.DEBUG_TOOLBAR_PANELS.remove("debug_toolbar.panels.sql.SQLPanel")
-        settings.DEBUG_TOOLBAR_PANELS.remove("debug_toolbar.panels.templates.TemplatesPanel")
 
         name_file = 'Баннер_1_photo_video.png'
         # Создали тестовую категорию товара
@@ -47,12 +53,13 @@ class ProfileTest(TestCase):
         user_1 = User.objects.create_user(username='TEST', password='password_TEST', email='test@mail.ru')
         user_2 = User.objects.create_user(username='TEST2', password='password_TEST2', email='test2@mail.ru')
         # Создадим Super_User
-        User.objects.create_superuser(username='SUPER_TEST',
-                                      password='password_SUPER_TEST',
-                                      email='SUPER_TEST@mail.ru')
+        client_super = User.objects.create_superuser(username='SUPER_TEST',
+                                                     password='password_SUPER_TEST',
+                                                     email='SUPER_TEST@mail.ru')
         # Создадим клиента (доп параметры от User)
-        client = Client.objects.get(user=user_1)
-        client2 = Client.objects.get(user=user_2)
+        client = Client.objects.create(user=user_1)
+        client2 = Client.objects.create(user=user_2)
+        Client.objects.create(user=client_super)
         client2.phone = 79999999
         client2.save()
         # Добавим просмотренные товары
