@@ -7,6 +7,7 @@ from django.conf import settings
 from products.models import Product, PropertyCategory, PropertyProduct, ProductPhoto, Category
 from shops.models import ShopProduct, ShopPhoto
 from accounts.models import Client
+from banners.models import Banners
 
 from for_import.models import FixtureFile
 from for_import.load_fixtur_logic import my_load_data
@@ -124,20 +125,23 @@ def load_data(priority=0, extension='json'):
         shop_photo_list = [str(i.photo.url).split('/')[-1] for i in ShopPhoto.objects.all() if i.photo]
         client_photo_list = [str(i.photo.url).split('/')[-1] for i in Client.objects.all() if i.photo]
         categories_photo_list = [str(i.icon_photo.url).split('/')[-1] for i in Category.objects.all() if i.icon_photo]
+        banners_photo_list = [str(i.photo.url).split('/')[-1] for i in Banners.objects.all() if i.photo]
         for i in fixture_file_list:
             moving_a_file(i, product_photo_list, 'media/products_photo/')
             moving_a_file(i, shop_photo_list, 'media/shops_photo/')
             moving_a_file(i, client_photo_list, 'media/accounts/')
             moving_a_file(i, categories_photo_list, 'media/categories/')
+            moving_a_file(i, banners_photo_list, 'media/banners_photo/')
 
 
 def moving_a_file(file, photo_list, new_directory):
     """Распределяет файлы загруженных изображений по необходимым директориям"""
-    file_name = str(file.file).split('/')[1]
+    real_file_name = str(file.file).split('/')[1]
+    file_name = file.name + '.' + file.extension
     if file_name in photo_list:
         file.delete()
         try:
             os.remove(new_directory + file_name)
         except FileNotFoundError:
             pass
-        os.rename('media/admin_fixtures/' + file_name, new_directory + file_name)
+        os.rename('media/admin_fixtures/' + real_file_name, new_directory + file_name)
