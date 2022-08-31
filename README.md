@@ -29,7 +29,7 @@
 ## Установка для разработки
 1. Клонировать репозиторий
    ```
-   git clone https://gitlab.skillbox.ru/kurator_skillbox/python_django_team9.git
+   git clone https://github.com/faertopone/megano.git
    cd python_django_team9
    ```
 2. Переключиться на ветку ``develop``
